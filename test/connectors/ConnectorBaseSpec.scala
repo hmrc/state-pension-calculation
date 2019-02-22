@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package config
+package connectors
 
-import com.google.inject.AbstractModule
-import services.ServiceLocatorRegistrationService
+import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.test.ResultExtractors
+import support.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
-class Module extends AbstractModule {
+trait ConnectorBaseSpec extends UnitSpec
+  with Status
+  with MimeTypes
+  with HeaderNames
+  with ResultExtractors {
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
-    bind(classOf[ServiceLocatorRegistrationService]).asEagerSingleton()
-  }
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
 }

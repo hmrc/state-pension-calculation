@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package config
+package services
 
-import com.google.inject.AbstractModule
-import services.ServiceLocatorRegistrationService
+import support.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
-class Module extends AbstractModule {
-
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
-    bind(classOf[ServiceLocatorRegistrationService]).asEagerSingleton()
-  }
+class ServiceBaseSpec extends UnitSpec {
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 }
