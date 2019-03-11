@@ -45,28 +45,21 @@ class ApiDefinitionISpec extends IntegrationSpec {
       private val expectedJson = Json.parse(
         """
           |{
-          |  "scopes": [
-          |    {
-          |      "key": "read:state-pension-calculation",
-          |      "name": "Get State Pension calculation",
-          |      "description": "Get State Pension calculation information"
-          |    },
-          |    {
-          |      "key": "write:state-pension-calculation",
-          |      "name": "Finalise State Pension calculation",
-          |      "description": "Finalise State Pension calculation information"
-          |    }
-          |  ],
+          |  "scopes": [],
           |  "api": {
-          |    "name": "Get State Pension calculation",
-          |    "description": "Get your State Pension calculation",
+          |    "name": "Get State Pension Calculation",
+          |    "description": "Get a citizens State Pension calculation",
           |    "context": "state-pension-calculation",
+          |    "categories": ["PENSIONS"],
           |    "versions": [
           |      {
           |        "version": "1.0",
           |        "status": "ALPHA",
           |        "endpointsEnabled": false,
-          |        "access" : "PRIVATE"
+          |        "access" : {
+          |          "type": "PRIVATE",
+          |          "whitelistedApplicationIds": []
+          |        }
           |      }
           |    ]
           |  }

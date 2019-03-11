@@ -1,0 +1,42 @@
+#%RAML 1.0
+---
+
+title: Get State Pension calculation
+version: 1.0
+protocols: [ HTTPS ]
+baseUri: https://api.service.hmrc.gov.uk/
+mediaType: [ application/json ]
+
+uses:
+  sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
+  headers: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/headers.raml
+  annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
+
+types:
+  ninoType:
+    pattern: "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"
+
+documentation:
+ - title: Overview
+   content: !include docs/overview.md
+ - title: Versioning
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/versioning.md
+ - title: Errors
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/errors.md
+ - title: Testing
+   content: !include docs/testing.md
+
+/state-pension-calculation:
+  /hello-world:
+    get:
+      displayName: Hello, World!
+      description: Gets a message that says hello
+      is: [headers.acceptHeader]
+      (annotations.scope): "read:state-pension-calculation"
+      securedBy: [ sec.x-application ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include schemas/hello-world/success.json
+              example: !include docs/examples/hello-world/success.json
