@@ -54,11 +54,11 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |    "versions": [
           |      {
           |        "version": "1.0",
-          |        "status": "ALPHA",
+          |        "status": "BETA",
           |        "endpointsEnabled": false,
           |        "access" : {
           |          "type": "PRIVATE",
-          |          "whitelistedApplicationIds": []
+          |          "whitelistedApplicationIds": ["applicationId#0", "applicationId#1"]
           |        }
           |      }
           |    ]
