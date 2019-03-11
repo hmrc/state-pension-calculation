@@ -41,17 +41,19 @@ trait IntegrationSpec extends WordSpecLike
 
   private val servicesPath = "microservice.services"
 
-  def servicesConfig: Map[String, String] = Map(
+  def overriddenConfig: Map[String, Any] = Map(
     s"$servicesPath.des.host" -> mockHost,
     s"$servicesPath.des.port" -> mockPort,
     s"$servicesPath.auth.host" -> mockHost,
     s"$servicesPath.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort
+    "auditing.consumer.baseUri.port" -> mockPort,
+    "api.status" -> "BETA",
+    "api.access.whitelistedApplicationIds" -> Seq("applicationId#0", "applicationId#1")
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
-    .configure(servicesConfig)
+    .configure(overriddenConfig)
     .build()
 
   override def beforeAll(): Unit = {

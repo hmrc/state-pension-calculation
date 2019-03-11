@@ -16,9 +16,10 @@
 
 package controllers
 
+import config.{ApiDefinitionConfig, AppConfig}
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpErrorHandler
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.api.controllers.DocumentationController
 
@@ -27,13 +28,19 @@ import scala.concurrent.Future
 @Singleton()
 class ApiDocumentationController @Inject()(cc: ControllerComponents,
                                            assets: Assets,
-                                           errorHandler: HttpErrorHandler)
+                                           errorHandler: HttpErrorHandler,
+                                           apiConfig: ApiDefinitionConfig)
   extends DocumentationController(cc, assets, errorHandler) {
 
   override def definition(): Action[AnyContent] = Action.async { implicit request =>
 
+    lazy val apiAccess: JsObject = Json.obj(
+      "type" -> apiConfig.accessType(),
+      "whitelistedApplicationIds" -> apiConfig.whiteListedApplicationIds()
+    )
+
     val apiDefinition = Json.parse(
-      """
+      s"""
         |{
         |  "scopes": [],
         |  "api": {
@@ -44,12 +51,9 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
         |    "versions": [
         |      {
         |        "version": "1.0",
-        |        "status": "ALPHA",
+        |        "status": "${apiConfig.status}",
         |        "endpointsEnabled": false,
-        |        "access" : {
-        |          "type": "PRIVATE",
-        |          "whitelistedApplicationIds": []
-        |        }
+        |        "access" : $apiAccess
         |      }
         |    ]
         |  }
