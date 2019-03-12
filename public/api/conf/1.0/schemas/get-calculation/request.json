@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Get State Pension Calculation request schema",
+  "type": "object",
+  "required": [
+    "nino",
+    "checkBrick",
+    "gender"
+  ],
+  "properties": {
+    "nino" : {
+      "type": "string",
+      "description": "National Insurance number with or without the suffix character.",
+      "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIQUV])[A-Z]|[A-Z]([DFIOQUV]))[A-Z]{2})[0-9]{6}[A-D\\s]?$"
+    },
+    "checkBrick": {
+      "type": "string",
+      "description": "First 3 characters of surname and 2 initials.",
+      "pattern": "^([A-Z][ A-Z-']{2,4})$"
+    },
+    "gender": {
+      "type": "string",
+      "description": "Gender (M - Male, F - Female)",
+      "enum": [
+        "M",
+        "F"
+      ]
+    }
+  }
+}

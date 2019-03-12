@@ -1,5 +1,3 @@
-## Overview
-
 This API provides resources related to State Pension calculations.
 
 This service has been developed for consumption by the Department of Work and Pensions (DWP) **only**.
