@@ -11,10 +11,7 @@ uses:
   sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
   headers: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/headers.raml
   annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
-
-types:
-  ninoType:
-    pattern: "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
 documentation:
  - title: Overview
@@ -33,7 +30,7 @@ documentation:
       description: Gets a message that says hello
       is: [headers.acceptHeader]
       (annotations.scope): "read:state-pension-calculation"
-      securedBy: [ sec.x-application ]
+      securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
       responses:
         200:
           body:
