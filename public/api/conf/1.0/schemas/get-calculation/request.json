@@ -10,17 +10,17 @@
   "properties": {
     "nino" : {
       "type": "string",
-      "description": "National Insurance number with or without the suffix character.",
+      "description": "The Individuals National Insurance number with or without the suffix character.",
       "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIQUV])[A-Z]|[A-Z]([DFIOQUV]))[A-Z]{2})[0-9]{6}[A-D\\s]?$"
     },
     "checkBrick": {
       "type": "string",
-      "description": "First 3 characters of surname and 2 initials.",
+      "description": "First 3 characters of the Individuals surname and 2 initials.",
       "pattern": "^([A-Z][ A-Z-']{2,4})$"
     },
     "gender": {
       "type": "string",
-      "description": "Gender (M - Male, F - Female)",
+      "description": "Gender of the Individual.",
       "enum": [
         "M",
         "F"

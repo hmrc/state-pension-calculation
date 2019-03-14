@@ -1,5 +1,5 @@
 {
-  "initialRequestResult": {
+  "details": {
     "nino": "AB123456C",
     "protectedPaymentAmount": 123.45,
     "rebateDerivedAmount": 123.45,
@@ -22,30 +22,30 @@
     "newStatePensionQualifyingYears": 33,
     "incompleteContributionRecordIndicator": true
   },
-  "associatedNotes": [
+  "notes": [
     {
-      "noteIdentifier": 260,
-      "numberOfNoteFields": 1,
-      "fieldsList": [
+      "id": 260,
+      "numberOfNoteLines": 1,
+      "lines": [
         {
-          "noteField": "SOME NOTES"
+          "line": "SOME NOTES"
         }
       ]
     },
     {
-      "noteIdentifier": 999,
-      "numberOfNoteFields": 2,
-      "fieldsList": [
+      "id": 999,
+      "numberOfNoteLines": 2,
+      "lines": [
         {
-          "noteField": "SOME MORE NOTES"
+          "line": "SOME MORE NOTES"
         },
         {
-          "noteField": "YET MORE NOTES"
+          "line": "YET MORE NOTES"
         }
       ]
     }
   ],
-  "listOfQualifyingYears": [
+  "qualifyingYears": [
     {
       "taxYear": 2017,
       "qualifyingTaxYear": true,

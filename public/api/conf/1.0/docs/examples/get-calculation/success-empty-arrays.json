@@ -1,5 +1,5 @@
 {
-  "initialRequestResult": {
+  "details": {
     "nino": "AB123456C",
     "protectedPaymentAmount": 123.45,
     "rebateDerivedAmount": 123.45,
@@ -22,6 +22,6 @@
     "newStatePensionQualifyingYears": 33,
     "incompleteContributionRecordIndicator": true
   },
-  "associatedNotes": [],
-  "listOfQualifyingYears": []
+  "notes": [],
+  "qualifyingYears": []
 }
