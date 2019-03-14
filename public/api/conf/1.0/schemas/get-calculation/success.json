@@ -3,12 +3,12 @@
   "title": "Get State Pension calculation success response schema",
   "type": "object",
   "required": [
-    "initialRequestResult",
-    "associatedNotes",
-    "listOfQualifyingYears"
+    "details",
+    "notes",
+    "qualifyingYears"
   ],
   "properties": {
-    "initialRequestResult": {
+    "details": {
       "type": "object",
       "required": [
         "nino",
@@ -35,116 +35,132 @@
       ],
       "properties": {
         "nino": {
-          "description": "National Insurance Number with optional suffix",
+          "description": "National Insurance number with or without the suffix character.",
           "type": "string",
           "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIQUV])[A-Z]|[A-Z]([DFIOQUV]))[A-Z]{2})[0-9]{6}[A-D]?$"
         },
         "protectedPaymentAmount": {
-          "description": "The part of your starting amount which is above the full new State Pension",
+          "description": "The part of the Individual's starting amount that is above the full new State Pension.",
           "$ref": "#/definitions/monetaryPosType"
         },
         "rebateDerivedAmount": {
-          "description": "The amount deducted from a person’s starting amount based on periods they were contracted out",
+          "description": "The amount deducted from an Individual's starting amount based on periods they were contracted out",
           "$ref": "#/definitions/monetaryPosType"
         },
         "newStatePensionEntitlementAmount": {
+          "description": "New State Pension Entitlement Amount minimum",
           "$ref": "#/definitions/monetaryPosType"
         },
         "reducedRateElectionToConsider": {
-          "description": "Up until 1977 women could opt to pay a reduced amount of NI contributions; true - opted in, false - did not opt in",
+          "description": "Up until 1977 women could opt to pay a reduced amount of National Insurance contributions",
           "type": "boolean"
         },
         "pensionShareOrderContractedOutEmploymentGroup": {
-          "description": "true - the pension is impacted by share",
+          "description": "Pension share on divorce contracted out employment group (COEG) flag",
           "type": "boolean"
         },
         "pensionShareOrderStateEarningsRelatedPensionService": {
-          "description": "true - the pension is impacted by share",
+          "description": "Pension Share on divorce state earnings related pension service (SERPS) flag",
           "type": "boolean"
         },
         "isleOfManContributions": {
-          "description": "true - if there has ever been any Isle of Man contribution made",
+          "description": "Isle of Man contribution flag",
           "type": "boolean"
         },
         "contractedOutEmploymentGroupInvestigationPosition": {
-          "description": "true - under investigation",
+          "description": "Under investigation flag",
           "type": "boolean"
         },
         "statePensionOldRulesAmount": {
+          "description": "State Pension Old Rules Amount",
           "$ref": "#/definitions/monetaryPosType"
         },
         "basicAmount": {
+          "description": "The amount of an Individual's Basic Pension before any additions",
           "$ref": "#/definitions/monetaryPosType"
         },
         "additionalPensionPre1997GrossAmount": {
+          "description": "An Individual's additional pension – pre 1997 (gross amount)",
           "$ref": "#/definitions/monetaryPosType"
         },
         "additionalPensionPre1997NetAmount": {
+          "description": "An Individual's additional pension – pre 1997 (net amount)",
           "$ref": "#/definitions/monetaryPosType"
         },
         "additionalPensionPost1997Amount": {
+          "description": "An Individual's additional pension – pre 1997",
           "$ref": "#/definitions/monetaryPosType"
         },
         "additionalPensionPost2002Amount": {
+          "description": "An Individual's additional pension – post 2002",
           "$ref": "#/definitions/monetaryPosType"
         },
         "graduatedRetirementBenefitAmount": {
+          "description": "This amount is based on an Individual's graduated contributions paid on earnings between 1961 and 1975 and is paid to Individuals who paid into the graduated pension scheme",
           "$ref": "#/definitions/monetaryPosType"
         },
         "statePensionNewRulesAmount": {
+          "description": "An Individual's state pension amount based on new state pension rules",
           "$ref": "#/definitions/monetaryPosType"
         },
         "statePensionAgeDate": {
-          "description": "The date the person has reached State Pension Age",
+          "description": "The date an Individual has reached State Pension Age",
           "$ref": "#/definitions/dateType"
         },
         "post2016YearsUsed": {
-          "description": "The count of the Minimum Qualifying Years used after 2016",
+          "description": "A count of the minimum qualifying years used after 2016",
           "type": "integer",
           "minimum": 0,
           "maximum": 99
         },
         "newStatePensionQualifyingYears": {
+          "description": "Amount of new state pension qualifying years",
           "type": "integer",
           "minimum": 0,
           "maximum": 99
         },
         "incompleteContributionRecordIndicator": {
+          "description": "Indicator for missing factors in an Individual's final relevant year",
           "type": "boolean"
         }
       }
     },
-    "associatedNotes": {
+    "notes": {
+      "description": "Contains notes related to an Individual",
       "type": "array",
       "items": {
         "type": "object",
         "required": [
-          "noteIdentifier",
-          "numberOfNoteFields",
-          "fieldsList"
+          "id",
+          "numberOfNoteLines",
+          "lines"
         ],
         "properties": {
-          "noteIdentifier": {
+          "id": {
+            "description": "Note ID",
             "type": "integer",
             "minimum": 1,
             "maximum": 999
           },
-          "numberOfNoteFields": {
+          "numberOfNoteLines": {
+            "description": "Number of lines of text",
             "type": "integer",
             "minimum": 0,
             "maximum": 99
           },
-          "fieldsList": {
+          "lines": {
+            "description": "Lines of text that make up the note",
             "type": "array",
             "additionalItems": false,
             "items": {
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "noteField"
+                "line"
               ],
               "properties": {
-                "noteField": {
+                "line": {
+                  "description": "A line in the notes",
                   "type": "string",
                   "pattern": "^[0-9A-Z'&,\\-()./ ]{1,255}$"
                 }
@@ -154,8 +170,8 @@
         }
       }
     },
-    "listOfQualifyingYears": {
-      "description": "A list of the 12 required years (FRY and the 11 preceding years) tax year data in descending tax year order, FRY first",
+    "qualifyingYears": {
+      "description": "List of the 12 required years (final relevant year and the 11 preceding years) tax year data",
       "type": "array",
       "items": {
         "type": "object",
@@ -166,15 +182,17 @@
         ],
         "properties": {
           "taxYear": {
+            "description": "The tax year which equals the qualifying year",
             "type": "integer",
             "minimum": 1975,
             "maximum": 2099
           },
           "qualifyingTaxYear": {
-            "description": "Qualifying or Non-Qualifying Year; true - Qualifying",
+            "description": "Qualifying or Non-Qualifying Year. true if qualifying year else false",
             "type": "boolean"
           },
           "earningsAmount": {
+            "description": "Amount of earnings in the year",
             "$ref": "#/definitions/monetaryPosType"
           }
         }
