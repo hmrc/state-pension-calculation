@@ -1,7 +1,10 @@
 
-# state-pension-calculation
+# State Pension Calculation API
 
-This is a placeholder README.md for a new repository
+This is the code repository for the Get State Pension Calculation API. This repository contains:
+
+* code used to serves requests issued by approved other governmnet departments via the HMRC API Platform.
+* content used to serve the documentation realted to the endpoints exposed via the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api).
 
 ### License
 
