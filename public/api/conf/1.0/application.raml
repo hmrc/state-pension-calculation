@@ -25,10 +25,10 @@ documentation:
 
 /state-pension-calculation:
 
-  /:
+  /initial:
     post:
-      displayName: Get State Pension calculation details
-      description: Gets the State Pension calculation details for a citizen.
+      displayName: Get the initial State Pension calculation
+      description: Gets the initial State Pension calculation for an individual.
       is: [headers.acceptHeader]
       (annotations.scope): "read:state-pension-calculation"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
@@ -48,7 +48,7 @@ documentation:
                   description: Example with all arrays populated.
                   value: !include docs/examples/get-calculation/success.json
                 example-2:
-                  description: Example with empty arrays.
+                  description: Example with no notes or qualifying years.
                   value: !include docs/examples/get-calculation/success-empty-arrays.json
 
   /hello-world:
