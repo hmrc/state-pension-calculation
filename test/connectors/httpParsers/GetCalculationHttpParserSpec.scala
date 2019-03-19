@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
-import models.CalculationTestData.Response._
+import support.data.CalculationTestData.Response._
 import models.errors.{InternalServerError, SingleError}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse

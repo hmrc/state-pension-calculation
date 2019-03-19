@@ -16,7 +16,7 @@
 
 package models
 
-import models.CalculationTestData.QualifyingYears._
+import support.data.CalculationTestData.QualifyingYears._
 import play.api.libs.json.Json
 import support.UnitSpec
 

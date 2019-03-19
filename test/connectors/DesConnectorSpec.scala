@@ -17,7 +17,7 @@
 package connectors
 
 import mocks.{MockAppConfig, MockHttpClient}
-import models.CalculationTestData.Response.{expectedModel => validResponse}
+import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 import models.errors.{InternalServerError, SingleError}
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames

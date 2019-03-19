@@ -16,7 +16,7 @@
 
 package models
 
-import models.CalculationTestData.Result._
+import support.data.CalculationTestData.Result._
 import play.api.libs.json.Json
 import support.UnitSpec
 

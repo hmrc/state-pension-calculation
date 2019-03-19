@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package support.data
+
+import models.{CalculationNote, CalculationResponse, CalculationResult, QualifyingYear}
 
 object CalculationTestData {
 
