@@ -1,5 +1,6 @@
 {
   "nino": "AB123456C",
   "checkBrick": "SMIJ",
-  "gender": "M"
+  "gender": "M",
+  "finalise": true
 }

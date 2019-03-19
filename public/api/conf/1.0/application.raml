@@ -25,10 +25,10 @@ documentation:
 
 /individuals/state-pension-calculation:
 
-  /initial:
+  /:
     post:
-      displayName: Get the initial State Pension calculation
-      description: Gets the initial State Pension calculation for an individual.
+      displayName: Get a State Pension calculation
+      description: Gets a State Pension calculation for an individual.
       is: [headers.acceptHeader]
       (annotations.scope): "read:state-pension-calculation"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
@@ -36,7 +36,16 @@ documentation:
       body:
         application/json:
           type: !include schemas/get-calculation/request.json
-          example: !include docs/examples/get-calculation/request.json
+          examples:
+            example-1:
+              description: Get initial calculation
+              value: !include docs/examples/get-calculation/request-initial.json
+            example-2:
+              description: Get final calculation using a FRY amount.
+              value: !include docs/examples/get-calculation/request-final-with-fry.json
+            example-3:
+              description: Get final calculation without a FRY amount.
+              value: !include docs/examples/get-calculation/request-final-without-fry.json
 
       responses:
         200:
@@ -50,6 +59,8 @@ documentation:
                 example-2:
                   description: Example with no notes or qualifying years.
                   value: !include docs/examples/get-calculation/success-empty-arrays.json
+
+      (annotations.sandboxData): !include docs/testData.md
 
   /hello-world:
     get:

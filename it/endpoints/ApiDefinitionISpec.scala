@@ -49,13 +49,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |    {
           |      "key": "read:state-pension-calculation",
           |      "name": "Get State Pension calculation",
-          |      "description": "Get State Pension calculation information"
-          |    },
-          |    {
-          |
-          |      "key": "write:state-pension-calculation",
-          |      "name": "Finalise State Pension calculation",
-          |      "description": "Finalise State Pension calculation information"
+          |      "description": "Get State Pension calculation"
           |    }
           |  ],
           |  "api": {
