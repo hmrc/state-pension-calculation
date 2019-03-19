@@ -36,6 +36,12 @@ trait MockHttpClient extends MockFactory {
         .expects(url, body, headers, *, *, *, *)
     }
 
+    def post[I, O](url: String, body: I): CallHandler[Future[O]] = {
+      (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
+        (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
+        .expects(url, body, *, *, *, *, *)
+    }
+
   }
 
 }
