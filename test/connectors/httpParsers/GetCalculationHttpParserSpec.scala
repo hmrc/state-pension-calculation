@@ -26,7 +26,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
   "parsing a 200 (OK) response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(OK, Some(Json.parse(json)))
+      val httpResponse = HttpResponse(OK, Some(Json.parse(initialCalcJson)))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)

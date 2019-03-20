@@ -26,7 +26,8 @@ case class CalculationResponse(result: CalculationResult,
 object CalculationResponse {
 
   implicit val reads: Reads[CalculationResponse] = (
-    (__ \ "initialRequestResult").read[CalculationResult] and
+    (__ \ "initialRequestResult").read[CalculationResult] or
+      (__ \ "finalRequestResult").read[CalculationResult] and
       (__ \ "associatedNotes").read[Seq[CalculationNote]] and
       (__ \ "listOfQualifyingYears").read[Seq[QualifyingYear]]
   )(CalculationResponse.apply _)
