@@ -26,6 +26,7 @@ class CalculationRequestSpec extends UnitSpec {
     val request = CalculationRequest("some nino",
       "a gender",
       "a check brick",
+      finalCalculation = true,
       Some(BigDecimal("123.99"))
     )
 

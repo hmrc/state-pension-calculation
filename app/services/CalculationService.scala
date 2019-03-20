@@ -16,13 +16,22 @@
 
 package services
 
-import support.UnitSpec
+import connectors.DesConnector
+import javax.inject.{Inject, Singleton}
+import models.{CalculationOutcome, CalculationRequest}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
-trait ServiceBaseSpec extends UnitSpec {
-  implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val ec: ExecutionContext = global
+@Singleton
+class CalculationService @Inject()(connector: DesConnector) {
+
+  def calculate(request: CalculationRequest)
+               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
+    if (request.finalCalculation) {
+      connector.getFinalCalculation(request)
+    } else {
+      connector.getInitialCalculation(request)
+    }
+  }
 }
