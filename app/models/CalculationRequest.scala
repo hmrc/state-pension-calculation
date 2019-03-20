@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json, Writes}
 case class CalculationRequest(nino: String,
                               gender: String,
                               checkBrick: String,
+                              finalCalculation: Boolean = false,
                               fryAmount: Option[BigDecimal] = None)
 
 object CalculationRequest {
