@@ -22,9 +22,16 @@ import support.UnitSpec
 
 class CalculationResponseSpec extends UnitSpec {
 
-  "Parsing valid JSON that represents a CalculationResponse" should {
+  "Parsing valid JSON that represents a CalculationResponse from the initial calc API" should {
     "generate a valid CalculationResponse" in {
-      val result = Json.parse(json).as[CalculationResponse]
+      val result = Json.parse(initialCalcJson).as[CalculationResponse]
+      result shouldBe expectedModel
+    }
+  }
+
+  "Parsing valid JSON that represents a CalculationResponse from the final calc API" should {
+    "generate a valid CalculationResponse" in {
+      val result = Json.parse(finalCalcJson).as[CalculationResponse]
       result shouldBe expectedModel
     }
   }

@@ -134,10 +134,19 @@ object CalculationTestData {
   }
 
   object Response {
-    val json: String =
+    val initialCalcJson: String =
       s"""
          |{
          |  "initialRequestResult": ${Result.json},
+         |  "associatedNotes": [${Notes.json}],
+         |  "listOfQualifyingYears": [${QualifyingYears.json}]
+         |}
+      """.stripMargin
+
+    val finalCalcJson: String =
+      s"""
+         |{
+         |  "finalRequestResult": ${Result.json},
          |  "associatedNotes": [${Notes.json}],
          |  "listOfQualifyingYears": [${QualifyingYears.json}]
          |}

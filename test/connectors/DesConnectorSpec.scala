@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class DesConnectorSpec extends ConnectorBaseSpec {
 
-  val baseUrl = "test-mtdIdBaseUrl"
+  val baseUrl = "des-base-url"
 
   private trait Test extends MockHttpClient with MockAppConfig {
 
