@@ -24,6 +24,7 @@ case class CalculationResponse(result: CalculationResult,
                                qualifyingYears: Seq[QualifyingYear])
 
 object CalculationResponse {
+  implicit val writes: OWrites[CalculationResponse] = Json.writes[CalculationResponse]
 
   implicit val reads: Reads[CalculationResponse] = (
     (__ \ "initialRequestResult").read[CalculationResult] or
@@ -31,4 +32,5 @@ object CalculationResponse {
       (__ \ "associatedNotes").read[Seq[CalculationNote]] and
       (__ \ "listOfQualifyingYears").read[Seq[QualifyingYear]]
   )(CalculationResponse.apply _)
+
 }

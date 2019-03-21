@@ -31,3 +31,6 @@ object KnownError {
 
 object InternalServerError
   extends KnownError("INTERNAL_SERVER_ERROR", "Internal server error.")
+
+object InvalidRequestError
+  extends KnownError("INVALID_REQUEST", "The request is invalid.")

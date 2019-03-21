@@ -47,8 +47,8 @@ trait HttpParser {
   private val multipleErrorReads: Reads[Seq[KnownError]] = (__ \ "failures").read[Seq[KnownError]]
 
   def parseErrors(response: HttpResponse): DesError = {
-    val singleError = response.validateJson[KnownError].map(SingleError)
-    lazy val multipleErrors = response.validateJson(multipleErrorReads).map(MultipleErrors)
+    val singleError = response.validateJson[KnownError].map(SingleError(_))
+    lazy val multipleErrors = response.validateJson(multipleErrorReads).map(MultipleErrors(_))
     lazy val unableToParseJsonError = {
       Logger.warn(s"unable to parse errors from response: ${response.body}")
       SingleError(InternalServerError)

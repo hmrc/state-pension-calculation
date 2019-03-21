@@ -28,4 +28,6 @@ object CalculationNote {
     (__ \ "noteIdentifier").read[Int] and
       (__ \ "fieldsList").lazyRead(Reads.seq[String](noteReader))
   )(CalculationNote.apply _)
+
+  implicit val writes: Writes[CalculationNote] = Json.writes[CalculationNote]
 }

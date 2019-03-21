@@ -16,6 +16,8 @@
 
 package controllers
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers.stubControllerComponents
@@ -28,6 +30,8 @@ class ControllerBaseSpec extends UnitSpec
   with HeaderNames
   with ResultExtractors {
 
+  implicit val system: ActorSystem = ActorSystem("MyTest")
+  implicit val mat: ActorMaterializer = ActorMaterializer()
   implicit lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   lazy val cc: ControllerComponents = stubControllerComponents()
