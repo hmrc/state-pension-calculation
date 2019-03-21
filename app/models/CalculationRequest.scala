@@ -16,7 +16,8 @@
 
 package models
 
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class CalculationRequest(nino: String,
                               gender: String,
@@ -25,6 +26,14 @@ case class CalculationRequest(nino: String,
                               fryAmount: Option[BigDecimal] = None)
 
 object CalculationRequest {
+  implicit val reads: Reads[CalculationRequest] =(
+    (__ \ "nino").read[String] and
+    (__ \ "gender").read[String] and
+    (__ \ "checkBrick").read[String] and
+    (__ \ "finalise").read[Boolean] and
+    (__ \ "fryAmount").readNullable[BigDecimal]
+  ) (CalculationRequest.apply _)
+
   implicit val writes: Writes[CalculationRequest] = new Writes[CalculationRequest] {
     override def writes(request: CalculationRequest): JsValue = {
       val json = Json.obj(

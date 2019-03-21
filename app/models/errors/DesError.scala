@@ -16,7 +16,24 @@
 
 package models.errors
 
+import play.api.libs.json.{JsValue, Json, Writes}
+
 sealed trait DesError
 
 case class SingleError(error: KnownError) extends DesError
+
+object SingleError {
+  implicit val writes: Writes[SingleError] = new Writes[SingleError] {
+    override def writes(data: SingleError): JsValue = Json.toJson(data.error)
+  }
+}
+
 case class MultipleErrors(errors: Seq[KnownError]) extends DesError
+
+object MultipleErrors {
+  implicit val writes: Writes[MultipleErrors] = new Writes[MultipleErrors] {
+    override def writes(data: MultipleErrors): JsValue = Json.obj(
+      "errors" -> Json.toJson(data.errors)
+    )
+  }
+}

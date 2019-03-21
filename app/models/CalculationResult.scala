@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class CalculationResult(nino: String,
                              protectedPaymentAmount: BigDecimal,
@@ -42,4 +42,5 @@ case class CalculationResult(nino: String,
 
 object CalculationResult {
   implicit val reads: Reads[CalculationResult] = Json.reads[CalculationResult]
+  implicit val writes: Writes[CalculationResult] = Json.writes[CalculationResult]
 }
