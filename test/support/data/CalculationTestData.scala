@@ -122,11 +122,11 @@ object CalculationTestData {
 
     val json: String =
       s"""
-        |{
-        |  "taxYear": $taxYear,
-        |  "qualifyingTaxYear": true,
-        |  "earningsAmount": 12345.67
-        |}
+         |{
+         |  "taxYear": $taxYear,
+         |  "qualifyingTaxYear": true,
+         |  "earningsAmount": 12345.67
+         |}
       """.stripMargin
 
     val expectedModel = QualifyingYear(taxYear, qualifyingTaxYear = true, BigDecimal("12345.67"))
@@ -156,6 +156,59 @@ object CalculationTestData {
       Seq(Notes.expectedModel),
       Seq(QualifyingYears.expectedModel)
     )
+
+    val generatedJson: String =
+      """
+        |{
+        |  "nino": "AA123456A",
+        |  "statePensionEligibilityDate": "2018-11-12",
+        |  "amounts": {
+        |    "protectedPayment": 123.45,
+        |    "rebateDerived": 123.45,
+        |    "newStatePensionEntitlement": 123.45,
+        |    "basicPension": 123.45,
+        |    "oldRulesStatePension": 123.45,
+        |    "newRulesStatePension": 123.45,
+        |    "graduatedRetirementBenefit": 123.45,
+        |    "additionalPension": {
+        |      "grossPre1997": 123.45,
+        |      "netPre1997": 123.45,
+        |      "post1997": 123.45,
+        |      "post2002": 123.45
+        |    }
+        |  },
+        |  "reducedRateElection": false,
+        |  "pensionShareOrder": {
+        |    "contractedOutEmploymentGroup": true,
+        |    "stateEarningsRelatedPensionService": true
+        |  },
+        |  "contributions": {
+        |    "isleOfMan": false,
+        |    "post2016YearsUsed": 2,
+        |    "newStatePensionQualifyingYears": 1,
+        |    "incomplete": true,
+        |    "qualifyingYears": [
+        |      {
+        |        "taxYear": 2017,
+        |        "qualifyingTaxYear": true,
+        |        "earningsAmount": 12345.67
+        |      }
+        |    ]
+        |  },
+        |  "underInvestigation": true,
+        |  "associatedNotes": [
+        |    {
+        |      "id": 1,
+        |      "notes": [
+        |        "note #1",
+        |        "note #2",
+        |        "note #3",
+        |        "note #4"
+        |      ]
+        |    }
+        |  ]
+        |}
+      """.stripMargin
   }
 
 }
