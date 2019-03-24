@@ -35,4 +35,12 @@ class CalculationResponseSpec extends UnitSpec {
       result shouldBe expectedModel
     }
   }
+
+  "Serialising a CalculationResponse to JSON" should {
+    "generate JSON that conforms to the JSON schema for a calc response" in {
+      val result = Json.toJson(expectedModel)
+      val expected = Json.parse(generatedJson)
+      result shouldBe expected
+    }
+  }
 }
