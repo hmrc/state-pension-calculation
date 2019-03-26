@@ -24,19 +24,19 @@ import uk.gov.hmrc.http.HttpResponse
 
 class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
-  "parsing a 200 (OK) response with valid JSON" should {
+  "parsing a 201 (Created) response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(OK, Some(Json.parse(initialCalcJson)))
+      val httpResponse = HttpResponse(CREATED, Some(Json.parse(initialCalcJson)))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)
     }
   }
 
-  "parsing a 200 (OK) response with invalid JSON" should {
+  "parsing a 201 (Created) response with invalid JSON" should {
     "return a single error" in {
       val invalidJson = Json.obj()
-      val httpResponse = HttpResponse(OK, Some(invalidJson))
+      val httpResponse = HttpResponse(CREATED, Some(invalidJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Left(SingleError(InternalServerError))

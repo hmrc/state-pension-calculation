@@ -28,7 +28,7 @@ object GetCalculationHttpParser extends HttpParser {
     new HttpReads[CalculationOutcome] {
       override def read(method: String, url: String, response: HttpResponse): CalculationOutcome = {
 
-        if (response.status != OK) {
+        if (response.status != CREATED) {
           val correlationId = response.header("CorrelationId").getOrElse("NOT FOUND")
 
           Logger.warn("[GetCalculationHttpParser][read] - " +
@@ -40,7 +40,7 @@ object GetCalculationHttpParser extends HttpParser {
 
         response.status match {
 
-          case OK => response.validateJson[CalculationResponse] match {
+          case CREATED => response.validateJson[CalculationResponse] match {
             case Some(result) => Right(result)
             case None => Left(SingleError(InternalServerError))
           }

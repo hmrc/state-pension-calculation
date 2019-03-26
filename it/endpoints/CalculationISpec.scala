@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import stubs.{AuditStub, AuthStub, DesStub}
+import stubs.{AuditStub, DesStub}
 import support.IntegrationSpec
 import support.data.CalculationTestData.{Response => testData}
 
@@ -51,7 +51,7 @@ class CalculationISpec extends IntegrationSpec {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
-          DesStub.initialCalc(Status.OK, desResponse)
+          DesStub.initialCalc(Status.CREATED, desResponse)
         }
 
         lazy val response: WSResponse = await(request().post(requestBody))
@@ -84,7 +84,7 @@ class CalculationISpec extends IntegrationSpec {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
-          DesStub.finalCalc(Status.OK, desResponse)
+          DesStub.finalCalc(Status.CREATED, desResponse)
         }
 
         lazy val response: WSResponse = await(request().post(requestBody))
