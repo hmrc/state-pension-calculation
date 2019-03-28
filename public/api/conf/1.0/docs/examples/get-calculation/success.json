@@ -28,13 +28,13 @@
       "numberOfNoteFields": 3,
       "fieldsList": [
         {
-          "noteField": "QUARTERLY CYCLIC BILLING"
+          "noteField": "NOTE FIELD 1 FOR NOTE 260"
         },
         {
-          "noteField": "DATE STARTED 10/10/2017"
+          "noteField": "NOTE FIELD 2 FOR NOTE 260"
         },
         {
-          "noteField": "DATE NEXT BILL DUE 06/12/2018"
+          "noteField": "NOTE FIELD 3 FOR NOTE 260"
         }
       ]
     },
@@ -43,16 +43,16 @@
       "numberOfNoteFields": 4,
       "fieldsList": [
         {
-          "noteField": "NSP UPRATING DATE 11/12/2018"
+          "noteField": "NOTE FIELD 1 FOR NOTE 541"
         },
         {
-          "noteField": "ENTITLEMENT"
+          "noteField": "NOTE FIELD 2 FOR NOTE 541"
         },
         {
-          "noteField": "PROTECTED PAYMENT"
+          "noteField": "NOTE FIELD 3 FOR NOTE 541"
         },
         {
-          "noteField": "CATEGORY BL"
+          "noteField": "NOTE FIELD 4 FOR NOTE 541"
         }
       ]
     }
