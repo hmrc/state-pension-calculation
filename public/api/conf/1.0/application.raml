@@ -61,18 +61,3 @@ documentation:
                   value: !include docs/examples/get-calculation/success-empty-arrays.json
 
       (annotations.sandboxData): !include docs/testData.md
-
-  /hello-world:
-    get:
-      displayName: Hello, World!
-      description: Gets a message that says hello
-      is: [headers.acceptHeader]
-      (annotations.scope): "read:state-pension-calculation"
-      securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
-
-      responses:
-        200:
-          body:
-            application/json:
-              type: !include schemas/hello-world/success.json
-              example: !include docs/examples/hello-world/success.json
