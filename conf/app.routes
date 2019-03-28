@@ -1,4 +1,3 @@
 # microservice specific routes
 
 POST        /                   controllers.CalculationController.calculation
-GET         /hello-world        controllers.HelloWorldController.hello
