@@ -35,7 +35,7 @@ documentation:
 
       body:
         application/json:
-          type: !include schemas/get-calculation/request.json
+          type: !include docs/schemas/get-calculation/request.json
           examples:
             example-1:
               description: Get initial calculation
@@ -51,7 +51,7 @@ documentation:
         200:
           body:
             application/json:
-              type: !include schemas/get-calculation/success.json
+              type: !include docs/schemas/get-calculation/success.json
               examples:
                 example-1:
                   description: Example with all arrays populated.
