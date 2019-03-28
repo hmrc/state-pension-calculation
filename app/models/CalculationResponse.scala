@@ -35,39 +35,32 @@ object CalculationResponse {
     override def writes(data: CalculationResponse): JsValue = {
       val calc = data.result
       Json.obj(
-        "nino" -> calc.nino,
-        "statePensionEligibilityDate" -> calc.statePensionAgeDate,
-        "amounts" -> Json.obj(
-          "protectedPayment" -> calc.protectedPaymentAmount,
-          "rebateDerived" -> calc.rebateDerivedAmount,
-          "newStatePensionEntitlement" -> calc.newStatePensionEntitlementAmount,
-          "basicPension" -> calc.basicAmount,
-          "oldRulesStatePension" -> calc.statePensionOldRulesAmount,
-          "newRulesStatePension" -> calc.statePensionNewRulesAmount,
-          "graduatedRetirementBenefit" -> calc.graduatedRetirementBenefitAmount,
-          "additionalPension" -> Json.obj(
-            "grossPre1997" -> calc.additionalPensionPre1997GrossAmount,
-            "netPre1997" -> calc.additionalPensionPre1997NetAmount,
-            "post1997" -> calc.additionalPensionPost1997Amount,
-            "post2002" -> calc.additionalPensionPost2002Amount
-          )
-        ),
-        "reducedRateElection" -> calc.reducedRateElectionToConsider,
-        "pensionShareOrder" -> Json.obj(
-          "contractedOutEmploymentGroup" -> calc.pensionShareOrderContractedOutEmploymentGroup,
-          "stateEarningsRelatedPensionService" -> calc.pensionShareOrderStateEarningsRelatedPensionService
-        ),
-        "contributions" -> Json.obj(
-          "isleOfMan" -> calc.isleOfManContributions,
+        "result" -> Json.obj(
+          "nino" -> calc.nino,
+          "protectedPaymentAmount" -> calc.protectedPaymentAmount,
+          "rebateDerivedAmount" -> calc.rebateDerivedAmount,
+          "newStatePensionEntitlementAmount" -> calc.newStatePensionEntitlementAmount,
+          "reducedRateElectionToConsider" -> calc.reducedRateElectionToConsider,
+          "pensionShareOrderContractedOutEmploymentGroup" -> calc.pensionShareOrderContractedOutEmploymentGroup,
+          "pensionShareOrderStateEarningsRelatedPensionService" -> calc.pensionShareOrderStateEarningsRelatedPensionService,
+          "isleOfManContributions" -> calc.isleOfManContributions,
+          "contractedOutEmploymentGroupInvestigationPosition" -> calc.contractedOutEmploymentGroupInvestigationPosition,
+          "statePensionOldRulesAmount" -> calc.statePensionOldRulesAmount,
+          "basicAmount" -> calc.basicAmount,
+          "additionalPensionPre1997GrossAmount" -> calc.additionalPensionPre1997GrossAmount,
+          "additionalPensionPre1997NetAmount" -> calc.additionalPensionPre1997NetAmount,
+          "additionalPensionPost1997Amount" -> calc.additionalPensionPost1997Amount,
+          "additionalPensionPost2002Amount" -> calc.additionalPensionPost2002Amount,
+          "graduatedRetirementBenefitAmount" -> calc.graduatedRetirementBenefitAmount,
+          "statePensionNewRulesAmount" -> calc.statePensionNewRulesAmount,
+          "statePensionAgeDate" -> calc.statePensionAgeDate,
           "post2016YearsUsed" -> calc.post2016YearsUsed,
           "newStatePensionQualifyingYears" -> calc.newStatePensionQualifyingYears,
-          "incomplete" -> calc.incompleteContributionRecordIndicator,
-          "qualifyingYears" -> Json.toJson(data.qualifyingYears)
+          "incompleteContributionRecordIndicator" -> calc.incompleteContributionRecordIndicator
         ),
-        "underInvestigation" -> calc.contractedOutEmploymentGroupInvestigationPosition,
-        "associatedNotes" -> Json.toJson(data.notes)
+        "associatedNotes" -> Json.toJson(data.notes),
+        "listOfQualifyingYears" -> Json.toJson(data.qualifyingYears)
       )
     }
   }
-
 }

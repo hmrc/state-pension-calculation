@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.CalculationRequest
-import models.errors.{InvalidRequestError, KnownError, MultipleErrors, SingleError}
+import models.errors.{InvalidRequestError, MultipleErrors, SingleError}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import services.CalculationService

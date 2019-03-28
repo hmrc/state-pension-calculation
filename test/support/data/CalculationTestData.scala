@@ -96,6 +96,7 @@ object CalculationTestData {
       """.stripMargin
 
     val expectedModel = CalculationNote(1,
+      4,
       Seq(
         "note #1",
         "note #2",
@@ -113,8 +114,9 @@ object CalculationTestData {
         |}
       """.stripMargin
 
-    val expectedEmptyModel = CalculationNote(1, Seq())
+    val expectedEmptyModel = CalculationNote(1, 0, Seq())
 
+    val generatedJson: String = json
   }
 
   object QualifyingYears {
@@ -134,81 +136,24 @@ object CalculationTestData {
   }
 
   object Response {
-    val initialCalcJson: String =
+    private val placeholder = "PLACEHOLDER"
+    private val json =
       s"""
          |{
-         |  "initialRequestResult": ${Result.json},
-         |  "associatedNotes": [${Notes.json}],
-         |  "listOfQualifyingYears": [${QualifyingYears.json}]
+         |  "$placeholder": ${Result.json},
+         |  "associatedNotes": [${Notes.json}, ${Notes.json}],
+         |  "listOfQualifyingYears": [${QualifyingYears.json}, ${QualifyingYears.json}]
          |}
       """.stripMargin
 
-    val finalCalcJson: String =
-      s"""
-         |{
-         |  "finalRequestResult": ${Result.json},
-         |  "associatedNotes": [${Notes.json}],
-         |  "listOfQualifyingYears": [${QualifyingYears.json}]
-         |}
-      """.stripMargin
+    val initialCalcJson: String = json.replace(placeholder, "initialRequestResult")
+    val finalCalcJson: String = json.replace(placeholder, "finalRequestResult")
+    val generatedJson: String = json.replace(placeholder, "result")
 
     val expectedModel = CalculationResponse(Result.expectedModel,
-      Seq(Notes.expectedModel),
-      Seq(QualifyingYears.expectedModel)
+      Seq(Notes.expectedModel, Notes.expectedModel),
+      Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel)
     )
-
-    val generatedJson: String =
-      """
-        |{
-        |  "nino": "AA123456A",
-        |  "statePensionEligibilityDate": "2018-11-12",
-        |  "amounts": {
-        |    "protectedPayment": 123.45,
-        |    "rebateDerived": 123.45,
-        |    "newStatePensionEntitlement": 123.45,
-        |    "basicPension": 123.45,
-        |    "oldRulesStatePension": 123.45,
-        |    "newRulesStatePension": 123.45,
-        |    "graduatedRetirementBenefit": 123.45,
-        |    "additionalPension": {
-        |      "grossPre1997": 123.45,
-        |      "netPre1997": 123.45,
-        |      "post1997": 123.45,
-        |      "post2002": 123.45
-        |    }
-        |  },
-        |  "reducedRateElection": false,
-        |  "pensionShareOrder": {
-        |    "contractedOutEmploymentGroup": true,
-        |    "stateEarningsRelatedPensionService": true
-        |  },
-        |  "contributions": {
-        |    "isleOfMan": false,
-        |    "post2016YearsUsed": 2,
-        |    "newStatePensionQualifyingYears": 1,
-        |    "incomplete": true,
-        |    "qualifyingYears": [
-        |      {
-        |        "taxYear": 2017,
-        |        "qualifyingTaxYear": true,
-        |        "earningsAmount": 12345.67
-        |      }
-        |    ]
-        |  },
-        |  "underInvestigation": true,
-        |  "associatedNotes": [
-        |    {
-        |      "id": 1,
-        |      "notes": [
-        |        "note #1",
-        |        "note #2",
-        |        "note #3",
-        |        "note #4"
-        |      ]
-        |    }
-        |  ]
-        |}
-      """.stripMargin
   }
 
 }
