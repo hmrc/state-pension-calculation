@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result",
+    "associatedNotes",
+    "listOfQualifyingYears"
+  ],
+  "properties": {
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nino",
+        "protectedPaymentAmount",
+        "rebateDerivedAmount",
+        "newStatePensionEntitlementAmount",
+        "reducedRateElectionToConsider",
+        "pensionShareOrderContractedOutEmploymentGroup",
+        "pensionShareOrderStateEarningsRelatedPensionService",
+        "isleOfManContributions",
+        "contractedOutEmploymentGroupInvestigationPosition",
+        "statePensionOldRulesAmount",
+        "basicAmount",
+        "additionalPensionPre1997GrossAmount",
+        "additionalPensionPre1997NetAmount",
+        "additionalPensionPost1997Amount",
+        "additionalPensionPost2002Amount",
+        "graduatedRetirementBenefitAmount",
+        "statePensionNewRulesAmount",
+        "statePensionAgeDate",
+        "post2016YearsUsed",
+        "newStatePensionQualifyingYears",
+        "incompleteContributionRecordIndicator"
+      ],
+      "properties": {
+        "nino": {
+          "description": "National Insurance Number with optional suffix",
+          "type": "string",
+          "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"
+        },
+        "protectedPaymentAmount": {
+          "description": "The part of your starting amount which is above the full new State Pension",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "rebateDerivedAmount": {
+          "description": "The amount deducted from a person’s starting amount based on periods they were contracted out",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "newStatePensionEntitlementAmount": {
+          "description": "New State Pension Entitlement Amount minimum",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "reducedRateElectionToConsider": {
+          "description": "Up until 1977 women could opt to pay a reduced amount of NI contributions; true - opted in, false - did not opt in",
+          "type": "boolean"
+        },
+        "pensionShareOrderContractedOutEmploymentGroup": {
+          "description": "true - the pension is impacted by share",
+          "type": "boolean"
+        },
+        "pensionShareOrderStateEarningsRelatedPensionService": {
+          "description": "true - the pension is impacted by share",
+          "type": "boolean"
+        },
+        "isleOfManContributions": {
+          "description": "true - if there has ever been any Isle of Man contribution made",
+          "type": "boolean"
+        },
+        "contractedOutEmploymentGroupInvestigationPosition": {
+          "description": "true - under investigation",
+          "type": "boolean"
+        },
+        "statePensionOldRulesAmount": {
+          "description": "State Pension Old Rules Amount",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "basicAmount": {
+          "description": "The amount of an Individual's Basic Pension before any additions",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "additionalPensionPre1997GrossAmount": {
+          "description": "An Individual's additional pension – pre 1997 (gross amount)",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "additionalPensionPre1997NetAmount": {
+          "description": "An Individual's additional pension – pre 1997 (net amount)",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "additionalPensionPost1997Amount": {
+          "description": "An Individual's additional pension – post 1997",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "additionalPensionPost2002Amount": {
+          "description": "An Individual's additional pension – post 2002",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "graduatedRetirementBenefitAmount": {
+          "description": "This amount is based on an Individual's graduated contributions paid on earnings between 1961 and 1975 and is paid to Individuals who paid into the graduated pension scheme",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "statePensionNewRulesAmount": {
+          "description": "An Individual's state pension amount based on new state pension rules",
+          "$ref": "#/definitions/monetaryPosType"
+        },
+        "statePensionAgeDate": {
+          "description": "The date the person has reached State Pension Age",
+          "$ref": "#/definitions/dateType"
+        },
+        "post2016YearsUsed": {
+          "description": "The count of the Minimum Qualifying Years used after 2016",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "newStatePensionQualifyingYears": {
+          "description": "Amount of new state pension qualifying years",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "incompleteContributionRecordIndicator": {
+          "description": "Indicator for missing factors in an Individual's final relevant year",
+          "type": "boolean"
+        }
+      }
+    },
+    "associatedNotes": {
+      "type": "array",
+      "description": "List of note items",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "noteIdentifier",
+          "numberOfNoteFields",
+          "fieldsList"
+        ],
+        "properties": {
+          "noteIdentifier": {
+            "description": "Note ID",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999
+          },
+          "numberOfNoteFields": {
+            "description": "Number of noteFields that make up the note",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          },
+          "fieldsList": {
+            "description": "List of note fields that make up the note",
+            "type": "array",
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "noteField"
+              ],
+              "properties": {
+                "noteField": {
+                  "description": "A single note field",
+                  "type": "string",
+                  "pattern": "^[0-9A-Z\\'\\&\\,\\-\\(\\)\\.\\/\\ ]{1,255}$"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "listOfQualifyingYears": {
+      "description": "A list of the 12 required years (FRY and the 11 preceding years) tax year data in descending tax year order, FRY first",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "taxYear",
+          "qualifyingTaxYear",
+          "earningsAmount"
+        ],
+        "properties": {
+          "taxYear": {
+            "description": "The tax year which equals the qualifying year",
+            "type": "integer",
+            "minimum": 1975,
+            "maximum": 2099
+          },
+          "qualifyingTaxYear": {
+            "description": "Qualifying or Non-Qualifying Year; true - Qualifying",
+            "type": "boolean"
+          },
+          "earningsAmount": {
+            "description": "Amount of earnings in the year",
+            "$ref": "#/definitions/monetaryPosType"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "monetaryPosType": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 999999999.99,
+      "multipleOf": 0.01
+    },
+    "dateType": {
+      "type": "string",
+      "description": "Format CCYY-MM-DD",
+      "pattern": "^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|1[0-9]|2[0-9]|30)|(19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$"
+    }
+  }
+}

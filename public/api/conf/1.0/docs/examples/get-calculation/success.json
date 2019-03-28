@@ -1,73 +1,122 @@
 {
-  "nino": "AB123456C",
-  "statePensionEligibilityDate": "2018-12-23",
-  "amounts": {
-    "protectedPayment": 123.45,
-    "rebateDerived": 123.45,
-    "newStatePensionEntitlement": 123.45,
-    "basicPension": 123.45,
-    "oldRulesStatePension": 123.45,
-    "newRulesStatePension": 123.45,
-    "graduatedRetirementBenefit": 123.45,
-    "additionalPension": {
-      "grossPre1997": 123.45,
-      "netPre1997": 123.45,
-      "post1997": 123.45,
-      "post2002": 123.45
-    }
-  },
-  "reducedRateElection": false,
-  "pensionShareOrder": {
-    "contractedOutEmploymentGroup": true,
-    "stateEarningsRelatedPensionService": true
-  },
-  "contributions": {
-    "isleOfMan": false,
+  "result": {
+    "nino": "AA111111A",
+    "protectedPaymentAmount": 123.45,
+    "rebateDerivedAmount": 123.45,
+    "newStatePensionEntitlementAmount": 123.45,
+    "reducedRateElectionToConsider": false,
+    "pensionShareOrderContractedOutEmploymentGroup": true,
+    "pensionShareOrderStateEarningsRelatedPensionService": true,
+    "isleOfManContributions": false,
+    "contractedOutEmploymentGroupInvestigationPosition": true,
+    "statePensionOldRulesAmount": 123.45,
+    "basicAmount": 123.45,
+    "additionalPensionPre1997GrossAmount": 123.45,
+    "additionalPensionPre1997NetAmount": 123.45,
+    "additionalPensionPost1997Amount": 123.45,
+    "additionalPensionPost2002Amount": 123.45,
+    "graduatedRetirementBenefitAmount": 123.45,
+    "statePensionNewRulesAmount": 123.45,
+    "statePensionAgeDate": "2018-11-12",
     "post2016YearsUsed": 2,
     "newStatePensionQualifyingYears": 33,
-    "incomplete": true,
-    "qualifyingYears": [
-      {
-        "taxYear": 2017,
-        "qualifyingTaxYear": true,
-        "earningsAmount": 12345.67
-      },
-      {
-        "taxYear": 2016,
-        "qualifyingTaxYear": false,
-        "earningsAmount": 123.45
-      },
-      {
-        "taxYear": 2015,
-        "qualifyingTaxYear": true,
-        "earningsAmount": 23456.78
-      },
-      {
-        "taxYear": 2014,
-        "qualifyingTaxYear": false,
-        "earningsAmount": 0.00
-      },
-      {
-        "taxYear": 2013,
-        "qualifyingTaxYear": false,
-        "earningsAmount": 123.45
-      }
-    ]
+    "incompleteContributionRecordIndicator": true
   },
-  "underInvestigation": true,
   "associatedNotes": [
     {
-      "id": 260,
-      "notes": [
-        "SOME NOTES"
+      "noteIdentifier": 260,
+      "numberOfNoteFields": 3,
+      "fieldsList": [
+        {
+          "noteField": "QUARTERLY CYCLIC BILLING"
+        },
+        {
+          "noteField": "DATE STARTED 10/10/2017"
+        },
+        {
+          "noteField": "DATE NEXT BILL DUE 06/12/2018"
+        }
       ]
     },
     {
-      "id": 999,
-      "notes": [
-        "SOME MORE NOTES",
-        "YET MORE NOTES"
+      "noteIdentifier": 541,
+      "numberOfNoteFields": 4,
+      "fieldsList": [
+        {
+          "noteField": "NSP UPRATING DATE 11/12/2018"
+        },
+        {
+          "noteField": "ENTITLEMENT"
+        },
+        {
+          "noteField": "PROTECTED PAYMENT"
+        },
+        {
+          "noteField": "CATEGORY BL"
+        }
       ]
+    }
+  ],
+  "listOfQualifyingYears": [
+    {
+      "taxYear": 2017,
+      "qualifyingTaxYear": true,
+      "earningsAmount": 12345.67
+    },
+    {
+      "taxYear": 2016,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 123.45
+    },
+    {
+      "taxYear": 2015,
+      "qualifyingTaxYear": true,
+      "earningsAmount": 23456.78
+    },
+    {
+      "taxYear": 2014,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 0.00
+    },
+    {
+      "taxYear": 2013,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 123.45
+    },
+    {
+      "taxYear": 2012,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 12.34
+    },
+    {
+      "taxYear": 2011,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 123.45
+    },
+    {
+      "taxYear": 2010,
+      "qualifyingTaxYear": true,
+      "earningsAmount": 12345.67
+    },
+    {
+      "taxYear": 2009,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 123.45
+    },
+    {
+      "taxYear": 2008,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 1.23
+    },
+    {
+      "taxYear": 2007,
+      "qualifyingTaxYear": false,
+      "earningsAmount": 123.45
+    },
+    {
+      "taxYear": 2006,
+      "qualifyingTaxYear": true,
+      "earningsAmount": 12345.67
     }
   ]
 }

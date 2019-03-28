@@ -1,33 +1,27 @@
 {
-  "nino": "AB123456C",
-  "statePensionEligibilityDate": "2018-12-23",
-  "amounts": {
-    "protectedPayment": 123.45,
-    "rebateDerived": 123.45,
-    "newStatePensionEntitlement": 123.45,
-    "basicPension": 123.45,
-    "oldRulesStatePension": 123.45,
-    "newRulesStatePension": 123.45,
-    "graduatedRetirementBenefit": 123.45,
-    "additionalPension": {
-      "grossPre1997": 123.45,
-      "netPre1997": 123.45,
-      "post1997": 123.45,
-      "post2002": 123.45
-    }
-  },
-  "reducedRateElection": false,
-  "pensionShareOrder": {
-    "contractedOutEmploymentGroup": true,
-    "stateEarningsRelatedPensionService": true
-  },
-  "contributions": {
-    "isleOfMan": false,
+  "result": {
+    "nino": "AA111111A",
+    "protectedPaymentAmount": 123.45,
+    "rebateDerivedAmount": 123.45,
+    "newStatePensionEntitlementAmount": 123.45,
+    "reducedRateElectionToConsider": false,
+    "pensionShareOrderContractedOutEmploymentGroup": true,
+    "pensionShareOrderStateEarningsRelatedPensionService": true,
+    "isleOfManContributions": false,
+    "contractedOutEmploymentGroupInvestigationPosition": true,
+    "statePensionOldRulesAmount": 123.45,
+    "basicAmount": 123.45,
+    "additionalPensionPre1997GrossAmount": 123.45,
+    "additionalPensionPre1997NetAmount": 123.45,
+    "additionalPensionPost1997Amount": 123.45,
+    "additionalPensionPost2002Amount": 123.45,
+    "graduatedRetirementBenefitAmount": 123.45,
+    "statePensionNewRulesAmount": 123.45,
+    "statePensionAgeDate": "2018-11-12",
     "post2016YearsUsed": 2,
     "newStatePensionQualifyingYears": 33,
-    "incomplete": true,
-    "qualifyingYears": []
+    "incompleteContributionRecordIndicator": true
   },
-  "underInvestigation": true,
-  "associatedNotes": []
+  "associatedNotes": [],
+  "listOfQualifyingYears": []
 }
