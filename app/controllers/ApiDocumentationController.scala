@@ -52,7 +52,7 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
          |  "api": {
          |    "name": "Get State Pension Calculation",
          |    "description": "Get an Individuals State Pension calculation",
-         |    "context": "state-pension-calculation",
+         |    "context": "individuals/state-pension-calculation",
          |    "categories": ["PENSIONS"],
          |    "versions": [
          |      {
