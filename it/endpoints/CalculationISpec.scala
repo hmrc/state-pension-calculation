@@ -32,13 +32,13 @@ class CalculationISpec extends IntegrationSpec {
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/individuals/state-pension-calculation/")
+      buildRequest(s"/calculation")
     }
   }
 
-  "Calling the /individuals/state-pension-calculation/ endpoint" when {
+  "Calling the /calculation endpoint" when {
 
-    "the request is valid get calc" should {
+    "the request is valid initial calc" should {
 
       trait InitialCalcTest extends Test {
         lazy val desResponse: JsValue = Json.parse(testData.initialCalcJson)
