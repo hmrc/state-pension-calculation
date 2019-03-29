@@ -32,11 +32,11 @@ class CalculationISpec extends IntegrationSpec {
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/state-pension-calculation/")
+      buildRequest(s"/individuals/state-pension-calculation/")
     }
   }
 
-  "Calling the /state-pension-calculation/ endpoint" when {
+  "Calling the /individuals/state-pension-calculation/ endpoint" when {
 
     "the request is valid get calc" should {
 
