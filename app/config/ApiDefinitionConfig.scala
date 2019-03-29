@@ -25,6 +25,8 @@ trait ApiDefinitionConfig {
 
   def accessType(): String
 
+  def endpointsEnabled(): Boolean
+
   def whiteListedApplicationIds(): Seq[String]
 
 }
@@ -37,5 +39,5 @@ class ApiDefinitionConfigImpl @Inject()(configuration: Configuration) extends Ap
   override lazy val status: String = configuration.get[String]("api.status")
   override lazy val accessType: String = configuration.getOptional[String]("api.access.type").getOrElse(PRIVATE)
   override lazy val whiteListedApplicationIds: Seq[String] = configuration.get[Seq[String]]("api.access.whitelistedApplicationIds")
-
+  override lazy val endpointsEnabled: Boolean = configuration.getOptional[Boolean]("api.endpointsEnabled").getOrElse(false)
 }

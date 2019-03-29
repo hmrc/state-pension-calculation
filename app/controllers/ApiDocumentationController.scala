@@ -16,10 +16,10 @@
 
 package controllers
 
-import config.{ApiDefinitionConfig, AppConfig}
+import config.ApiDefinitionConfig
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpErrorHandler
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.api.controllers.DocumentationController
 
@@ -41,29 +41,29 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
 
     val apiDefinition = Json.parse(
       s"""
-        |{
-        |  "scopes": [
-        |    {
-        |      "key": "read:state-pension-calculation",
-        |      "name": "Get State Pension calculation",
-        |      "description": "Get State Pension calculation"
-        |    }
-        |  ],
-        |  "api": {
-        |    "name": "Get State Pension Calculation",
-        |    "description": "Get a citizens State Pension calculation",
-        |    "context": "state-pension-calculation",
-        |    "categories": ["PENSIONS"],
-        |    "versions": [
-        |      {
-        |        "version": "1.0",
-        |        "status": "${apiConfig.status}",
-        |        "endpointsEnabled": false,
-        |        "access" : $apiAccess
-        |      }
-        |    ]
-        |  }
-        |}
+         |{
+         |  "scopes": [
+         |    {
+         |      "key": "read:state-pension-calculation",
+         |      "name": "Get State Pension calculation",
+         |      "description": "Get State Pension calculation"
+         |    }
+         |  ],
+         |  "api": {
+         |    "name": "Get State Pension Calculation",
+         |    "description": "Get an Individuals State Pension calculation",
+         |    "context": "state-pension-calculation",
+         |    "categories": ["PENSIONS"],
+         |    "versions": [
+         |      {
+         |        "version": "1.0",
+         |        "status": "${apiConfig.status()}",
+         |        "endpointsEnabled": ${apiConfig.endpointsEnabled()},
+         |        "access" : $apiAccess
+         |      }
+         |    ]
+         |  }
+         |}
       """.stripMargin
     )
 

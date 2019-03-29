@@ -54,14 +54,14 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |  ],
           |  "api": {
           |    "name": "Get State Pension Calculation",
-          |    "description": "Get a citizens State Pension calculation",
+          |    "description": "Get an Individuals State Pension calculation",
           |    "context": "state-pension-calculation",
           |    "categories": ["PENSIONS"],
           |    "versions": [
           |      {
           |        "version": "1.0",
           |        "status": "BETA",
-          |        "endpointsEnabled": false,
+          |        "endpointsEnabled": true,
           |        "access" : {
           |          "type": "PRIVATE",
           |          "whitelistedApplicationIds": ["applicationId#0", "applicationId#1"]
