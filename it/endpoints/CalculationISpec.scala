@@ -57,8 +57,8 @@ class CalculationISpec extends IntegrationSpec {
         lazy val response: WSResponse = await(request().post(requestBody))
       }
 
-      "return a 200 status code" in new InitialCalcTest {
-        response.status shouldBe Status.OK
+      "return a 201 status code" in new InitialCalcTest {
+        response.status shouldBe Status.CREATED
       }
 
       "return the correct JSON" in new InitialCalcTest {
@@ -91,7 +91,7 @@ class CalculationISpec extends IntegrationSpec {
       }
 
       "return a 200 status code" in new FinalCalcTest {
-        response.status shouldBe Status.OK
+        response.status shouldBe Status.CREATED
       }
 
       "return the correct JSON" in new FinalCalcTest {

@@ -48,7 +48,7 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
 
   def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
     service.calculate(calculationRequest).map {
-      case Right(result) => Ok(Json.toJson(result))
+      case Right(result) => Created(Json.toJson(result))
       case Left(error@SingleError(_)) => BadRequest(Json.toJson(error))
       case Left(errors@MultipleErrors(_)) => BadRequest(Json.toJson(errors))
     }

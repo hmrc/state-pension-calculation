@@ -48,20 +48,20 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "the request is valid" should {
 
-      "return 200" in new Test {
+      "return 201" in new Test {
 
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(request)
-        status(result) shouldBe Status.OK
+        status(result) shouldBe Status.CREATED
       }
 
     }
 
     "the request is invalid" should {
 
-      "return 200" in new Test {
+      "return 400" in new Test {
 
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
