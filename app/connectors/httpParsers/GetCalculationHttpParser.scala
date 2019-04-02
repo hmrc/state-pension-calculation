@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.errors.{Errors, InternalServerError}
+import models.errors.{Errors, ApiServiceError}
 import models.{CalculationOutcome, CalculationResponse}
 import play.api.Logger
 import play.api.http.Status._
@@ -42,9 +42,9 @@ object GetCalculationHttpParser extends HttpParser {
 
           case CREATED => response.validateJson[CalculationResponse] match {
             case Some(result) => Right(result)
-            case None => Left(Errors(InternalServerError))
+            case None => Left(Errors(ApiServiceError))
           }
-          case _ => Left(Errors(InternalServerError))
+          case _ => Left(parseErrors(response))
         }
       }
     }

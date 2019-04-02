@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.CalculationRequest
-import models.errors.{Errors, InvalidRequestError}
+import models.errors._
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import services.CalculationService
@@ -35,11 +35,11 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
   private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
     service.calculate(calculationRequest).map {
       case Right(result) => Created(Json.toJson(result))
-      case Left(errors) => BadRequest(Json.toJson(errors))
+      case Left(_) => InternalServerError(Json.toJson(ApiServiceError))
     }
   }
 
-  private[controllers] def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
+  private def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
     request.validate[CalculationRequest] match {
       case JsSuccess(calculationRequest, _) => Right(calculationRequest)
       case JsError(_) => Left(Errors(InvalidRequestError))

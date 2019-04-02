@@ -48,7 +48,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
       val httpResponse = HttpResponse(CREATED, Some(invalidJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
-      result shouldBe Left(Errors(InternalServerError))
+      result shouldBe Left(Errors(ApiServiceError))
     }
   }
 
@@ -61,12 +61,43 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
           |  "reason": "some reason"
           |}
         """.stripMargin)
-      val expected = Errors(InternalServerError)
+      val expected = Errors(Error("TEST_CODE", "some reason"))
 
       val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
-
   }
+
+  "parsing a failure response with a multiple errors" should {
+    "return multiple errors" in {
+      val errorResponseJson = Json.parse(
+        """
+          |{
+          |  "failures": [
+          |    {
+          |      "code": "TEST_CODE_1",
+          |      "reason": "some reason"
+          |    },
+          |    {
+          |      "code": "TEST_CODE_2",
+          |      "reason": "some reason"
+          |    }
+          |  ]
+          |}
+        """.stripMargin)
+
+      val expected = Errors(
+        Seq(
+          Error("TEST_CODE_1", "some reason"),
+          Error("TEST_CODE_2", "some reason")
+        )
+      )
+
+      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
+      result shouldBe Left(expected)
+    }
+  }
+
 }

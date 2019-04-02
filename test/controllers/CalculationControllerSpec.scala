@@ -20,8 +20,8 @@ import mocks.MockCalculationService
 import models.CalculationRequest
 import models.errors._
 import play.api.http.Status
+import play.api.libs.json.Json.toJson
 import play.api.libs.json.{JsObject, JsValue, Json, Writes}
-import play.api.libs.json.Json.{JsValueWrapper, toJson}
 import play.api.mvc.Request
 import play.api.test.Helpers.stubControllerComponents
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
@@ -126,36 +126,13 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     testInvalidRequestProperty("fryAmount", false)
 
-    "a single error is returned from the service" should {
-      "not return a 200 response" in new Test {
+    "an InternalServerError is returned from the service" should {
+      "return a 500 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(InternalServerError))))
+          .returns(Future.successful(Left(Errors(ApiServiceError))))
 
         private val result = target.calculation()(request)
-        status(result) shouldNot be(Status.OK)
-      }
-    }
-
-  }
-
-  "Calling buildRequest" when {
-    "the json is valid" should {
-      "create a valid request instance" in new Test {
-
-        private val result = target.buildRequest(validPayload)
-
-        result shouldBe Right(calcRequest)
-
-      }
-    }
-
-    "the json is invalid" should {
-      "return an error" in new Test {
-
-        private val result = target.buildRequest(Json.obj())
-
-        result shouldBe Left(Errors(InvalidRequestError))
-
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
   }

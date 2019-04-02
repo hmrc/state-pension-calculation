@@ -29,7 +29,7 @@ object Error {
     ) (Error.apply _)
 }
 
-object InternalServerError
+object ApiServiceError
   extends Error("INTERNAL_SERVER_ERROR", "Internal server error.")
 
 object InvalidRequestError

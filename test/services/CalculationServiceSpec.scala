@@ -17,6 +17,7 @@
 package services
 
 import mocks.MockDesConnector
+import models.errors.{Error, Errors, ApiServiceError}
 import models.{CalculationOutcome, CalculationRequest}
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 
@@ -29,6 +30,8 @@ class CalculationServiceSpec extends ServiceBaseSpec {
   }
 
   "Calling calculate" when {
+
+    val validRequest = CalculationRequest("AA12456A", "M", "SMIJ", finalCalculation = true)
 
     "the request is not final" should {
 
@@ -54,6 +57,58 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val result: CalculationOutcome = await(target.calculate(request))
 
         result shouldBe Right(validResponse)
+      }
+    }
+
+    "an unknown error is returned" should {
+      "convert the error to an InternalServerError" in new Test {
+        val error = Error("UNKNOWN", "unknown message")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+
+        result shouldBe Left(Errors(ApiServiceError))
+
+      }
+    }
+
+    "an INVALID_CORRELATIONID error is returned" should {
+      "convert the error to an InternalServerError" in new Test {
+        val error = Error("INVALID_CORRELATIONID", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+
+        result shouldBe Left(Errors(ApiServiceError))
+
+      }
+    }
+
+    "an INVALID_NINO error is returned" should {
+      "convert the error to an InternalServerError" in new Test {
+        val error = Error("INVALID_NINO", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+
+        result shouldBe Left(Errors(ApiServiceError))
+
+      }
+    }
+
+    "an INVALID_PAYLOAD error is returned" should {
+      "convert the error to an InternalServerError" in new Test {
+        val error = Error("INVALID_PAYLOAD", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+
+        result shouldBe Left(Errors(ApiServiceError))
+
       }
     }
 

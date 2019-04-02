@@ -82,7 +82,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
           |}
         """.stripMargin)
 
-      val expected = Errors(InternalServerError)
+      val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
       val target = new HttpParser {}
@@ -93,7 +93,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "attempting to parse a response with no content" should {
     "return a internal server error" in {
-      val expected = Errors(InternalServerError)
+      val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(NO_CONTENT, None)
       val target = new HttpParser {}
