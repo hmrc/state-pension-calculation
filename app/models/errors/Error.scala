@@ -34,3 +34,6 @@ object ApiServiceError
 
 object InvalidRequestError
   extends Error("INVALID_REQUEST", "The request is invalid.")
+
+object UnexpectedFryAmountError
+  extends Error("FRY_AMOUNT_NOT_EXPECTED", "Do not supply a FRY amount for an initial calculation.")
