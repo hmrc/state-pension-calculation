@@ -41,6 +41,7 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
 
   private def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
     request.validate[CalculationRequest] match {
+      case JsSuccess(CalculationRequest(_, _, _, false, Some(_)), _) => Left(Errors(UnexpectedFryAmountError))
       case JsSuccess(calculationRequest, _) => Right(calculationRequest)
       case JsError(_) => Left(Errors(InvalidRequestError))
     }

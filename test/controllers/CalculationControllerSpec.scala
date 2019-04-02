@@ -86,7 +86,9 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    def testInvalidRequestProperty[T](propertyName: String, invalidValue: T)(implicit w: Writes[T]) {
+    def testInvalidRequestProperty[T](propertyName: String,
+                                      invalidValue: T,
+                                      expectedError: Error = InvalidRequestError)(implicit w: Writes[T]) {
       s"the request has an invalid value for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
         val invalidRequest = fakePostRequest[JsValue](invalidPayload)
@@ -106,9 +108,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
           private val result = target.calculation()(invalidRequest)
 
-          contentAsJson(result) shouldBe toJson(InvalidRequestError)
+          contentAsJson(result) shouldBe toJson(expectedError)
         }
-
       }
     }
 
@@ -125,6 +126,29 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     testInvalidRequestProperty("finalise", "maybe?")
 
     testInvalidRequestProperty("fryAmount", false)
+
+    "the request has a FRY amount for an initial calc" should {
+      val invalidPayload = validPayload ++ Json.obj("fryAmount" -> BigDecimal("1.00"))
+      val invalidRequest = fakePostRequest[JsValue](invalidPayload)
+
+      "return 400" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Right(validResponse)))
+
+        private val result = target.calculation()(invalidRequest)
+
+        status(result) shouldBe Status.BAD_REQUEST
+      }
+
+      "return an FRY_AMOUNT_NOT_EXPECTED error in the body" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Right(validResponse)))
+
+        private val result = target.calculation()(invalidRequest)
+
+        contentAsJson(result) shouldBe toJson(UnexpectedFryAmountError)
+      }
+    }
 
     "an InternalServerError is returned from the service" should {
       "return a 500 response" in new Test {
