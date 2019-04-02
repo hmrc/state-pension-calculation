@@ -77,7 +77,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     "a single error is returned from the service" should {
       "not return a 200 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
-          .returns(Future.successful(Left(SingleError(InternalServerError))))
+          .returns(Future.successful(Left(Errors(InternalServerError))))
 
         private val result = target.calculation()(request)
         status(result) shouldNot be(Status.OK)
@@ -86,10 +86,10 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "multiple errors are returned by the service" should {
       "not return a 200 response" in new Test {
-        val errors = MultipleErrors(
+        val errors = Errors(
           Seq(
             InternalServerError,
-            KnownError("A", "B")
+            Error("A", "B")
           )
         )
         MockedCalculationService.calculate(calcRequest)
@@ -118,7 +118,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
         private val result = target.buildRequest(Json.obj())
 
-        result shouldBe Left(SingleError(InvalidRequestError))
+        result shouldBe Left(Errors(InvalidRequestError))
 
       }
     }

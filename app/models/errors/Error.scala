@@ -19,18 +19,18 @@ package models.errors
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class KnownError(code: String, message: String)
+case class Error(code: String, message: String)
 
-object KnownError {
-  implicit val writes: Writes[KnownError] = Json.writes[KnownError]
-  implicit val reads: Reads[KnownError] = (
+object Error {
+  implicit val writes: Writes[Error] = Json.writes[Error]
+  implicit val reads: Reads[Error] = (
     (__ \ "code").read[String] and
       (__ \ "reason").read[String]
-    ) (KnownError.apply _)
+    ) (Error.apply _)
 }
 
 object InternalServerError
-  extends KnownError("INTERNAL_SERVER_ERROR", "Internal server error.")
+  extends Error("INTERNAL_SERVER_ERROR", "Internal server error.")
 
 object InvalidRequestError
-  extends KnownError("INVALID_REQUEST", "The request is invalid.")
+  extends Error("INVALID_REQUEST", "The request is invalid.")

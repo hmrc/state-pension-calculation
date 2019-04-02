@@ -18,7 +18,7 @@ package connectors.httpParsers
 
 import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
 import support.data.CalculationTestData.Response._
-import models.errors.{InternalServerError, SingleError}
+import models.errors._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
@@ -48,7 +48,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
       val httpResponse = HttpResponse(CREATED, Some(invalidJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
-      result shouldBe Left(SingleError(InternalServerError))
+      result shouldBe Left(Errors(InternalServerError))
     }
   }
 
@@ -61,7 +61,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
           |  "reason": "some reason"
           |}
         """.stripMargin)
-      val expected = SingleError(InternalServerError)
+      val expected = Errors(InternalServerError)
 
       val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)

@@ -18,22 +18,18 @@ package models.errors
 
 import play.api.libs.json.{JsValue, Json, Writes}
 
-sealed trait DesError
+case class Errors(errors: Seq[Error])
 
-case class SingleError(error: KnownError) extends DesError
+object Errors {
+  def apply(error: Error): Errors = Errors(Seq(error))
 
-object SingleError {
-  implicit val writes: Writes[SingleError] = new Writes[SingleError] {
-    override def writes(data: SingleError): JsValue = Json.toJson(data.error)
-  }
-}
-
-case class MultipleErrors(errors: Seq[KnownError]) extends DesError
-
-object MultipleErrors {
-  implicit val writes: Writes[MultipleErrors] = new Writes[MultipleErrors] {
-    override def writes(data: MultipleErrors): JsValue = Json.obj(
-      "errors" -> Json.toJson(data.errors)
-    )
+  implicit val writes: Writes[Errors] = new Writes[Errors] {
+    override def writes(data: Errors): JsValue = {
+      if (data.errors.size > 1) {
+        Json.obj("errors" -> Json.toJson(data.errors))
+      } else {
+        Json.toJson(data.errors.head)
+      }
+    }
   }
 }
