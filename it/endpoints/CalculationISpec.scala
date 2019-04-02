@@ -17,6 +17,7 @@
 package endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import models.errors.ApiServiceError
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
@@ -104,6 +105,108 @@ class CalculationISpec extends IntegrationSpec {
 
     }
 
+    def testDesErrorHandling(desErrorCode: String,
+                             desStatusCode: Int,
+                             desResponseBody: JsValue,
+                             apiStatusCode: Int,
+                             apiResponseBody: JsValue): Unit = {
+
+      s"DES responds with $desErrorCode" should {
+
+        trait CalcTest extends Test {
+          lazy val desResponse: JsValue = desResponseBody
+          lazy val requestBody: JsValue = Json.obj(
+            "nino" -> "AA123456A",
+            "checkBrick" -> "SMIJ",
+            "gender" -> "M",
+            "finalise" -> true
+          )
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            DesStub.finalCalc(desStatusCode, desResponse)
+          }
+
+          lazy val response: WSResponse = await(request().post(requestBody))
+        }
+
+        s"return a $apiStatusCode status code" in new CalcTest {
+          response.status shouldBe apiStatusCode
+        }
+
+        "return the correct JSON" in new CalcTest {
+          response.body[JsValue] shouldBe apiResponseBody
+        }
+
+        "have the correct Content-Type header and value" in new CalcTest {
+          response.header(HeaderNames.CONTENT_TYPE) shouldBe Some("application/json")
+        }
+
+      }
+    }
+
+    {
+      val invalidPayloadErrorCode = "INVALID_PAYLOAD"
+      val invalidPayloadBody = Json.obj(
+        "code" -> invalidPayloadErrorCode,
+        "reason" -> "Submission has not passed validation. Invalid Payload."
+      )
+
+      testDesErrorHandling(invalidPayloadErrorCode,
+        Status.BAD_REQUEST,
+        invalidPayloadBody,
+        Status.INTERNAL_SERVER_ERROR,
+        Json.toJson(ApiServiceError))
+    }
+
+    {
+      val invalidNinoErrorCode = "INVALID_NINO"
+      val invalidNinoBody = Json.obj(
+        "code" -> invalidNinoErrorCode,
+        "reason" -> "Submission has not passed validation. Invalid parameter nino."
+      )
+
+      testDesErrorHandling(invalidNinoErrorCode,
+        Status.BAD_REQUEST,
+        invalidNinoBody,
+        Status.INTERNAL_SERVER_ERROR,
+        Json.toJson(ApiServiceError))
+    }
+
+    {
+      val invalidCorrelationIdErrorCode = "INVALID_CORRELATIONID"
+      val invalidCorrelationIdBody = Json.obj(
+        "code" -> invalidCorrelationIdErrorCode,
+        "reason" -> "Submission has not passed validation. Invalid header CorrelationId."
+      )
+
+      testDesErrorHandling(invalidCorrelationIdErrorCode,
+        Status.BAD_REQUEST,
+        invalidCorrelationIdBody,
+        Status.INTERNAL_SERVER_ERROR,
+        Json.toJson(ApiServiceError))
+    }
+
+    {
+      val multipleErrorCodes = "INVALID_PAYLOAD and INVALID_NINO"
+      val invalidBody = Json.obj(
+        "failures" -> Json.arr(
+          Json.obj(
+            "code" -> "INVALID_PAYLOAD",
+            "reason" -> "Submission has not passed validation. Invalid Payload."
+          ),
+          Json.obj(
+            "code" -> "INVALID_NINO",
+            "reason" -> "Submission has not passed validation. Invalid parameter nino."
+          )
+        )
+      )
+      testDesErrorHandling(multipleErrorCodes,
+        Status.BAD_REQUEST,
+        invalidBody,
+        Status.INTERNAL_SERVER_ERROR,
+        Json.toJson(ApiServiceError))
+    }
   }
 
 }

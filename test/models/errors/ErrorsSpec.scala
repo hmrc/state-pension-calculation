@@ -19,9 +19,9 @@ package models.errors
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class DesErrorSpec extends UnitSpec {
+class ErrorsSpec extends UnitSpec {
 
-  "Serialising a SingleError into JSON" should {
+  "Serialising a single error into JSON" should {
     "generate the correct JSON" in {
       val expected = Json.parse(
         """
@@ -32,7 +32,7 @@ class DesErrorSpec extends UnitSpec {
         """.stripMargin
       )
 
-      val error = SingleError(KnownError("SOME_CODE", "some message"))
+      val error = Errors(Error("SOME_CODE", "some message"))
 
       val result = Json.toJson(error)
 
@@ -40,7 +40,7 @@ class DesErrorSpec extends UnitSpec {
     }
   }
 
-  "Serialising MultipleErrors into JSON" should {
+  "Serialising multiple errors into JSON" should {
     "generate the correct JSON" in {
       val expected = Json.parse(
         """
@@ -59,10 +59,10 @@ class DesErrorSpec extends UnitSpec {
         """.stripMargin
       )
 
-      val errors = MultipleErrors(
+      val errors = Errors(
         Seq(
-          KnownError("SOME_CODE_1", "some message 1"),
-          KnownError("SOME_CODE_2", "some message 2")
+          Error("SOME_CODE_1", "some message 1"),
+          Error("SOME_CODE_2", "some message 2")
         )
       )
 

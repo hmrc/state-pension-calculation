@@ -20,7 +20,8 @@ import mocks.MockCalculationService
 import models.CalculationRequest
 import models.errors._
 import play.api.http.Status
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json.toJson
+import play.api.libs.json.{JsObject, JsValue, Json, Writes}
 import play.api.mvc.Request
 import play.api.test.Helpers.stubControllerComponents
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
@@ -33,14 +34,14 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     lazy val target = new CalculationController(stubControllerComponents(), mockCalculationService)
   }
 
-  val payload: JsValue = Json.obj(
+  val validPayload: JsObject = Json.obj(
     "nino" -> "AA123456A",
     "checkBrick" -> "SMIJ",
     "gender" -> "M",
     "finalise" -> false
   )
 
-  implicit val request: Request[JsValue] = fakePostRequest[JsValue](payload)
+  implicit val request: Request[JsValue] = fakePostRequest[JsValue](validPayload)
 
   val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ")
 
@@ -59,67 +60,79 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     }
 
-    "the request is invalid" should {
+    def testMissingRequestProperty(propertyName: String) {
+      s"the request is missing the $propertyName property" should {
+        val invalidPayload = validPayload - propertyName
+        val invalidRequest = fakePostRequest[JsValue](invalidPayload)
 
-      "return 400" in new Test {
+        "return 400" in new Test {
 
-        MockedCalculationService.calculate(calcRequest)
-          .returns(Future.successful(Right(validResponse)))
+          MockedCalculationService.calculate(calcRequest)
+            .returns(Future.successful(Right(validResponse)))
 
-        private val invalidRequest = fakePostRequest[JsValue](Json.obj())
+          private val result = target.calculation()(invalidRequest)
+          status(result) shouldBe Status.BAD_REQUEST
+        }
 
-        private val result = target.calculation()(invalidRequest)
-        status(result) shouldBe Status.BAD_REQUEST
+        "return an INVALID_REQUEST error in the body" in new Test {
+          MockedCalculationService.calculate(calcRequest)
+            .returns(Future.successful(Right(validResponse)))
+
+          private val result = target.calculation()(invalidRequest)
+
+          contentAsJson(result) shouldBe toJson(InvalidRequestError)
+        }
+
       }
-
     }
 
-    "a single error is returned from the service" should {
-      "not return a 200 response" in new Test {
+    def testInvalidRequestProperty[T](propertyName: String, invalidValue: T)(implicit w: Writes[T]) {
+      s"the request has an invalid value for the property $propertyName" should {
+        val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
+        val invalidRequest = fakePostRequest[JsValue](invalidPayload)
+
+        "return 400" in new Test {
+          MockedCalculationService.calculate(calcRequest)
+            .returns(Future.successful(Right(validResponse)))
+
+          private val result = target.calculation()(invalidRequest)
+
+          status(result) shouldBe Status.BAD_REQUEST
+        }
+
+        "return an INVALID_REQUEST error in the body" in new Test {
+          MockedCalculationService.calculate(calcRequest)
+            .returns(Future.successful(Right(validResponse)))
+
+          private val result = target.calculation()(invalidRequest)
+
+          contentAsJson(result) shouldBe toJson(InvalidRequestError)
+        }
+
+      }
+    }
+
+    testMissingRequestProperty("nino")
+    testInvalidRequestProperty("nino", "INVALID NINO")
+
+    testMissingRequestProperty("checkBrick")
+    testInvalidRequestProperty("checkBrick", "INVALID CHECK BRICK")
+
+    testMissingRequestProperty("gender")
+    testInvalidRequestProperty("gender", "X")
+
+    testMissingRequestProperty("finalise")
+    testInvalidRequestProperty("finalise", "maybe?")
+
+    testInvalidRequestProperty("fryAmount", false)
+
+    "an InternalServerError is returned from the service" should {
+      "return a 500 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
-          .returns(Future.successful(Left(SingleError(InternalServerError))))
+          .returns(Future.successful(Left(Errors(ApiServiceError))))
 
         private val result = target.calculation()(request)
-        status(result) shouldNot be(Status.OK)
-      }
-    }
-
-    "multiple errors are returned by the service" should {
-      "not return a 200 response" in new Test {
-        val errors = MultipleErrors(
-          Seq(
-            InternalServerError,
-            KnownError("A", "B")
-          )
-        )
-        MockedCalculationService.calculate(calcRequest)
-          .returns(Future.successful(Left(errors)))
-
-        private val result = target.calculation()(request)
-        status(result) shouldNot be(Status.OK)
-      }
-    }
-
-  }
-
-  "Calling buildRequest" when {
-    "the json is valid" should {
-      "create a valid request instance" in new Test {
-
-        private val result = target.buildRequest(payload)
-
-        result shouldBe Right(calcRequest)
-
-      }
-    }
-
-    "the json is invalid" should {
-      "return an error" in new Test {
-
-        private val result = target.buildRequest(Json.obj())
-
-        result shouldBe Left(SingleError(InvalidRequestError))
-
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
   }

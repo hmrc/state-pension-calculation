@@ -17,10 +17,10 @@
 package connectors
 
 import mocks.{MockAppConfig, MockHttpClient}
-import support.data.CalculationTestData.Response.{expectedModel => validResponse}
-import models.errors.{InternalServerError, SingleError}
+import models.errors.{Errors, ApiServiceError}
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames
+import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -71,7 +71,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
     "return an error" when {
       "the http client returns an error response" in new Test {
-        val errorResponse = SingleError(InternalServerError)
+        val errorResponse = Errors(ApiServiceError)
 
         MockedHttpClient.post(url, request)
           .returns(Future.successful(Left(errorResponse)))
@@ -102,7 +102,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
     "return an error" when {
       "the http client returns an error response" in new Test {
-        val errorResponse = SingleError(InternalServerError)
+        val errorResponse = Errors(ApiServiceError)
 
         MockedHttpClient.post(url, request)
           .returns(Future.successful(Left(errorResponse)))

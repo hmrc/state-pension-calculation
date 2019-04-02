@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.errors.{InternalServerError, KnownError, MultipleErrors, SingleError}
+import models.errors._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
@@ -32,7 +32,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
           |}
         """.stripMargin)
 
-      val expected = SingleError(KnownError("TEST_CODE", "some reason"))
+      val expected = Errors(Error("TEST_CODE", "some reason"))
 
       val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
       val target = new HttpParser {}
@@ -59,10 +59,10 @@ class HttpParserSpec extends HttpParserBaseSpec {
           |}
         """.stripMargin)
 
-      val expected = MultipleErrors(
+      val expected = Errors(
         Seq(
-          KnownError("TEST_CODE_1", "some reason"),
-          KnownError("TEST_CODE_2", "some reason")
+          Error("TEST_CODE_1", "some reason"),
+          Error("TEST_CODE_2", "some reason")
         )
       )
 
@@ -82,7 +82,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
           |}
         """.stripMargin)
 
-      val expected = SingleError(InternalServerError)
+      val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
       val target = new HttpParser {}
@@ -93,7 +93,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "attempting to parse a response with no content" should {
     "return a internal server error" in {
-      val expected = SingleError(InternalServerError)
+      val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(NO_CONTENT, None)
       val target = new HttpParser {}

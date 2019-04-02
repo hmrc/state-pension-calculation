@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.CalculationRequest
-import models.errors.{InvalidRequestError, MultipleErrors, SingleError}
+import models.errors._
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc._
 import services.CalculationService
@@ -32,10 +32,17 @@ import scala.concurrent.Future
 class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)
   extends BackendController(cc) {
 
-  def buildRequest(request: JsValue): Either[SingleError, CalculationRequest] = {
+  private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
+    service.calculate(calculationRequest).map {
+      case Right(result) => Created(Json.toJson(result))
+      case Left(_) => InternalServerError(Json.toJson(ApiServiceError))
+    }
+  }
+
+  private def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
     request.validate[CalculationRequest] match {
       case JsSuccess(calculationRequest, _) => Right(calculationRequest)
-      case JsError(_) => Left(SingleError(InvalidRequestError))
+      case JsError(_) => Left(Errors(InvalidRequestError))
     }
   }
 
@@ -43,14 +50,6 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
     buildRequest(request.body) match {
       case Right(calcRequest) => calculate(calcRequest)
       case Left(error) => Future.successful(BadRequest(Json.toJson(error)))
-    }
-  }
-
-  def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
-    service.calculate(calculationRequest).map {
-      case Right(result) => Created(Json.toJson(result))
-      case Left(error@SingleError(_)) => BadRequest(Json.toJson(error))
-      case Left(errors@MultipleErrors(_)) => BadRequest(Json.toJson(errors))
     }
   }
 

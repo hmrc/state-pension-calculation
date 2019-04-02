@@ -18,7 +18,9 @@ package services
 
 import connectors.DesConnector
 import javax.inject.{Inject, Singleton}
+import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
+import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,10 +30,30 @@ class CalculationService @Inject()(connector: DesConnector) {
 
   def calculate(request: CalculationRequest)
                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
-    if (request.finalCalculation) {
+
+    val unexpectedErrorMapping: String => Error = code => {
+      Logger.warn(s"Unexpected error received from DES. Code: $code")
+      ApiServiceError
+    }
+
+    val errorMappings: Map[String, Error] = Map(
+      "INVALID_CORRELATIONID" -> ApiServiceError,
+      "INVALID_NINO" -> ApiServiceError,
+      "INVALID_PAYLOAD" -> ApiServiceError
+    ).withDefault(unexpectedErrorMapping)
+
+    val result = if (request.finalCalculation) {
       connector.getFinalCalculation(request)
     } else {
       connector.getInitialCalculation(request)
+    }
+
+    result.map {
+      case calculation@Right(_) => calculation
+      case Left(Errors(errors)) =>
+        val desErrorCodes = errors.map(_.code)
+        val apiErrors = desErrorCodes.map(errorMappings).distinct
+        Left(Errors(apiErrors))
     }
   }
 }

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import models.errors.DesError
+import models.errors.Errors
 
 package object models {
-  type CalculationOutcome = Either[DesError, CalculationResponse]
+  type CalculationOutcome = Either[Errors, CalculationResponse]
 }
