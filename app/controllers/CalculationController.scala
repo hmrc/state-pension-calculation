@@ -32,7 +32,14 @@ import scala.concurrent.Future
 class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)
   extends BackendController(cc) {
 
-  def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
+  private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
+    service.calculate(calculationRequest).map {
+      case Right(result) => Created(Json.toJson(result))
+      case Left(errors) => BadRequest(Json.toJson(errors))
+    }
+  }
+
+  private[controllers] def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
     request.validate[CalculationRequest] match {
       case JsSuccess(calculationRequest, _) => Right(calculationRequest)
       case JsError(_) => Left(Errors(InvalidRequestError))
@@ -43,13 +50,6 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
     buildRequest(request.body) match {
       case Right(calcRequest) => calculate(calcRequest)
       case Left(error) => Future.successful(BadRequest(Json.toJson(error)))
-    }
-  }
-
-  def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
-    service.calculate(calculationRequest).map {
-      case Right(result) => Created(Json.toJson(result))
-      case Left(errors) => BadRequest(Json.toJson(errors))
     }
   }
 

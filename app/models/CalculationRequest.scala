@@ -19,6 +19,8 @@ package models
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import scala.util.matching.Regex
+
 case class CalculationRequest(nino: String,
                               gender: String,
                               checkBrick: String,
@@ -26,10 +28,14 @@ case class CalculationRequest(nino: String,
                               fryAmount: Option[BigDecimal] = None)
 
 object CalculationRequest {
+  val ninoPattern: Regex = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D\s]?$""".r
+  val checkBrickPattern: Regex = """^([A-Z]{1}[ A-Z-']{2,4})$""".r
+  val genderPattern: Regex = """^[MF]$""".r
+
   implicit val reads: Reads[CalculationRequest] =(
-    (__ \ "nino").read[String] and
-    (__ \ "gender").read[String] and
-    (__ \ "checkBrick").read[String] and
+    (__ \ "nino").read[String](Reads.pattern(ninoPattern)) and
+    (__ \ "gender").read[String](Reads.pattern(genderPattern)) and
+    (__ \ "checkBrick").read[String](Reads.pattern(checkBrickPattern)) and
     (__ \ "finalise").read[Boolean] and
     (__ \ "fryAmount").readNullable[BigDecimal]
   ) (CalculationRequest.apply _)
