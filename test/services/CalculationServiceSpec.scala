@@ -168,5 +168,16 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a SERVICE_UNAVAILABLE error is returned" should {
+      "convert the error to an ServiceUnavailableError" in new Test {
+        val error = Error("SERVICE_UNAVAILABLE", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(ServiceUnavailableError))
+      }
+    }
+
   }
 }
