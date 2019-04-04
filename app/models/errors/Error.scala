@@ -43,3 +43,6 @@ object RetirementAfterDeathError
 
 object TooEarlyError
   extends Error("TOO_EARLY", "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date.")
+
+object UnknownBusinessError
+  extends Error("UNKNOWN_BUSINESS_ERROR", "The remote endpoint has returned an unknown business validation error.")

@@ -212,7 +212,7 @@ class CalculationISpec extends IntegrationSpec {
     {
       val retirementAfterDeathCode = "RETIREMENT_DATE_AFTER_DEATH"
       val invalidBody = Json.obj(
-        "code" -> "RETIREMENT_DATE_AFTER_DEATH",
+        "code" -> retirementAfterDeathCode,
         "reason" -> "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
       )
 
@@ -226,7 +226,7 @@ class CalculationISpec extends IntegrationSpec {
     {
       val tooEarlyCode = "TOO_EARLY"
       val invalidBody = Json.obj(
-        "code" -> "TOO_EARLY",
+        "code" -> tooEarlyCode,
         "reason" -> "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date."
       )
 
@@ -235,6 +235,20 @@ class CalculationISpec extends IntegrationSpec {
         invalidBody,
         Status.FORBIDDEN,
         Json.toJson(TooEarlyError))
+    }
+
+    {
+      val unknownBusinessErrorCode = "UNKNOWN_BUSINESS_ERROR"
+      val invalidBody = Json.obj(
+        "code" -> unknownBusinessErrorCode,
+        "reason" -> "The remote endpoint has returned an unknown business validation error."
+      )
+
+      testDesErrorHandling(unknownBusinessErrorCode,
+        Status.BAD_REQUEST,
+        invalidBody,
+        Status.FORBIDDEN,
+        Json.toJson(UnknownBusinessError))
     }
   }
 

@@ -37,6 +37,7 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
       case Right(result) => Created(Json.toJson(result))
       case Left(errors@Errors(RetirementAfterDeathError :: _)) => Forbidden(Json.toJson(errors))
       case Left(errors@Errors(TooEarlyError :: _)) => Forbidden(Json.toJson(errors))
+      case Left(errors@Errors(UnknownBusinessError :: _)) => Forbidden(Json.toJson(errors))
       case Left(_) => InternalServerError(Json.toJson(ApiServiceError))
     }
   }

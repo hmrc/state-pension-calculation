@@ -124,5 +124,16 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a UNKNOWN_BUSINESS_ERROR error is returned" should {
+      "convert the error to an UnknownBusinessError" in new Test {
+        val error = Error("UNKNOWN_BUSINESS_ERROR", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(UnknownBusinessError))
+      }
+    }
+
   }
 }
