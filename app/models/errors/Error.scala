@@ -52,3 +52,6 @@ object NinoNotFoundError
 
 object MatchNotFoundError
   extends Error("NOT_FOUND_MATCH", "The remote endpoint has indicated that there is no match for the person details provided.")
+
+object ServiceUnavailableError
+  extends Error("SERVER_ERROR", "Service unavailable.")

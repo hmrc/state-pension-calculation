@@ -209,6 +209,16 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.NOT_FOUND
       }
     }
+
+    "an ServiceUnavailableError is returned from the service" should {
+      "return a 503 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(ServiceUnavailableError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.SERVICE_UNAVAILABLE
+      }
+    }
   }
 
 }

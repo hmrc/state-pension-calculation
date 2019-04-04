@@ -292,6 +292,20 @@ class CalculationISpec extends IntegrationSpec {
         Status.INTERNAL_SERVER_ERROR,
         Json.toJson(ApiServiceError))
     }
+
+    {
+      val serviceUnavailableCode = "SERVICE_UNAVAILABLE"
+      val invalidBody = Json.obj(
+        "code" -> serviceUnavailableCode,
+        "reason" -> "Dependent systems are currently not responding."
+      )
+
+      testDesErrorHandling(serviceUnavailableCode,
+        Status.SERVICE_UNAVAILABLE,
+        invalidBody,
+        Status.SERVICE_UNAVAILABLE,
+        Json.toJson(ServiceUnavailableError))
+    }
   }
 
 }
