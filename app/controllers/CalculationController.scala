@@ -38,6 +38,8 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
       case Left(errors@Errors(RetirementAfterDeathError :: _)) => Forbidden(Json.toJson(errors))
       case Left(errors@Errors(TooEarlyError :: _)) => Forbidden(Json.toJson(errors))
       case Left(errors@Errors(UnknownBusinessError :: _)) => Forbidden(Json.toJson(errors))
+      case Left(errors@Errors(NinoNotFoundError :: _)) => NotFound(Json.toJson(errors))
+      case Left(errors@Errors(MatchNotFoundError :: _)) => NotFound(Json.toJson(errors))
       case Left(_) => InternalServerError(Json.toJson(ApiServiceError))
     }
   }

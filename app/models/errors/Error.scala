@@ -46,3 +46,9 @@ object TooEarlyError
 
 object UnknownBusinessError
   extends Error("UNKNOWN_BUSINESS_ERROR", "The remote endpoint has returned an unknown business validation error.")
+
+object NinoNotFoundError
+  extends Error("NOT_FOUND_NINO", "The remote endpoint has indicated that the Nino provided cannot be found.")
+
+object MatchNotFoundError
+  extends Error("NOT_FOUND_MATCH", "The remote endpoint has indicated that there is no match for the person details provided.")

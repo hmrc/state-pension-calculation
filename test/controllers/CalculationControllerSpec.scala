@@ -189,6 +189,26 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.FORBIDDEN
       }
     }
+
+    "an NinoNotFoundError is returned from the service" should {
+      "return a 404 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(NinoNotFoundError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.NOT_FOUND
+      }
+    }
+
+    "an MatchNotFoundError is returned from the service" should {
+      "return a 404 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(MatchNotFoundError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.NOT_FOUND
+      }
+    }
   }
 
 }

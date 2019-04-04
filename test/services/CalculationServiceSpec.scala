@@ -135,5 +135,27 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a NOT_FOUND_NINO error is returned" should {
+      "convert the error to an NinoNotFoundError" in new Test {
+        val error = Error("NOT_FOUND_NINO", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(NinoNotFoundError))
+      }
+    }
+
+    "a NO_MATCH_FOUND error is returned" should {
+      "convert the error to an MatchNotFoundError" in new Test {
+        val error = Error("NO_MATCH_FOUND", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(MatchNotFoundError))
+      }
+    }
+
   }
 }

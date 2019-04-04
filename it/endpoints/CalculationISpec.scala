@@ -250,6 +250,34 @@ class CalculationISpec extends IntegrationSpec {
         Status.FORBIDDEN,
         Json.toJson(UnknownBusinessError))
     }
+
+    {
+      val notFoundCode = "NOT_FOUND_NINO"
+      val invalidBody = Json.obj(
+        "code" -> notFoundCode,
+        "reason" -> "The remote endpoint has indicated that the Nino provided cannot be found."
+      )
+
+      testDesErrorHandling(notFoundCode,
+        Status.NOT_FOUND,
+        invalidBody,
+        Status.NOT_FOUND,
+        Json.toJson(NinoNotFoundError))
+    }
+
+    {
+      val notFoundCode = "NO_MATCH_FOUND"
+      val invalidBody = Json.obj(
+        "code" -> notFoundCode,
+        "reason" -> "The remote endpoint has indicated that there is no match for the person details provided."
+      )
+
+      testDesErrorHandling(notFoundCode,
+        Status.NOT_FOUND,
+        invalidBody,
+        Status.NOT_FOUND,
+        Json.toJson(MatchNotFoundError))
+    }
   }
 
 }
