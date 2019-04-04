@@ -42,7 +42,8 @@ class CalculationService @Inject()(connector: DesConnector) {
       "INVALID_PAYLOAD" -> ApiServiceError,
       "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError,
       "TOO_EARLY" -> TooEarlyError,
-      "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError
+      "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError,
+      "NOT_FOUND_NINO" -> NinoNotFoundError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {
