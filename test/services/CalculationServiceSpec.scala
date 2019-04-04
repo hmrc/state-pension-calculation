@@ -17,7 +17,7 @@
 package services
 
 import mocks.MockDesConnector
-import models.errors.{Error, Errors, ApiServiceError}
+import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 
@@ -108,6 +108,19 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val result: CalculationOutcome = await(target.calculate(validRequest))
 
         result shouldBe Left(Errors(ApiServiceError))
+
+      }
+    }
+
+    "a RETIREMENT_DATE_AFTER_DEATH error is returned" should {
+      "convert the error to an RetirementAfterDeathError" in new Test {
+        val error = Error("RETIREMENT_DATE_AFTER_DEATH", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+
+        result shouldBe Left(Errors(RetirementAfterDeathError))
 
       }
     }

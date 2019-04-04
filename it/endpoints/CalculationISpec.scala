@@ -17,7 +17,7 @@
 package endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import models.errors.ApiServiceError
+import models.errors._
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
@@ -201,11 +201,26 @@ class CalculationISpec extends IntegrationSpec {
           )
         )
       )
+
       testDesErrorHandling(multipleErrorCodes,
         Status.BAD_REQUEST,
         invalidBody,
         Status.INTERNAL_SERVER_ERROR,
         Json.toJson(ApiServiceError))
+    }
+
+    {
+      val retirementAfterDeathCode = "RETIREMENT_DATE_AFTER_DEATH"
+      val invalidBody = Json.obj(
+        "code" -> "RETIREMENT_DATE_AFTER_DEATH",
+        "reason" -> "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
+      )
+
+      testDesErrorHandling(retirementAfterDeathCode,
+        Status.BAD_REQUEST,
+        invalidBody,
+        Status.FORBIDDEN,
+        Json.toJson(RetirementAfterDeathError))
     }
   }
 

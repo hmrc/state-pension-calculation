@@ -37,3 +37,6 @@ object InvalidRequestError
 
 object UnexpectedFryAmountError
   extends Error("FRY_AMOUNT_NOT_EXPECTED", "Do not supply a FRY amount for an initial calculation.")
+
+object RetirementAfterDeathError
+  extends Error("RETIREMENT_DATE_AFTER_DEATH", "The remote endpoint has indicated that the Date of Retirement is after the Date of Death.")
