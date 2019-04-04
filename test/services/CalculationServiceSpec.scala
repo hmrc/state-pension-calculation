@@ -42,7 +42,6 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
-
         result shouldBe Right(validResponse)
       }
     }
@@ -55,7 +54,6 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
-
         result shouldBe Right(validResponse)
       }
     }
@@ -67,9 +65,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -80,9 +76,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -93,9 +87,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -106,9 +98,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -119,9 +109,18 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(RetirementAfterDeathError))
+      }
+    }
 
+    "a TOO_EARLY error is returned" should {
+      "convert the error to an TooEarlyError" in new Test {
+        val error = Error("TOO_EARLY", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(TooEarlyError))
       }
     }
 

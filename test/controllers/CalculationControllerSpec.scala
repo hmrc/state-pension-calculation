@@ -169,6 +169,16 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.FORBIDDEN
       }
     }
+
+    "an TooEarlyError is returned from the service" should {
+      "return a 403 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(TooEarlyError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
+      }
+    }
   }
 
 }

@@ -40,7 +40,8 @@ class CalculationService @Inject()(connector: DesConnector) {
       "INVALID_CORRELATIONID" -> ApiServiceError,
       "INVALID_NINO" -> ApiServiceError,
       "INVALID_PAYLOAD" -> ApiServiceError,
-      "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError
+      "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError,
+      "TOO_EARLY" -> TooEarlyError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {

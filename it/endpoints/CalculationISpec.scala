@@ -222,6 +222,20 @@ class CalculationISpec extends IntegrationSpec {
         Status.FORBIDDEN,
         Json.toJson(RetirementAfterDeathError))
     }
+
+    {
+      val tooEarlyCode = "TOO_EARLY"
+      val invalidBody = Json.obj(
+        "code" -> "TOO_EARLY",
+        "reason" -> "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date."
+      )
+
+      testDesErrorHandling(tooEarlyCode,
+        Status.BAD_REQUEST,
+        invalidBody,
+        Status.FORBIDDEN,
+        Json.toJson(TooEarlyError))
+    }
   }
 
 }
