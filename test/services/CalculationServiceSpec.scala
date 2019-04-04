@@ -157,5 +157,16 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a SERVER_ERROR error is returned" should {
+      "convert the error to an ApiServiceError" in new Test {
+        val error = Error("SERVER_ERROR", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(ApiServiceError))
+      }
+    }
+
   }
 }

@@ -278,6 +278,20 @@ class CalculationISpec extends IntegrationSpec {
         Status.NOT_FOUND,
         Json.toJson(MatchNotFoundError))
     }
+
+    {
+      val serverErrorCode = "SERVER_ERROR"
+      val invalidBody = Json.obj(
+        "code" -> serverErrorCode,
+        "reason" -> "DES is currently experiencing problems that require live service intervention."
+      )
+
+      testDesErrorHandling(serverErrorCode,
+        Status.INTERNAL_SERVER_ERROR,
+        invalidBody,
+        Status.INTERNAL_SERVER_ERROR,
+        Json.toJson(ApiServiceError))
+    }
   }
 
 }

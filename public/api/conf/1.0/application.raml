@@ -106,24 +106,6 @@ documentation:
                   description: Match not found for individual
                   value:
                     code: NOT_FOUND_MATCH
-        500:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                serverError:
-                  description: Service error occured
-                  value:
-                    code: SERVER_ERROR
-        503:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                serviceUnavailable:
-                  description: Service is unavailable
-                  value:
-                    code: SERVICE_UNAVAILABLE
 
 
       (annotations.sandboxData): !include docs/testData.md

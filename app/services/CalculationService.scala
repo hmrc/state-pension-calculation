@@ -44,7 +44,8 @@ class CalculationService @Inject()(connector: DesConnector) {
       "TOO_EARLY" -> TooEarlyError,
       "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError,
       "NOT_FOUND_NINO" -> NinoNotFoundError,
-      "NO_MATCH_FOUND" -> MatchNotFoundError
+      "NO_MATCH_FOUND" -> MatchNotFoundError,
+      "SERVER_ERROR" -> ApiServiceError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {
