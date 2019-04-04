@@ -219,6 +219,16 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.SERVICE_UNAVAILABLE
       }
     }
+
+    "an ThrottledError is returned from the service" should {
+      "return a 429 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(ThrottledError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.TOO_MANY_REQUESTS
+      }
+    }
   }
 
 }

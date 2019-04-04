@@ -306,6 +306,38 @@ class CalculationISpec extends IntegrationSpec {
         Status.SERVICE_UNAVAILABLE,
         Json.toJson(ServiceUnavailableError))
     }
+
+    "DES responds with 429 response code" should {
+
+      trait CalcTest extends Test {
+        lazy val requestBody: JsValue = Json.obj(
+          "nino" -> "AA123456A",
+          "checkBrick" -> "SMIJ",
+          "gender" -> "M",
+          "finalise" -> true
+        )
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          DesStub.finalCalc(Status.TOO_MANY_REQUESTS, Json.obj())
+        }
+
+        lazy val response: WSResponse = await(request().post(requestBody))
+      }
+
+      s"return a 429 status code" in new CalcTest {
+        response.status shouldBe Status.TOO_MANY_REQUESTS
+      }
+
+      "return the correct JSON" in new CalcTest {
+        response.body[JsValue] shouldBe Json.toJson(ThrottledError)
+      }
+
+      "have the correct Content-Type header and value" in new CalcTest {
+        response.header(HeaderNames.CONTENT_TYPE) shouldBe Some("application/json")
+      }
+
+    }
   }
 
 }

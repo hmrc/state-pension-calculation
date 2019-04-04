@@ -52,6 +52,16 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
     }
   }
 
+  "parsing a Too Many Requests (429) response" should {
+    "return a single ThrottledError error" in {
+      val expected = Errors(ThrottledError)
+
+      val httpResponse = HttpResponse(TOO_MANY_REQUESTS, None)
+      val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
+      result shouldBe Left(expected)
+    }
+  }
+
   "parsing a failure response with a single error" should {
     "return a single error" in {
       val errorResponseJson = Json.parse(

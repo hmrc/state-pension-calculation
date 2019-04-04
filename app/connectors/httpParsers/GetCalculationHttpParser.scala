@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.errors.{Errors, ApiServiceError}
+import models.errors.{ApiServiceError, Errors, ThrottledError}
 import models.{CalculationOutcome, CalculationResponse}
 import play.api.Logger
 import play.api.http.Status._
@@ -44,6 +44,7 @@ object GetCalculationHttpParser extends HttpParser {
             case Some(result) => Right(result)
             case None => Left(Errors(ApiServiceError))
           }
+          case TOO_MANY_REQUESTS => Left(Errors(ThrottledError))
           case _ => Left(parseErrors(response))
         }
       }
