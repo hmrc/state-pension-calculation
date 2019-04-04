@@ -30,7 +30,7 @@ object Error {
 }
 
 object ApiServiceError
-  extends Error("INTERNAL_SERVER_ERROR", "Internal server error.")
+  extends Error("INTERNAL_SERVER_ERROR", "An error occurred whilst processing your request.")
 
 object InvalidRequestError
   extends Error("INVALID_REQUEST", "The request is invalid.")
