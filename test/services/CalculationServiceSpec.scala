@@ -179,5 +179,16 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a MESSAGE_THROTTLED_OUT error is returned" should {
+      "convert the error to an ThrottledError" in new Test {
+        val error = Error("MESSAGE_THROTTLED_OUT", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(ThrottledError))
+      }
+    }
+
   }
 }

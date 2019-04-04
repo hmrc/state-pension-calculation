@@ -55,3 +55,6 @@ object MatchNotFoundError
 
 object ServiceUnavailableError
   extends Error("SERVER_ERROR", "Service unavailable.")
+
+object ThrottledError
+  extends Error("MESSAGE_THROTTLED_OUT", "The application has reached its maximum rate limit.")
