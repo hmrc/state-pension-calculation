@@ -43,7 +43,8 @@ class CalculationService @Inject()(connector: DesConnector) {
       "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError,
       "TOO_EARLY" -> TooEarlyError,
       "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError,
-      "NOT_FOUND_NINO" -> NinoNotFoundError
+      "NOT_FOUND_NINO" -> NinoNotFoundError,
+      "NO_MATCH_FOUND" -> MatchNotFoundError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {

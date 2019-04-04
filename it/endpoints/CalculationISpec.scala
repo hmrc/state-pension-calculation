@@ -264,6 +264,20 @@ class CalculationISpec extends IntegrationSpec {
         Status.NOT_FOUND,
         Json.toJson(NinoNotFoundError))
     }
+
+    {
+      val notFoundCode = "NO_MATCH_FOUND"
+      val invalidBody = Json.obj(
+        "code" -> notFoundCode,
+        "reason" -> "The remote endpoint has indicated that there is no match for the person details provided."
+      )
+
+      testDesErrorHandling(notFoundCode,
+        Status.NOT_FOUND,
+        invalidBody,
+        Status.NOT_FOUND,
+        Json.toJson(MatchNotFoundError))
+    }
   }
 
 }
