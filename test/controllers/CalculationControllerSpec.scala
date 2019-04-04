@@ -159,6 +159,36 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
+
+    "an RetirementAfterDeathError is returned from the service" should {
+      "return a 403 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(RetirementAfterDeathError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
+      }
+    }
+
+    "an TooEarlyError is returned from the service" should {
+      "return a 403 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(TooEarlyError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
+      }
+    }
+
+    "an UnknownBusinessError is returned from the service" should {
+      "return a 403 response" in new Test {
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(UnknownBusinessError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
+      }
+    }
   }
 
 }

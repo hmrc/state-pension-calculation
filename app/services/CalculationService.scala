@@ -39,7 +39,10 @@ class CalculationService @Inject()(connector: DesConnector) {
     val errorMappings: Map[String, Error] = Map(
       "INVALID_CORRELATIONID" -> ApiServiceError,
       "INVALID_NINO" -> ApiServiceError,
-      "INVALID_PAYLOAD" -> ApiServiceError
+      "INVALID_PAYLOAD" -> ApiServiceError,
+      "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError,
+      "TOO_EARLY" -> TooEarlyError,
+      "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {

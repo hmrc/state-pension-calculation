@@ -17,7 +17,7 @@
 package services
 
 import mocks.MockDesConnector
-import models.errors.{Error, Errors, ApiServiceError}
+import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 
@@ -42,7 +42,6 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
-
         result shouldBe Right(validResponse)
       }
     }
@@ -55,7 +54,6 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
-
         result shouldBe Right(validResponse)
       }
     }
@@ -67,9 +65,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -80,9 +76,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -93,9 +87,7 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
-
       }
     }
 
@@ -106,9 +98,40 @@ class CalculationServiceSpec extends ServiceBaseSpec {
           .returns(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-
         result shouldBe Left(Errors(ApiServiceError))
+      }
+    }
 
+    "a RETIREMENT_DATE_AFTER_DEATH error is returned" should {
+      "convert the error to an RetirementAfterDeathError" in new Test {
+        val error = Error("RETIREMENT_DATE_AFTER_DEATH", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(RetirementAfterDeathError))
+      }
+    }
+
+    "a TOO_EARLY error is returned" should {
+      "convert the error to an TooEarlyError" in new Test {
+        val error = Error("TOO_EARLY", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(TooEarlyError))
+      }
+    }
+
+    "a UNKNOWN_BUSINESS_ERROR error is returned" should {
+      "convert the error to an UnknownBusinessError" in new Test {
+        val error = Error("UNKNOWN_BUSINESS_ERROR", "")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(UnknownBusinessError))
       }
     }
 
