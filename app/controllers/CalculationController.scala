@@ -32,17 +32,39 @@ import scala.concurrent.Future
 class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)
   extends BackendController(cc) {
 
+  private def handleErrors(errors: Errors): Result = {
+
+    val handleNonStandardError: Error => Int = error => {
+      if (error.code.matches("""^[0-9]{4,5}$""")) {
+        FORBIDDEN
+      } else {
+        INTERNAL_SERVER_ERROR
+      }
+    }
+
+    val errorToResponseMapping: Map[Error, Int] = Map(
+      RetirementAfterDeathError -> FORBIDDEN,
+      TooEarlyError -> FORBIDDEN,
+      UnknownBusinessError -> FORBIDDEN,
+      NinoNotFoundError -> NOT_FOUND,
+      MatchNotFoundError -> NOT_FOUND,
+      ServiceUnavailableError -> SERVICE_UNAVAILABLE,
+      ThrottledError -> TOO_MANY_REQUESTS
+    ).withDefault(handleNonStandardError)
+
+    val statusCode: Int = errorToResponseMapping(errors.errors.head)
+
+    if (statusCode == INTERNAL_SERVER_ERROR) {
+      Status(statusCode)(Json.toJson(ApiServiceError))
+    } else {
+      Status(statusCode)(Json.toJson(errors))
+    }
+  }
+
   private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
     service.calculate(calculationRequest).map {
       case Right(result) => Created(Json.toJson(result))
-      case Left(errors@Errors(RetirementAfterDeathError :: _)) => Forbidden(Json.toJson(errors))
-      case Left(errors@Errors(TooEarlyError :: _)) => Forbidden(Json.toJson(errors))
-      case Left(errors@Errors(UnknownBusinessError :: _)) => Forbidden(Json.toJson(errors))
-      case Left(errors@Errors(NinoNotFoundError :: _)) => NotFound(Json.toJson(errors))
-      case Left(errors@Errors(MatchNotFoundError :: _)) => NotFound(Json.toJson(errors))
-      case Left(errors@Errors(ServiceUnavailableError :: _)) => ServiceUnavailable(Json.toJson(errors))
-      case Left(errors@Errors(ThrottledError :: _)) => TooManyRequests(Json.toJson(errors))
-      case Left(_) => InternalServerError(Json.toJson(ApiServiceError))
+      case Left(errors) => handleErrors(errors)
     }
   }
 

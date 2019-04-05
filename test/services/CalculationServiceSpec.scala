@@ -190,5 +190,29 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
+    "a calculation error is returned" should {
+      "pass through the error without any changes" in new Test {
+        val error = Error("12345", "Calc Error for scenario 12345")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(error))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(error))
+      }
+    }
+
+
+    "multiple calculation errors are returned" should {
+      "pass through the error without any changes" in new Test {
+        val error1 = Error("12345", "Calc Error for scenario 12345")
+        val error2 = Error("123456", "Calc Error for scenario 123456")
+        MockedDesConnector.getFinalCalculation(validRequest)
+          .returns(Future.successful(Left(Errors(Seq(error1, error2)))))
+
+        val result: CalculationOutcome = await(target.calculate(validRequest))
+        result shouldBe Left(Errors(Seq(error1, error2)))
+      }
+    }
+
   }
 }
