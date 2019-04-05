@@ -59,9 +59,15 @@ class CalculationService @Inject()(connector: DesConnector) {
     result.map {
       case calculation@Right(_) => calculation
       case Left(Errors(errors)) =>
-        val desErrorCodes = errors.map(_.code)
-        val apiErrors = desErrorCodes.map(errorMappings).distinct
+        val calculationErrorCodePattern = """^[0-9]{5,6}$"""
+        val apiErrors = if (errors.forall(_.code.matches(calculationErrorCodePattern))) {
+          errors
+        } else {
+          val desErrorCodes = errors.map(_.code)
+          desErrorCodes.map(errorMappings).distinct
+        }
         Left(Errors(apiErrors))
     }
   }
+
 }

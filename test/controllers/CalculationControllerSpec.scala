@@ -190,7 +190,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    "an NinoNotFoundError is returned from the service" should {
+    "a NinoNotFoundError is returned from the service" should {
       "return a 404 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(NinoNotFoundError))))
@@ -200,7 +200,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    "an MatchNotFoundError is returned from the service" should {
+    "a MatchNotFoundError is returned from the service" should {
       "return a 404 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(MatchNotFoundError))))
@@ -210,7 +210,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    "an ServiceUnavailableError is returned from the service" should {
+    "a ServiceUnavailableError is returned from the service" should {
       "return a 503 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(ServiceUnavailableError))))
@@ -220,13 +220,36 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    "an ThrottledError is returned from the service" should {
+    "a ThrottledError is returned from the service" should {
       "return a 429 response" in new Test {
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(ThrottledError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.TOO_MANY_REQUESTS
+      }
+    }
+
+    "a calculation error is returned from the service" should {
+      "return a 403 response" in new Test {
+        val calculationError = Error("12345", "Calc error 12345")
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(calculationError))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
+      }
+    }
+
+    "multiple calculation errors are returned from the service" should {
+      "return a 403 response" in new Test {
+        val calculationError1 = Error("12345", "Calc error 12345")
+        val calculationError2 = Error("12345", "Calc error 12345")
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Left(Errors(Seq(calculationError1, calculationError2)))))
+
+        private val result = target.calculation()(request)
+        status(result) shouldBe Status.FORBIDDEN
       }
     }
   }

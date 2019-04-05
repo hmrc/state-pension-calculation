@@ -338,6 +338,49 @@ class CalculationISpec extends IntegrationSpec {
       }
 
     }
+
+    {
+      val serverErrorCode = "a calculation error"
+      val invalidBody = Json.obj(
+        "code" -> "12345",
+        "reason" -> "Backend returned calculation error code 12345."
+      )
+      val expectedResponse = Error("12345", "Backend returned calculation error code 12345.")
+
+      testDesErrorHandling(serverErrorCode,
+        Status.CONFLICT,
+        invalidBody,
+        Status.FORBIDDEN,
+        Json.toJson(expectedResponse))
+    }
+
+    {
+      val serverErrorCode = "multiple calculation errors"
+      val invalidBody = Json.obj(
+        "failures" -> Json.arr(
+          Json.obj(
+            "code" -> "12345",
+            "reason" -> "Backend returned calculation error code 12345."
+          ),
+          Json.obj(
+            "code" -> "123456",
+            "reason" -> "Backend returned calculation error code 123456."
+          )
+        )
+      )
+      val expectedResponse = Errors(
+        Seq(
+          Error("12345", "Backend returned calculation error code 12345."),
+          Error("123456", "Backend returned calculation error code 123456.")
+        )
+      )
+      testDesErrorHandling(serverErrorCode,
+        Status.CONFLICT,
+        invalidBody,
+        Status.FORBIDDEN,
+        Json.toJson(expectedResponse))
+    }
+
   }
 
 }
