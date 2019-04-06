@@ -25,7 +25,7 @@
     "checkBrick": {
       "type": "string",
       "description": "First 3 characters of the Individuals surname and 2 initials.",
-      "pattern": "^([A-Z][ A-Z-']{2,4})$"
+      "pattern": "^([A-Z][ A-Z-'.]{2,4})$"
     },
     "gender": {
       "type": "string",
