@@ -29,7 +29,7 @@ case class CalculationRequest(nino: String,
 
 object CalculationRequest {
   val ninoPattern: Regex = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D\s]?$""".r
-  val checkBrickPattern: Regex = """^([A-Z]{1}[ A-Z-']{2,4})$""".r
+  val checkBrickPattern: Regex = """^([A-Z]{1}[ A-Z-'.]{2,4})$""".r
   val genderPattern: Regex = """^[MF]$""".r
 
   implicit val reads: Reads[CalculationRequest] =(
