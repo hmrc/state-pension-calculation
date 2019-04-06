@@ -53,12 +53,12 @@ documentation:
             application/json:
               type: !include docs/schemas/get-calculation/success.json
               examples:
-                example-1:
+                standardResponse:
                   description: Example with all arrays populated.
                   value: !include docs/examples/get-calculation/success.json
-                example-2:
-                  description: Example with no notes or qualifying years.
-                  value: !include docs/examples/get-calculation/success-empty-arrays.json
+                noNotesResponse:
+                  description: Example with no notes.
+                  value: !include docs/examples/get-calculation/success-no-notes.json
         400:
           body:
             application/json:

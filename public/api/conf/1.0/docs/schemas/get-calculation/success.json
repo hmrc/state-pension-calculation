@@ -4,7 +4,6 @@
   "additionalProperties": false,
   "required": [
     "result",
-    "associatedNotes",
     "listOfQualifyingYears"
   ],
   "properties": {
