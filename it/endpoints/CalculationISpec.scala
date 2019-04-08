@@ -42,7 +42,7 @@ class CalculationISpec extends IntegrationSpec {
     "the request is valid initial calc" should {
 
       trait InitialCalcTest extends Test {
-        lazy val desResponse: JsValue = Json.parse(testData.initialCalcJson)
+        lazy val desResponse: JsValue = testData.initialCalcJson
         lazy val requestBody: JsValue = Json.obj(
           "nino" -> "AA123456A",
           "checkBrick" -> "SMIJ",
@@ -63,7 +63,7 @@ class CalculationISpec extends IntegrationSpec {
       }
 
       "return the correct JSON" in new InitialCalcTest {
-        response.body shouldBe testData.generatedJson
+        response.body[JsValue] shouldBe testData.generatedJson
       }
 
       "have the correct Content-Type header and value" in new InitialCalcTest {
@@ -75,12 +75,12 @@ class CalculationISpec extends IntegrationSpec {
     "the request is valid final calc" should {
 
       trait FinalCalcTest extends Test {
-        lazy val desResponse: JsValue = Json.parse(testData.finalCalcJson)
+        lazy val desResponse: JsValue = testData.finalCalcJson
         lazy val requestBody: JsValue = Json.obj(
           "nino" -> "AA123456A",
           "checkBrick" -> "SMIJ",
           "gender" -> "M",
-          "finalise" -> false
+          "finalise" -> true
         )
 
         override def setupStubs(): StubMapping = {
@@ -91,12 +91,12 @@ class CalculationISpec extends IntegrationSpec {
         lazy val response: WSResponse = await(request().post(requestBody))
       }
 
-      "return a 200 status code" in new FinalCalcTest {
+      "return a 201 status code" in new FinalCalcTest {
         response.status shouldBe Status.CREATED
       }
 
       "return the correct JSON" in new FinalCalcTest {
-        response.body shouldBe testData.generatedJson
+        response.body[JsValue] shouldBe testData.generatedJson
       }
 
       "have the correct Content-Type header and value" in new FinalCalcTest {

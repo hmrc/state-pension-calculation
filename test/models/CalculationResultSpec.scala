@@ -24,7 +24,7 @@ class CalculationResultSpec extends UnitSpec {
 
   "Parsing valid JSON that represents a CalculationResult" should {
     "generate a valid CalculationResult" in {
-      val result = Json.parse(json).as[CalculationResult]
+      val result = json.as[CalculationResult]
       result shouldBe expectedModel
     }
   }

@@ -24,14 +24,14 @@ class CalculationNoteSpec extends UnitSpec {
 
   "Parsing valid JSON that represents a note" should {
     "generate a valid CalculationNote" in {
-      val note = Json.parse(json).as[CalculationNote]
+      val note = json.as[CalculationNote]
       note shouldBe expectedModel
     }
   }
 
   "Parsing valid JSON that represents a note without any lines" should {
     "generate a valid CalculationNote" in {
-      val note = Json.parse(emptyJson).as[CalculationNote]
+      val note = emptyJson.as[CalculationNote]
       note shouldBe expectedEmptyModel
     }
   }
@@ -39,7 +39,7 @@ class CalculationNoteSpec extends UnitSpec {
   "Serialising CalculationNotes to JSON" should {
     "generate JSON that conforms to the JSON schema for calc notes" in {
       val result = Json.toJson(expectedModel)
-      val expected = Json.parse(generatedJson)
+      val expected = generatedJson
       result shouldBe expected
     }
   }

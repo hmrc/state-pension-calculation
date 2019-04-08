@@ -26,7 +26,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
   "parsing a 201 (Created) initial calc response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(CREATED, Some(Json.parse(initialCalcJson)))
+      val httpResponse = HttpResponse(CREATED, Some(initialCalcJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)
@@ -35,7 +35,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
   "parsing a 201 (Created) final calc response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(CREATED, Some(Json.parse(finalCalcJson)))
+      val httpResponse = HttpResponse(CREATED, Some(finalCalcJson))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)
