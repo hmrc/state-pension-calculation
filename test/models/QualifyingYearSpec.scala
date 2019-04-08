@@ -25,7 +25,7 @@ class QualifyingYearSpec extends UnitSpec {
   "Parsing valid JSON that represents a QualifyingYear" should {
 
     "generate a valid QualifyingYear" in {
-      val result = Json.parse(json).as[QualifyingYear]
+      val result = json.as[QualifyingYear]
       result shouldBe expectedModel
     }
   }

@@ -20,21 +20,21 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class CalculationResponse(result: CalculationResult,
-                               notes: Seq[CalculationNote],
+                               notes: Option[Seq[CalculationNote]],
                                qualifyingYears: Seq[QualifyingYear])
 
 object CalculationResponse {
   implicit val reads: Reads[CalculationResponse] = (
     (__ \ "initialRequestResult").read[CalculationResult] or
       (__ \ "finalRequestResult").read[CalculationResult] and
-      (__ \ "associatedNotes").read[Seq[CalculationNote]] and
+      (__ \ "associatedNotes").readNullable[Seq[CalculationNote]] and
       (__ \ "listOfQualifyingYears").read[Seq[QualifyingYear]]
     ) (CalculationResponse.apply _)
 
   implicit val writes: Writes[CalculationResponse] = new Writes[CalculationResponse] {
     override def writes(data: CalculationResponse): JsValue = {
       val calc = data.result
-      Json.obj(
+      val json = Json.obj(
         "result" -> Json.obj(
           "nino" -> calc.nino,
           "protectedPaymentAmount" -> calc.protectedPaymentAmount,
@@ -61,6 +61,11 @@ object CalculationResponse {
         "associatedNotes" -> Json.toJson(data.notes),
         "listOfQualifyingYears" -> Json.toJson(data.qualifyingYears)
       )
+      if (data.notes.isDefined) {
+        json
+      } else {
+        json - "associatedNotes"
+      }
     }
   }
 }

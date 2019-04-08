@@ -17,12 +17,12 @@
 package support.data
 
 import models.{CalculationNote, CalculationResponse, CalculationResult, QualifyingYear}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 object CalculationTestData {
 
   object Result {
-    val json: String =
+    val json: JsValue = Json.parse(
       """
         |{
         |  "nino": "AA123456A",
@@ -47,7 +47,7 @@ object CalculationTestData {
         |  "newStatePensionQualifyingYears": 1,
         |  "incompleteContributionRecordIndicator": true
         |}
-        |""".stripMargin
+        |""".stripMargin)
 
     val expectedModel = CalculationResult(
       nino = "AA123456A",
@@ -74,7 +74,7 @@ object CalculationTestData {
   }
 
   object Notes {
-    val json: String =
+    val json: JsValue = Json.parse(
       """
         |{
         |  "noteIdentifier": 1,
@@ -94,7 +94,7 @@ object CalculationTestData {
         |    }
         |  ]
         |}
-      """.stripMargin
+      """.stripMargin)
 
     val expectedModel = CalculationNote(1,
       4,
@@ -110,53 +110,58 @@ object CalculationTestData {
   object QualifyingYears {
     val taxYear = 2017
 
-    val json: String =
+    val json: JsValue = Json.parse(
       s"""
          |{
          |  "taxYear": $taxYear,
          |  "qualifyingTaxYear": true,
          |  "earningsAmount": 12345.67
          |}
-      """.stripMargin
+      """.stripMargin)
 
     val expectedModel = QualifyingYear(taxYear, qualifyingTaxYear = true, BigDecimal("12345.67"))
 
   }
 
   object Response {
-    val initialCalcJson: String =
+    private val placeholder = "PLACEHOLDER"
+    private val json =
       s"""
          |{
-         |  "initialRequestResult": ${Result.json},
-         |  "associatedNotes": [${Notes.json}],
-         |  "listOfQualifyingYears": [${QualifyingYears.json}]
+         |  "$placeholder": ${Result.json},
+         |  "associatedNotes": [${Notes.json}, ${Notes.json}],
+         |  "listOfQualifyingYears": [${QualifyingYears.json}, ${QualifyingYears.json}]
          |}
       """.stripMargin
 
-    val finalCalcJson: String =
-      s"""
-         |{
-         |  "initialRequestResult": ${Result.json},
-         |  "associatedNotes": [${Notes.json}],
-         |  "listOfQualifyingYears": [${QualifyingYears.json}]
-         |}
-      """.stripMargin
+    val initialCalcJson: JsValue = Json.parse(json.replace(placeholder, "initialRequestResult"))
+    val finalCalcJson: JsValue = Json.parse(json.replace(placeholder, "finalRequestResult"))
+    val generatedJson: JsValue = Json.parse(json.replace(placeholder, "result"))
 
     val expectedModel = CalculationResponse(Result.expectedModel,
-      Seq(Notes.expectedModel),
-      Seq(QualifyingYears.expectedModel)
+      Some(Seq(Notes.expectedModel, Notes.expectedModel)),
+      Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel)
     )
+  }
 
-    val generatedJson: String = Json.parse(
+  object ResponseWithoutNotes {
+    private val placeholder = "PLACEHOLDER"
+    private val json =
       s"""
          |{
-         |  "result": ${Result.json},
-         |  "associatedNotes": [${Notes.json}],
-         |  "listOfQualifyingYears": [${QualifyingYears.json}]
+         |  "$placeholder": ${Result.json},
+         |  "listOfQualifyingYears": [${QualifyingYears.json}, ${QualifyingYears.json}]
          |}
       """.stripMargin
-    ).toString()
 
+    val initialCalcJson: JsValue = Json.parse(json.replace(placeholder, "initialRequestResult"))
+    val finalCalcJson: JsValue = Json.parse(json.replace(placeholder, "finalRequestResult"))
+    val generatedJson: JsValue = Json.parse(json.replace(placeholder, "result"))
+
+    val expectedModel = CalculationResponse(Result.expectedModel,
+      None,
+      Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel)
+    )
   }
 
 }
