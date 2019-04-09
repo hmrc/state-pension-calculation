@@ -38,12 +38,12 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     "nino" -> "AA123456A",
     "checkBrick" -> "SMIJ",
     "gender" -> "M",
-    "finalise" -> false
+    "finalise" -> true
   )
 
   implicit val request: Request[JsValue] = fakePostRequest[JsValue](validPayload)
 
-  val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ")
+  val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ", finalCalculation = true)
 
   "Calling the calculation action" when {
 
@@ -89,7 +89,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     def testInvalidRequestProperty[T](propertyName: String,
                                       invalidValue: T,
                                       expectedError: Error = InvalidRequestError)(implicit w: Writes[T]) {
-      s"the request has an invalid value for the property $propertyName" should {
+      s"the request has an invalid value ($invalidValue) for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
         val invalidRequest = fakePostRequest[JsValue](invalidPayload)
 
@@ -126,9 +126,14 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     testInvalidRequestProperty("finalise", "maybe?")
 
     testInvalidRequestProperty("fryAmount", false)
+    testInvalidRequestProperty("fryAmount", BigDecimal("-0.01"))
+    testInvalidRequestProperty("fryAmount", BigDecimal("1000000000.00"))
+    testInvalidRequestProperty("fryAmount", BigDecimal("1.123"))
 
     "the request has a FRY amount for an initial calc" should {
-      val invalidPayload = validPayload ++ Json.obj("fryAmount" -> BigDecimal("1.00"))
+      val invalidPayload = validPayload ++
+        Json.obj("fryAmount" -> BigDecimal("1.00")) ++
+        Json.obj("finalise" -> false)
       val invalidRequest = fakePostRequest[JsValue](invalidPayload)
 
       "return 400" in new Test {
