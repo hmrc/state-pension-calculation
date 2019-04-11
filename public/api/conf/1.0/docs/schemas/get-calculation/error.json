@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/singleError"
+    },
+    {
+      "$ref": "#/definitions/multipleStandardErrors"
+    },
+    {
+      "$ref": "#/definitions/singleCalculationError"
+    },
+    {
+      "$ref": "#/definitions/multipleCalculationErrors"
+    }
+  ],
+  "definitions": {
+    "multipleStandardErrors": {
+      "type": "object",
+      "required": [ "failures" ],
+      "properties": {
+        "failures": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/singleError"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "multipleCalculationErrors": {
+      "type": "object",
+      "required": [ "failures" ],
+      "properties": {
+        "failures": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/singleCalculationError"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "singleError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "A code for the error"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "A description for the error"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "singleCalculationError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[0-9]{5,6}$",
+          "description": "A numeric code for the calculation error"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "A description for the calculation error"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
