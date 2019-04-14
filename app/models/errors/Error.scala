@@ -39,7 +39,7 @@ object UnexpectedFryAmountError
   extends Error("FRY_AMOUNT_NOT_EXPECTED", "Do not supply a FRY amount for an initial calculation.")
 
 object RetirementAfterDeathError
-  extends Error("RETIREMENT_DATE_AFTER_DEATH", "The remote endpoint has indicated that the Date of Retirement is after the Date of Death.")
+  extends Error("RETIREMENT_DATE_AFTER_DEATH_DATE", "The remote endpoint has indicated that the Date of Retirement is after the Date of Death.")
 
 object TooEarlyError
   extends Error("TOO_EARLY", "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date.")

@@ -102,9 +102,9 @@ class CalculationServiceSpec extends ServiceBaseSpec {
       }
     }
 
-    "a RETIREMENT_DATE_AFTER_DEATH error is returned" should {
+    "a RETIREMENT_DATE_AFTER_DEATH_DATE error is returned" should {
       "convert the error to an RetirementAfterDeathError" in new Test {
-        val error = Error("RETIREMENT_DATE_AFTER_DEATH", "")
+        val error = Error("RETIREMENT_DATE_AFTER_DEATH_DATE", "")
         MockedDesConnector.getFinalCalculation(validRequest)
           .returns(Future.successful(Left(Errors(error))))
 

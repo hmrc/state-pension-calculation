@@ -40,7 +40,7 @@ class CalculationService @Inject()(connector: DesConnector) {
       "INVALID_CORRELATIONID" -> ApiServiceError,
       "INVALID_NINO" -> ApiServiceError,
       "INVALID_PAYLOAD" -> ApiServiceError,
-      "RETIREMENT_DATE_AFTER_DEATH" -> RetirementAfterDeathError,
+      "RETIREMENT_DATE_AFTER_DEATH_DATE" -> RetirementAfterDeathError,
       "TOO_EARLY" -> TooEarlyError,
       "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError,
       "NOT_FOUND_NINO" -> NinoNotFoundError,

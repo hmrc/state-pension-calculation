@@ -210,7 +210,7 @@ class CalculationISpec extends IntegrationSpec {
     }
 
     {
-      val retirementAfterDeathCode = "RETIREMENT_DATE_AFTER_DEATH"
+      val retirementAfterDeathCode = "RETIREMENT_DATE_AFTER_DEATH_DATE"
       val invalidBody = Json.obj(
         "code" -> retirementAfterDeathCode,
         "reason" -> "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
