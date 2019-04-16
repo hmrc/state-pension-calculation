@@ -56,7 +56,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |    "name": "Get State Pension Calculation",
           |    "description": "Get an Individuals State Pension calculation",
           |    "context": "individuals/state-pension-calculation",
-          |    "categories": ["PENSIONS"],
+          |    "categories": ["PRIVATE_GOVERNMENT"],
           |    "versions": [
           |      {
           |        "version": "1.0",
