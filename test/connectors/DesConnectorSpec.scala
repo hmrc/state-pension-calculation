@@ -46,6 +46,10 @@ class DesConnectorSpec extends ConnectorBaseSpec {
       connector.desHeaderCarrier.headers.contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
     }
 
+    "return a header carrier with an Content-Type header" in new Test {
+      connector.desHeaderCarrier.headers.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
+    }
+
     "return a header carrier with an environment header using the DES environment specified in config" in new Test {
       connector.desHeaderCarrier.headers.contains("Environment" -> "des-environment") shouldBe true
     }
