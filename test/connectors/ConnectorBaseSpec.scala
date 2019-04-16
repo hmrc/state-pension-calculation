@@ -28,5 +28,6 @@ trait ConnectorBaseSpec extends UnitSpec
   with ResultExtractors {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+    .withExtraHeaders(HeaderNames.CONTENT_TYPE -> "application/json")
 
 }
