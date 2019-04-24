@@ -69,4 +69,32 @@ class CalculationRequestSpec extends UnitSpec {
       json shouldBe expectedJson
     }
   }
+
+  "Generating a CalculationRequest from JSON" should {
+
+    val json = Json.parse(
+      """
+        |{
+        |  "nino": "AA111111A",
+        |  "gender": "M",
+        |  "checkBrick": "SMIJ",
+        |  "fryAmount": 123.99,
+        |  "finalise": true
+        |}
+      """.stripMargin
+    )
+
+    "create a CalculationRequest with the correct values" in {
+      val expectedRequest = CalculationRequest(
+        "AA111111A",
+        "M",
+        "SMIJ",
+        finalCalculation = true,
+        Some(BigDecimal("123.99"))
+      )
+
+      json.as[CalculationRequest] shouldBe expectedRequest
+    }
+  }
+
 }
