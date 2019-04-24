@@ -30,6 +30,13 @@ documentation:
       displayName: Get a State Pension calculation
       description: Gets a State Pension calculation for an individual.
       is: [headers.acceptHeader]
+      headers:
+        Correlationid:
+          description: Identifier used to track a request throughout the service.
+          type: string
+          required: true
+          example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+
       (annotations.scope): "read:state-pension-calculation"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
 
@@ -49,6 +56,13 @@ documentation:
 
       responses:
         201:
+          headers:
+            Correlationid:
+              description: Identifier used to track a request throughout the service.
+              type: string
+              required: true
+              example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+
           body:
             application/json:
               type: !include docs/schemas/get-calculation/success.json
