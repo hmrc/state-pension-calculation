@@ -26,9 +26,18 @@ case class CalculationRequest(nino: String,
                               gender: String,
                               checkBrick: String,
                               finalCalculation: Boolean = false,
-                              fryAmount: Option[BigDecimal] = None)
+                              fryAmount: Option[BigDecimal] = None,
+                              correlationId: String = "")
 
 object CalculationRequest {
+
+  def createWithoutCorrelationId(nino: String,
+            gender: String,
+            checkBrick: String,
+            finalCalculation: Boolean = false,
+            fryAmount: Option[BigDecimal] = None): CalculationRequest =
+    CalculationRequest(nino, gender, checkBrick, finalCalculation, fryAmount)
+
   val ninoPattern: Regex = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D\s]?$""".r
   val checkBrickPattern: Regex = """^([A-Z]{1}[ A-Z-'.]{2,4})$""".r
   val genderPattern: Regex = """^[MF]$""".r
@@ -45,7 +54,7 @@ object CalculationRequest {
       (__ \ "checkBrick").read[String](pattern(checkBrickPattern)) and
       (__ \ "finalise").read[Boolean] and
       (__ \ "fryAmount").readNullable[BigDecimal](verifying(readAmount))
-    ) (CalculationRequest.apply _)
+    ) (CalculationRequest.createWithoutCorrelationId _)
 
   implicit val writes: Writes[CalculationRequest] = new Writes[CalculationRequest] {
     override def writes(request: CalculationRequest): JsValue = {
