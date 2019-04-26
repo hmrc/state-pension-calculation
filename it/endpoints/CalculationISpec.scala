@@ -16,6 +16,8 @@
 
 package endpoints
 
+import java.util.UUID
+
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.errors._
 import play.api.http.{HeaderNames, Status}
@@ -24,6 +26,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import stubs.{AuditStub, DesStub}
 import support.IntegrationSpec
 import support.data.CalculationTestData.{Response => testData}
+import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 class CalculationISpec extends IntegrationSpec {
 
@@ -34,6 +37,7 @@ class CalculationISpec extends IntegrationSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(s"/calculation")
+        .addHttpHeaders(CorrelationIdHeader -> UUID.randomUUID().toString)
     }
   }
 

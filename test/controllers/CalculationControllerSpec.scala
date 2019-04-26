@@ -23,8 +23,10 @@ import play.api.http.Status
 import play.api.libs.json.Json.toJson
 import play.api.libs.json.{JsObject, JsValue, Json, Writes}
 import play.api.mvc.Request
+import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 import scala.concurrent.Future
 
@@ -41,9 +43,9 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     "finalise" -> true
   )
 
-  implicit val request: Request[JsValue] = fakePostRequest[JsValue](validPayload)
+  implicit val request: Request[JsValue] = postRequest[JsValue](validPayload)
 
-  val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ", finalCalculation = true)
+  val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ", finalCalculation = true, correlationId = correlationId)
 
   "Calling the calculation action" when {
 
@@ -58,28 +60,61 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         status(result) shouldBe Status.CREATED
       }
 
+      "return the Correlation ID in the header" in new Test {
+
+        MockedCalculationService.calculate(calcRequest)
+          .returns(Future.successful(Right(validResponse)))
+
+        private val result = target.calculation()(request)
+        header(CorrelationIdHeader, result) shouldBe Some(correlationId)
+      }
+
+    }
+
+    "the request is missing the Correlation ID header" should {
+      val invalidRequest = FakeRequest().withBody(validPayload)
+
+      "return 400" in new Test {
+        private val result = target.calculation()(invalidRequest)
+        status(result) shouldBe Status.BAD_REQUEST
+      }
+
+      "return an INVALID_REQUEST error in the body" in new Test {
+        private val result = target.calculation()(invalidRequest)
+        contentAsJson(result) shouldBe toJson(InvalidRequestError)
+      }
+
+    }
+
+    "the request contains an invalid Correlation ID header" should {
+      val invalidRequest = FakeRequest()
+        .withHeaders(CorrelationIdHeader -> "BAD CORRELATION ID")
+        .withBody(validPayload)
+
+      "return 400" in new Test {
+        private val result = target.calculation()(invalidRequest)
+        status(result) shouldBe Status.BAD_REQUEST
+      }
+
+      "return an INVALID_REQUEST error in the body" in new Test {
+        private val result = target.calculation()(invalidRequest)
+        contentAsJson(result) shouldBe toJson(InvalidRequestError)
+      }
+
     }
 
     def testMissingRequestProperty(propertyName: String) {
       s"the request is missing the $propertyName property" should {
         val invalidPayload = validPayload - propertyName
-        val invalidRequest = fakePostRequest[JsValue](invalidPayload)
+        val invalidRequest = postRequest[JsValue](invalidPayload)
 
         "return 400" in new Test {
-
-          MockedCalculationService.calculate(calcRequest)
-            .returns(Future.successful(Right(validResponse)))
-
           private val result = target.calculation()(invalidRequest)
           status(result) shouldBe Status.BAD_REQUEST
         }
 
         "return an INVALID_REQUEST error in the body" in new Test {
-          MockedCalculationService.calculate(calcRequest)
-            .returns(Future.successful(Right(validResponse)))
-
           private val result = target.calculation()(invalidRequest)
-
           contentAsJson(result) shouldBe toJson(InvalidRequestError)
         }
 
@@ -91,23 +126,15 @@ class CalculationControllerSpec extends ControllerBaseSpec {
                                       expectedError: Error = InvalidRequestError)(implicit w: Writes[T]) {
       s"the request has an invalid value ($invalidValue) for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
-        val invalidRequest = fakePostRequest[JsValue](invalidPayload)
+        val invalidRequest = postRequest[JsValue](invalidPayload)
 
         "return 400" in new Test {
-          MockedCalculationService.calculate(calcRequest)
-            .returns(Future.successful(Right(validResponse)))
-
           private val result = target.calculation()(invalidRequest)
-
           status(result) shouldBe Status.BAD_REQUEST
         }
 
         "return an INVALID_REQUEST error in the body" in new Test {
-          MockedCalculationService.calculate(calcRequest)
-            .returns(Future.successful(Right(validResponse)))
-
           private val result = target.calculation()(invalidRequest)
-
           contentAsJson(result) shouldBe toJson(expectedError)
         }
       }
@@ -134,7 +161,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       val invalidPayload = validPayload ++
         Json.obj("fryAmount" -> BigDecimal("1.00")) ++
         Json.obj("finalise" -> false)
-      val invalidRequest = fakePostRequest[JsValue](invalidPayload)
+      val invalidRequest = postRequest[JsValue](invalidPayload)
 
       "return 400" in new Test {
         MockedCalculationService.calculate(calcRequest)

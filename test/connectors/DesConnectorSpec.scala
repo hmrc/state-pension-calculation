@@ -16,11 +16,14 @@
 
 package connectors
 
+import java.util.UUID
+
 import mocks.{MockAppConfig, MockHttpClient}
-import models.errors.{Errors, ApiServiceError}
+import models.errors.{ApiServiceError, Errors}
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,16 +45,22 @@ class DesConnectorSpec extends ConnectorBaseSpec {
   }
 
   "desHeaderCarrier" should {
+    val correlationId = UUID.randomUUID().toString
+
     "return a header carrier with an authorization header using the DES token specified in config" in new Test {
-      connector.desHeaderCarrier.headers.contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
+      connector.desHeaderCarrier(correlationId).headers.contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
     }
 
     "return a header carrier with an Content-Type header" in new Test {
-      connector.desHeaderCarrier.headers.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
+      connector.desHeaderCarrier(correlationId).headers.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
     }
 
     "return a header carrier with an environment header using the DES environment specified in config" in new Test {
-      connector.desHeaderCarrier.headers.contains("Environment" -> "des-environment") shouldBe true
+      connector.desHeaderCarrier(correlationId).headers.contains("Environment" -> "des-environment") shouldBe true
+    }
+
+    "return a header carrier with a CorrelationId header" in new Test {
+      connector.desHeaderCarrier(correlationId).headers.contains(CorrelationIdHeader -> correlationId) shouldBe true
     }
   }
 

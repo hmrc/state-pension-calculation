@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.util.UUID
+
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import play.api.http.{HeaderNames, MimeTypes, Status}
@@ -23,6 +25,8 @@ import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
 import support.UnitSpec
+import utils.AdditionalHeaderNames.CorrelationIdHeader
+
 
 class ControllerBaseSpec extends UnitSpec
   with Status
@@ -30,11 +34,14 @@ class ControllerBaseSpec extends UnitSpec
   with HeaderNames
   with ResultExtractors {
 
+  val correlationId: String = UUID.randomUUID().toString
+
   implicit val system: ActorSystem = ActorSystem("MyTest")
   implicit val mat: ActorMaterializer = ActorMaterializer()
-  implicit lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit lazy val validRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest().withHeaders(CorrelationIdHeader -> correlationId)
 
   lazy val cc: ControllerComponents = stubControllerComponents()
 
-  def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
+  def postRequest[T](body: T): FakeRequest[T] = validRequest.withBody(body)
 }
