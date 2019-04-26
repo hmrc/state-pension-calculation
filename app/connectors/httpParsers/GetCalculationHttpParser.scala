@@ -31,11 +31,12 @@ object GetCalculationHttpParser extends HttpParser {
         if (response.status != CREATED) {
           val correlationId = response.header("CorrelationId").getOrElse("NOT FOUND")
 
-          Logger.warn("[GetCalculationHttpParser][read] - " +
-            s"Error response received from DES when calling $url\n" +
-            s"status code: ${response.status}\n" +
-            s"correlation ID: $correlationId\n" +
-            s"body: ${response.body}")
+          Logger.warn("[GetCalculationHttpParser][read] - Error response received from DES\n" +
+            s"URL: $url\n" +
+            s"Status code: ${response.status}\n" +
+            s"Correlation ID: $correlationId\n" +
+            s"Body: ${response.body}"
+          )
         }
 
         response.status match {

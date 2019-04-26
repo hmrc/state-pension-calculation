@@ -22,6 +22,7 @@ import models.{CalculationOutcome, CalculationRequest}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,9 +30,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class DesConnector @Inject()(http: HttpClient,
                              appConfig: AppConfig) {
 
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier): HeaderCarrier = hc
+  private[connectors] def desHeaderCarrier(correlationId: String)(implicit hc: HeaderCarrier): HeaderCarrier = hc
     .copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken()}")))
-    .withExtraHeaders("Environment" -> appConfig.desEnvironment())
+    .withExtraHeaders(
+      "Environment" -> appConfig.desEnvironment(),
+      CorrelationIdHeader -> correlationId
+    )
 
   def getInitialCalculation(request: CalculationRequest)
                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
@@ -39,15 +43,15 @@ class DesConnector @Inject()(http: HttpClient,
 
     val url = s"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/initial/${request.nino}"
 
-    http.POST(url, request)(implicitly, getCalculationHttpReads, desHeaderCarrier, implicitly)
+    http.POST(url, request)(implicitly, getCalculationHttpReads, desHeaderCarrier(request.correlationId), implicitly)
   }
 
   def getFinalCalculation(request: CalculationRequest)
-                           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
+                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
     import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
 
     val url = s"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/final/${request.nino}"
 
-    http.POST(url, request)(implicitly, getCalculationHttpReads, desHeaderCarrier, implicitly)
+    http.POST(url, request)(implicitly, getCalculationHttpReads, desHeaderCarrier(request.correlationId), implicitly)
   }
 }

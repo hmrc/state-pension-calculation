@@ -32,7 +32,7 @@ class CalculationService @Inject()(connector: DesConnector) {
                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
 
     val unexpectedErrorMapping: String => Error = code => {
-      Logger.warn(s"Unexpected error received from DES. Code: $code")
+      Logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")
       ApiServiceError
     }
 
@@ -47,7 +47,8 @@ class CalculationService @Inject()(connector: DesConnector) {
       "NO_MATCH_FOUND" -> MatchNotFoundError,
       "SERVER_ERROR" -> ApiServiceError,
       "SERVICE_UNAVAILABLE" -> ServiceUnavailableError,
-      "MESSAGE_THROTTLED_OUT" -> ThrottledError
+      "MESSAGE_THROTTLED_OUT" -> ThrottledError,
+      "INTERNAL_SERVER_ERROR" -> ApiServiceError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {

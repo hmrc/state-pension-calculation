@@ -19,11 +19,12 @@ package controllers
 import javax.inject.{Inject, Singleton}
 import models.CalculationRequest
 import models.errors._
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import play.api.mvc._
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -68,18 +69,29 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
     }
   }
 
-  private def buildRequest(request: JsValue): Either[Errors, CalculationRequest] = {
-    request.validate[CalculationRequest] match {
-      case JsSuccess(CalculationRequest(_, _, _, false, Some(_), _), _) => Left(Errors(UnexpectedFryAmountError))
-      case JsSuccess(calculationRequest, _) => Right(calculationRequest)
-      case JsError(_) => Left(Errors(InvalidRequestError))
-    }
+  private def buildRequest(request: Request[JsValue]): Either[Errors, CalculationRequest] = {
+    val correlationIdPattern = "^[A-Za-z0-9\\-]{36}$"
+    request.headers.get(CorrelationIdHeader).map { correlationId =>
+      request.body.validate[CalculationRequest] match {
+        case JsSuccess(CalculationRequest(_, _, _, false, Some(_), _), _) =>
+          Left(Errors(UnexpectedFryAmountError))
+        case JsSuccess(calculationRequest, _) if correlationId.matches(correlationIdPattern) =>
+          Right(calculationRequest.copy(correlationId = correlationId))
+        case _ =>
+          Left(Errors(InvalidRequestError))
+      }
+    }.getOrElse(Left(Errors(InvalidRequestError)))
   }
 
   def calculation(): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    buildRequest(request.body) match {
+    val response = buildRequest(request) match {
       case Right(calcRequest) => calculate(calcRequest)
       case Left(error) => Future.successful(BadRequest(Json.toJson(error)))
+    }
+
+    response map { result =>
+      val correlationId = request.headers.get(CorrelationIdHeader).getOrElse("")
+      result.withHeaders(CorrelationIdHeader -> correlationId)
     }
   }
 
