@@ -46,6 +46,7 @@ object GetCalculationHttpParser extends HttpParser {
             case None => Left(Errors(ApiServiceError))
           }
           case TOO_MANY_REQUESTS => Left(Errors(ThrottledError))
+          case SERVICE_UNAVAILABLE => Left(parseServiceUnavailableError(response))
           case _ => Left(parseErrors(response))
         }
       }

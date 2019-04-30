@@ -16,10 +16,10 @@
 
 package connectors.httpParsers
 
+import models.errors._
 import play.api.Logger
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpResponse
-import models.errors._
 
 import scala.util.{Success, Try}
 
@@ -59,6 +59,13 @@ trait HttpParser {
     }
 
     errors getOrElse unableToParseJsonError
+  }
+
+  def parseServiceUnavailableError(response: HttpResponse): Errors = {
+    (response.json \ "incidentReference").asOpt[String] match {
+      case Some("LTM000503") => Errors(ThrottledError)
+      case _ => parseErrors(response)
+    }
   }
 
 }

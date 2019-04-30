@@ -344,6 +344,17 @@ class CalculationISpec extends IntegrationSpec {
     }
 
     {
+      val serviceUnavailableCode = "SERVICE_UNAVAILABLE throttled response"
+      val invalidBody = Json.obj("incidentReference" -> "LTM000503")
+
+      testDesErrorHandling(serviceUnavailableCode,
+        Status.SERVICE_UNAVAILABLE,
+        invalidBody,
+        Status.TOO_MANY_REQUESTS,
+        Json.toJson(ThrottledError))
+    }
+
+    {
       val serverErrorCode = "a calculation error"
       val invalidBody = Json.obj(
         "code" -> "12345",

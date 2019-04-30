@@ -19,7 +19,7 @@ package connectors.httpParsers
 import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
 import support.data.CalculationTestData.Response._
 import models.errors._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 
 class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
@@ -57,6 +57,17 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(ThrottledError)
 
       val httpResponse = HttpResponse(TOO_MANY_REQUESTS, None)
+      val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
+      result shouldBe Left(expected)
+    }
+  }
+
+  "parsing a Service Unavailable (503) response with a throttling body" should {
+    "return a single ThrottledError error" in {
+      val expected = Errors(ThrottledError)
+      val throttlingBody: JsValue = Json.obj("incidentReference" -> "LTM000503")
+
+      val httpResponse = HttpResponse(SERVICE_UNAVAILABLE, Some(throttlingBody))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
