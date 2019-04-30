@@ -17,13 +17,11 @@
 package config
 
 import com.google.inject.AbstractModule
-import services.ServiceLocatorRegistrationService
 
 class Module extends AbstractModule {
 
   override def configure(): Unit = {
     bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
     bind(classOf[ApiDefinitionConfig]).to(classOf[ApiDefinitionConfigImpl]).asEagerSingleton()
-    bind(classOf[ServiceLocatorRegistrationService]).asEagerSingleton()
   }
 }
