@@ -26,26 +26,6 @@ trait MockAppConfig extends MockFactory {
 
   object MockedAppConfig {
 
-    def serviceLocatorBaseUrl(): CallHandler[String] = {
-      (mockAppConfig.serviceLocatorBaseUrl: () => String)
-        .expects()
-    }
-
-    def apiServiceName(): CallHandler[String] = {
-      (mockAppConfig.apiServiceName: () => String)
-        .expects()
-    }
-
-    def registrationEnabled(): CallHandler[Boolean] = {
-      (mockAppConfig.registrationEnabled: () => Boolean)
-        .expects()
-    }
-
-    def discoveryUrl(): CallHandler[String] = {
-      (mockAppConfig.discoveryUrl: () => String)
-        .expects()
-    }
-
     def desBaseUrl(): CallHandler[String] = {
       (mockAppConfig.desBaseUrl: () => String)
         .expects()
