@@ -1,4 +1,3 @@
 # microservice specific routes
 
 POST        /calculation        controllers.CalculationController.calculation
-GET        /error/:status        controllers.ResponseTestController.error(status)
