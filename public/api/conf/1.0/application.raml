@@ -25,22 +25,6 @@ documentation:
 
 /individuals/state-pension-calculation:
 
-  /error/{statusCode}:
-    get:
-      displayName: Test Get a State Pension calculation responses
-      description: Gets responses for a State Pension calculation for an individual request.
-      is: [headers.acceptHeader]
-      headers:
-        Correlationid:
-          description: Identifier used to track a request throughout the service.
-          type: string
-          required: true
-          example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
-
-      (annotations.scope): "read:state-pension-calculation"
-      securedBy: [ sec.oauth_2_0: { scopes: [ "read:state-pension-calculation" ] } ]
-
-
   /calculation:
     post:
       displayName: Get a State Pension calculation
