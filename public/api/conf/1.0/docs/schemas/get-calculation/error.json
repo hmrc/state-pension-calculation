@@ -71,7 +71,7 @@
       "properties": {
         "code": {
           "type": "string",
-          "pattern": "^[0-9]{5,6}$",
+          "pattern": "^CALCULATION_ERROR_[0-9]{5,6}$",
           "description": "A numeric code for the calculation error"
         },
         "message": {
