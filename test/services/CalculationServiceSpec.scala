@@ -20,6 +20,7 @@ import mocks.MockDesConnector
 import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import utils.ErrorCodes.CalculationErrorCodePrefix
 
 import scala.concurrent.Future
 
@@ -191,26 +192,29 @@ class CalculationServiceSpec extends ServiceBaseSpec {
     }
 
     "a calculation error is returned" should {
-      "pass through the error without any changes" in new Test {
-        val error = Error("12345", "Calc Error for scenario 12345")
+      "prefix the error code with CALCULATION_ERROR_" in new Test {
+        val calcError = Error("12345", "Calc Error for scenario 12345")
+        val expectedError = Error(CalculationErrorCodePrefix + "12345", "Calc Error for scenario 12345")
         MockedDesConnector.getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .returns(Future.successful(Left(Errors(calcError))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-        result shouldBe Left(Errors(error))
+        result shouldBe Left(Errors(expectedError))
       }
     }
 
 
     "multiple calculation errors are returned" should {
-      "pass through the error without any changes" in new Test {
+      "prefix each error code with CALCULATION_ERROR_" in new Test {
         val error1 = Error("12345", "Calc Error for scenario 12345")
         val error2 = Error("123456", "Calc Error for scenario 123456")
+        val expectedError1 = Error(CalculationErrorCodePrefix + "12345", "Calc Error for scenario 12345")
+        val expectedError2 = Error(CalculationErrorCodePrefix + "123456", "Calc Error for scenario 123456")
         MockedDesConnector.getFinalCalculation(validRequest)
           .returns(Future.successful(Left(Errors(Seq(error1, error2)))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
-        result shouldBe Left(Errors(Seq(error1, error2)))
+        result shouldBe Left(Errors(Seq(expectedError1, expectedError2)))
       }
     }
 

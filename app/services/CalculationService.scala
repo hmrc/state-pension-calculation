@@ -22,6 +22,7 @@ import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.ErrorCodes._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,18 +38,18 @@ class CalculationService @Inject()(connector: DesConnector) {
     }
 
     val errorMappings: Map[String, Error] = Map(
-      "INVALID_CORRELATIONID" -> ApiServiceError,
-      "INVALID_NINO" -> ApiServiceError,
-      "INVALID_PAYLOAD" -> ApiServiceError,
-      "RETIREMENT_DATE_AFTER_DEATH_DATE" -> RetirementAfterDeathError,
-      "TOO_EARLY" -> TooEarlyError,
-      "UNKNOWN_BUSINESS_ERROR" -> UnknownBusinessError,
-      "NOT_FOUND_NINO" -> NinoNotFoundError,
-      "NO_MATCH_FOUND" -> MatchNotFoundError,
-      "SERVER_ERROR" -> ApiServiceError,
-      "SERVICE_UNAVAILABLE" -> ServiceUnavailableError,
-      "MESSAGE_THROTTLED_OUT" -> ThrottledError,
-      "INTERNAL_SERVER_ERROR" -> ApiServiceError
+      InvalidCorrelationIdCode -> ApiServiceError,
+      InvalidNinoCode -> ApiServiceError,
+      InvalidPayloadCode -> ApiServiceError,
+      RetirementDateAfterDeathDateCode -> RetirementAfterDeathError,
+      TooEarlyCode -> TooEarlyError,
+      UnknownBusinessErrorCode -> UnknownBusinessError,
+      NinoNotFoundCode -> NinoNotFoundError,
+      MatchNotFoundCode -> MatchNotFoundError,
+      ServerErrorCode -> ApiServiceError,
+      ServiceUnavailableCode -> ServiceUnavailableError,
+      MessageThrottledCode -> ThrottledError,
+      InternalServerErrorCode -> ApiServiceError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {
@@ -62,7 +63,7 @@ class CalculationService @Inject()(connector: DesConnector) {
       case Left(Errors(errors)) =>
         val calculationErrorCodePattern = """^[0-9]{5,6}$"""
         val apiErrors = if (errors.forall(_.code.matches(calculationErrorCodePattern))) {
-          errors
+          errors.map { error => Error(CalculationErrorCodePrefix + error.code, error.message) }
         } else {
           val desErrorCodes = errors.map(_.code)
           desErrorCodes.map(errorMappings).distinct

@@ -25,6 +25,7 @@ import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.AdditionalHeaderNames.CorrelationIdHeader
+import utils.ErrorCodes.CalculationErrorCodePrefix
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,7 +37,7 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
   private def handleErrors(errors: Errors): Result = {
 
     val handleNonStandardError: Error => Int = error => {
-      if (error.code.matches("""^[0-9]{4,5}$""")) {
+      if (error.code.startsWith(CalculationErrorCodePrefix)) {
         FORBIDDEN
       } else {
         INTERNAL_SERVER_ERROR
