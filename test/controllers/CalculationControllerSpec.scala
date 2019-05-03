@@ -27,6 +27,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 import utils.AdditionalHeaderNames.CorrelationIdHeader
+import utils.ErrorCodes.CalculationErrorCodePrefix
 
 import scala.concurrent.Future
 
@@ -264,7 +265,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "a calculation error is returned from the service" should {
       "return a 403 response" in new Test {
-        val calculationError = Error("12345", "Calc error 12345")
+        val calculationError = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(calculationError))))
 
@@ -275,8 +276,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "multiple calculation errors are returned from the service" should {
       "return a 403 response" in new Test {
-        val calculationError1 = Error("12345", "Calc error 12345")
-        val calculationError2 = Error("12345", "Calc error 12345")
+        val calculationError1 = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
+        val calculationError2 = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
         MockedCalculationService.calculate(calcRequest)
           .returns(Future.successful(Left(Errors(Seq(calculationError1, calculationError2)))))
 
