@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,16 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(ThrottledError)
 
       val httpResponse = HttpResponse(TOO_MANY_REQUESTS, None)
+      val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
+      result shouldBe Left(expected)
+    }
+  }
+
+  "parsing a 502 response" should {
+    "return something" in {
+      val htmlResponse = "<html>oops, 502</html"
+      val expected = Errors(Seq(Error(BAD_GATEWAY.toString, htmlResponse)))
+      val httpResponse = HttpResponse(BAD_GATEWAY, None, Map.empty,Some(htmlResponse))
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
