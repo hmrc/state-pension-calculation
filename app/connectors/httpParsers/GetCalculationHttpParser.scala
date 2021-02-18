@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.errors.{ApiServiceError, Errors, ThrottledError}
+import models.errors.{ApiServiceError, Error, Errors, ThrottledError}
 import models.{CalculationOutcome, CalculationResponse}
 import play.api.Logger
 import play.api.http.Status._
@@ -47,6 +47,7 @@ object GetCalculationHttpParser extends HttpParser {
           }
           case TOO_MANY_REQUESTS => Left(Errors(ThrottledError))
           case SERVICE_UNAVAILABLE => Left(parseServiceUnavailableError(response))
+          case BAD_GATEWAY => Left(Errors(Seq(Error(BAD_GATEWAY.toString, response.body))))
           case _ => Left(parseErrors(response))
         }
       }
