@@ -19,9 +19,7 @@ package connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import models.{CalculationOutcome, CalculationRequest}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpClient}
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 
 import scala.concurrent.{ExecutionContext, Future}

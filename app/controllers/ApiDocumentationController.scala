@@ -32,7 +32,7 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
                                            apiConfig: ApiDefinitionConfig)
   extends DocumentationController(cc, assets, errorHandler) {
 
-  override def definition(): Action[AnyContent] = Action.async { implicit request =>
+  override def definition(): Action[AnyContent] = Action.async {
 
     lazy val apiAccess: JsObject = Json.obj(
       "type" -> apiConfig.accessType(),
