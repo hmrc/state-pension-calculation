@@ -32,7 +32,9 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
-  .settings(scalaVersion := "2.12.12")
+  .settings(scalaVersion := "2.12.12",
+    SilencerSettings()
+  )
 
 // Dependencies upgrades that have been reviewed (16th April 2019) and discounted
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
