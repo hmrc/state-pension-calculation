@@ -63,8 +63,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |        "status": "BETA",
           |        "endpointsEnabled": true,
           |        "access" : {
-          |          "type": "PRIVATE",
-          |          "allowlistedApplicationIds": ["applicationId#0", "applicationId#1"]
+          |          "type": "PRIVATE"
           |        }
           |      }
           |    ]

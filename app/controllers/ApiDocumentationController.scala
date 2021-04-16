@@ -35,8 +35,7 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
   override def definition(): Action[AnyContent] = Action.async { implicit request =>
 
     lazy val apiAccess: JsObject = Json.obj(
-      "type" -> apiConfig.accessType(),
-      "allowlistedApplicationIds" -> apiConfig.allowlistedApplicationIds()
+      "type" -> apiConfig.accessType()
     )
 
     val apiDefinition = Json.parse(
