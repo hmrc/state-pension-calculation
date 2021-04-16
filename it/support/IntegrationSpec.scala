@@ -48,7 +48,7 @@ trait IntegrationSpec extends WordSpecLike
     s"$servicesPath.auth.port" -> mockPort,
     "auditing.consumer.baseUri.port" -> mockPort,
     "api.status" -> "BETA",
-    "api.access.whitelistedApplicationIds" -> Seq("applicationId#0", "applicationId#1")
+    "api.access.allowlistedApplicationIds" -> Seq("applicationId#0", "applicationId#1")
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

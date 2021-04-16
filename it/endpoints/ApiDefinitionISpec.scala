@@ -64,7 +64,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |        "endpointsEnabled": true,
           |        "access" : {
           |          "type": "PRIVATE",
-          |          "whitelistedApplicationIds": ["applicationId#0", "applicationId#1"]
+          |          "allowlistedApplicationIds": ["applicationId#0", "applicationId#1"]
           |        }
           |      }
           |    ]

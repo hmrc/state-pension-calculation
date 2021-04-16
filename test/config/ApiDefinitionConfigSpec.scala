@@ -82,25 +82,25 @@ class ApiDefinitionConfigSpec extends UnitSpec {
     }
   }
 
-  "calling whitelistedApplicationIds" when {
+  "calling allowlistedApplicationIds" when {
 
     "values are added to the configuration" should {
-      "retrieve the whitelisted application IDs specified" in new Test {
+      "retrieve the allowlisted application IDs specified" in new Test {
 
         private val expected = Seq("a", "b")
 
         (mockConfig.get[Seq[String]](_: String)(_: ConfigLoader[Seq[String]]))
-          .expects("api.access.whitelistedApplicationIds", *)
+          .expects("api.access.allowlistedApplicationIds", *)
           .returns(expected)
 
-        target.whiteListedApplicationIds shouldBe expected
+        target.allowlistedApplicationIds shouldBe expected
       }
     }
 
     "no value is added to the configuration" should {
       "return a runtime exception" in new Test {
         intercept[RuntimeException] {
-          target.whiteListedApplicationIds
+          target.allowlistedApplicationIds
         }
       }
     }

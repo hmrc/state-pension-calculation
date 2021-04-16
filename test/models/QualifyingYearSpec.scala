@@ -17,7 +17,6 @@
 package models
 
 import support.data.CalculationTestData.QualifyingYears._
-import play.api.libs.json.Json
 import support.UnitSpec
 
 class QualifyingYearSpec extends UnitSpec {

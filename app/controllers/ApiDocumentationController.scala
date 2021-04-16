@@ -36,7 +36,7 @@ class ApiDocumentationController @Inject()(cc: ControllerComponents,
 
     lazy val apiAccess: JsObject = Json.obj(
       "type" -> apiConfig.accessType(),
-      "whitelistedApplicationIds" -> apiConfig.whiteListedApplicationIds()
+      "allowlistedApplicationIds" -> apiConfig.allowlistedApplicationIds()
     )
 
     val apiDefinition = Json.parse(
