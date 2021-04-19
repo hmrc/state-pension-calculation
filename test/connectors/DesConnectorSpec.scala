@@ -48,19 +48,19 @@ class DesConnectorSpec extends ConnectorBaseSpec {
     val correlationId = UUID.randomUUID().toString
 
     "return a header carrier with an authorization header using the DES token specified in config" in new Test {
-      connector.desHeaderCarrier(correlationId).headers.contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
+      connector.desHeaderCarrier(correlationId).headers(Seq(HeaderNames.AUTHORIZATION)).contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
     }
 
     "return a header carrier with an Content-Type header" in new Test {
-      connector.desHeaderCarrier(correlationId).headers.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
+      connector.desHeaderCarrier(correlationId).extraHeaders.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
     }
 
     "return a header carrier with an environment header using the DES environment specified in config" in new Test {
-      connector.desHeaderCarrier(correlationId).headers.contains("Environment" -> "des-environment") shouldBe true
+      connector.desHeaderCarrier(correlationId).extraHeaders.contains("Environment" -> "des-environment") shouldBe true
     }
 
     "return a header carrier with a CorrelationId header" in new Test {
-      connector.desHeaderCarrier(correlationId).headers.contains(CorrelationIdHeader -> correlationId) shouldBe true
+      connector.desHeaderCarrier(correlationId).extraHeaders.contains(CorrelationIdHeader -> correlationId) shouldBe true
     }
   }
 

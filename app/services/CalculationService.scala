@@ -20,20 +20,20 @@ import connectors.DesConnector
 import javax.inject.{Inject, Singleton}
 import models.errors._
 import models.{CalculationOutcome, CalculationRequest}
-import play.api.Logger
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.ErrorCodes._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationService @Inject()(connector: DesConnector) {
+class CalculationService @Inject()(connector: DesConnector) extends Logging {
 
   def calculate(request: CalculationRequest)
                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
 
     val unexpectedErrorMapping: String => Error = code => {
-      Logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")
+      logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")
       ApiServiceError
     }
 
