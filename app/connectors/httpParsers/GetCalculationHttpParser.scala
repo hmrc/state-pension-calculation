@@ -18,11 +18,11 @@ package connectors.httpParsers
 
 import models.errors.{ApiServiceError, Error, Errors, ThrottledError}
 import models.{CalculationOutcome, CalculationResponse}
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-object GetCalculationHttpParser extends HttpParser {
+object GetCalculationHttpParser extends HttpParser with Logging {
 
   implicit val getCalculationHttpReads: HttpReads[CalculationOutcome] =
     new HttpReads[CalculationOutcome] {
@@ -31,7 +31,7 @@ object GetCalculationHttpParser extends HttpParser {
         if (response.status != CREATED) {
           val correlationId = response.header("CorrelationId").getOrElse("NOT FOUND")
 
-          Logger.warn("[GetCalculationHttpParser][read] - Error response received from DES\n" +
+          logger.warn("[GetCalculationHttpParser][read] - Error response received from DES\n" +
             s"URL: $url\n" +
             s"Status code: ${response.status}\n" +
             s"Correlation ID: $correlationId\n" +
