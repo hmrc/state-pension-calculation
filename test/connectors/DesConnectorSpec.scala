@@ -23,7 +23,7 @@ import models.errors.{ApiServiceError, Errors}
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
-import utils.AdditionalHeaderNames.CorrelationIdHeader
+import utils.AdditionalHeaderNames.{CorrelationIdHeader, Environment}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -48,19 +48,19 @@ class DesConnectorSpec extends ConnectorBaseSpec {
     val correlationId = UUID.randomUUID().toString
 
     "return a header carrier with an authorization header using the DES token specified in config" in new Test {
-      connector.desHeaderCarrier(correlationId).headers(Seq(HeaderNames.AUTHORIZATION)).contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
+      connector.desHeaders(correlationId).contains(HeaderNames.AUTHORIZATION -> "Bearer des-token") shouldBe true
     }
 
     "return a header carrier with an Content-Type header" in new Test {
-      connector.desHeaderCarrier(correlationId).extraHeaders.contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
+      connector.desHeaders(correlationId).contains(HeaderNames.CONTENT_TYPE -> "application/json") shouldBe true
     }
 
     "return a header carrier with an environment header using the DES environment specified in config" in new Test {
-      connector.desHeaderCarrier(correlationId).extraHeaders.contains("Environment" -> "des-environment") shouldBe true
+      connector.desHeaders(correlationId).contains(Environment -> "des-environment") shouldBe true
     }
 
     "return a header carrier with a CorrelationId header" in new Test {
-      connector.desHeaderCarrier(correlationId).extraHeaders.contains(CorrelationIdHeader -> correlationId) shouldBe true
+      connector.desHeaders(correlationId).contains(CorrelationIdHeader -> correlationId) shouldBe true
     }
   }
 
