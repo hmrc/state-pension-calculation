@@ -20,7 +20,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 val appName = "state-pension-calculation"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     majorVersion := 0,
@@ -35,6 +35,8 @@ lazy val microservice = Project(appName, file("."))
   .settings(scalaVersion := "2.12.12",
     SilencerSettings()
   )
+  .settings(isPublicArtefact := true)
+  .settings(PlayKeys.playDefaultPort := 9790)
 
 // Dependencies upgrades that have been reviewed (16th April 2019) and discounted
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
