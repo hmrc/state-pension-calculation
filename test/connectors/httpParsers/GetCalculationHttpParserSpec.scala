@@ -26,7 +26,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
   "parsing a 201 (Created) initial calc response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(CREATED, Some(initialCalcJson))
+      val httpResponse = HttpResponse(CREATED, initialCalcJson.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)
@@ -35,7 +35,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
 
   "parsing a 201 (Created) final calc response with valid JSON" should {
     "return a valid calculation response" in {
-      val httpResponse = HttpResponse(CREATED, Some(finalCalcJson))
+      val httpResponse = HttpResponse(CREATED, finalCalcJson.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Right(expectedModel)
@@ -45,7 +45,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
   "parsing a 201 (Created) response with invalid JSON" should {
     "return a single error" in {
       val invalidJson = Json.obj()
-      val httpResponse = HttpResponse(CREATED, Some(invalidJson))
+      val httpResponse = HttpResponse(CREATED, invalidJson.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
 
       result shouldBe Left(Errors(ApiServiceError))
@@ -56,7 +56,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
     "return a single ThrottledError error" in {
       val expected = Errors(ThrottledError)
 
-      val httpResponse = HttpResponse(TOO_MANY_REQUESTS, None)
+      val httpResponse = HttpResponse(TOO_MANY_REQUESTS, "")
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
@@ -66,7 +66,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
     "return something" in {
       val htmlResponse = "<html>oops, 502</html"
       val expected = Errors(Seq(Error(BAD_GATEWAY.toString, htmlResponse)))
-      val httpResponse = HttpResponse(BAD_GATEWAY, None, Map.empty,Some(htmlResponse))
+      val httpResponse = HttpResponse(BAD_GATEWAY, htmlResponse)
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
@@ -77,7 +77,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(ThrottledError)
       val throttlingBody: JsValue = Json.obj("incidentReference" -> "LTM000503")
 
-      val httpResponse = HttpResponse(SERVICE_UNAVAILABLE, Some(throttlingBody))
+      val httpResponse = HttpResponse(SERVICE_UNAVAILABLE, throttlingBody.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
@@ -94,7 +94,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
         """.stripMargin)
       val expected = Errors(Error("TEST_CODE", "some reason"))
 
-      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
@@ -125,7 +125,7 @@ class GetCalculationHttpParserSpec extends HttpParserBaseSpec {
         )
       )
 
-      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson.toString())
       val result = getCalculationHttpReads.read(POST, "/test", httpResponse)
       result shouldBe Left(expected)
     }
