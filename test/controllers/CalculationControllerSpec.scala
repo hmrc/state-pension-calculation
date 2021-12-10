@@ -37,6 +37,24 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     lazy val target = new CalculationController(stubControllerComponents(), mockCalculationService)
   }
 
+  val InvalidRequestErrorJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "code": "INVALID_REQUEST",
+       |  "message": "The request is invalid."
+       |}
+      """.stripMargin
+  )
+
+  val UnexpectedFryAmountErrorJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "code": "FRY_AMOUNT_NOT_EXPECTED",
+       |  "message": "Do not supply a FRY amount for an initial calculation."
+       |}
+      """.stripMargin
+  )
+
   val validPayload: JsObject = Json.obj(
     "nino" -> "AA123456A",
     "checkBrick" -> "SMIJ",
@@ -82,7 +100,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
       "return an INVALID_REQUEST error in the body" in new Test {
         private val result = target.calculation()(invalidRequest)
-        contentAsJson(result) shouldBe toJson(InvalidRequestError)
+        contentAsJson(result) shouldBe InvalidRequestErrorJson
       }
 
     }
@@ -99,7 +117,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
       "return an INVALID_REQUEST error in the body" in new Test {
         private val result = target.calculation()(invalidRequest)
-        contentAsJson(result) shouldBe toJson(InvalidRequestError)
+        contentAsJson(result) shouldBe InvalidRequestErrorJson
       }
 
     }
@@ -116,7 +134,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
         "return an INVALID_REQUEST error in the body" in new Test {
           private val result = target.calculation()(invalidRequest)
-          contentAsJson(result) shouldBe toJson(InvalidRequestError)
+          contentAsJson(result) shouldBe InvalidRequestErrorJson
         }
 
       }
@@ -179,7 +197,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
         private val result = target.calculation()(invalidRequest)
 
-        contentAsJson(result) shouldBe toJson(UnexpectedFryAmountError)
+        contentAsJson(result) shouldBe UnexpectedFryAmountErrorJson
       }
     }
 

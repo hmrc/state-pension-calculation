@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DesConnector @Inject()(http: HttpClient,
                              appConfig: AppConfig) {
-  private[connectors] def desHeaders(correlationId: String)(implicit hc: HeaderCarrier): Seq[(String, String)] =
+  private[connectors] def desHeaders(correlationId: String): Seq[(String, String)] =
     Seq(
       "Authorization" -> s"Bearer ${appConfig.desToken()}",
       Environment -> appConfig.desEnvironment(),
