@@ -23,6 +23,9 @@ case class Error(code: String, message: String)
 
 object Error {
   implicit val writes: Writes[Error] = Json.writes[Error]
+  implicit val apiServiceErrorWrites: Writes[ApiServiceError.type] = Json.writes[ApiServiceError.type]
+  implicit val invalidRequestErrorWrites: Writes[InvalidRequestError.type] = Json.writes[InvalidRequestError.type]
+  implicit val unexpectedFryAmountErrorWrites: Writes[UnexpectedFryAmountError.type] = Json.writes[UnexpectedFryAmountError.type]
   implicit val reads: Reads[Error] = (
     (__ \ "code").read[String] and
       (__ \ "reason").read[String]

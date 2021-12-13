@@ -20,16 +20,17 @@ import sbt._
 object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "bootstrap-backend-play-27" % "5.3.0",
-    "uk.gov.hmrc" %% "play-hmrc-api" % "6.2.0-play-27"
+    "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.14.0",
+    "uk.gov.hmrc" %% "play-hmrc-api"             % "6.4.0-play-28"
   )
 
   val test: Seq[ModuleID] = Seq(
-    "com.typesafe.play" %% "play-test" % current % "test",
-    "org.scalamock" %% "scalamock" % "4.4.0" % "test",
-    "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % "test, it",
-    "org.pegdown" % "pegdown" % "1.6.0" % "test, it",
-    "com.github.tomakehurst" % "wiremock-standalone" % "2.27.2" % "test, it"
+    "com.typesafe.play"      %% "play-test"           % current   % "test",
+    "org.scalamock"          %% "scalamock"           % "5.1.0"   % "test",
+    "org.scalatestplus.play" %% "scalatestplus-play"  % "5.1.0"   % "test, it",
+    "org.pegdown"             % "pegdown"             % "1.6.0"   % "test, it",
+    "com.github.tomakehurst"  % "wiremock-standalone" % "2.27.2"  % "test, it",
+    "com.vladsch.flexmark"    % "flexmark-all"        % "0.35.10" % "test, it"
   )
 
   // Fixes a transitive dependency clash between wiremock and scalatestplus-play
