@@ -26,6 +26,8 @@ object Error {
   implicit val apiServiceErrorWrites: Writes[ApiServiceError.type] = Json.writes[ApiServiceError.type]
   implicit val invalidRequestErrorWrites: Writes[InvalidRequestError.type] = Json.writes[InvalidRequestError.type]
   implicit val unexpectedFryAmountErrorWrites: Writes[UnexpectedFryAmountError.type] = Json.writes[UnexpectedFryAmountError.type]
+  implicit val retirementAfterDeathErrorWrites: Writes[RetirementAfterDeathError.type] = Json.writes[RetirementAfterDeathError.type]
+  implicit val throttledErrorWrites: Writes[ThrottledError.type] = Json.writes[ThrottledError.type]
   implicit val reads: Reads[Error] = (
     (__ \ "code").read[String] and
       (__ \ "reason").read[String]
