@@ -27,6 +27,11 @@ object Error {
   implicit val invalidRequestErrorWrites: Writes[InvalidRequestError.type] = Json.writes[InvalidRequestError.type]
   implicit val unexpectedFryAmountErrorWrites: Writes[UnexpectedFryAmountError.type] = Json.writes[UnexpectedFryAmountError.type]
   implicit val retirementAfterDeathErrorWrites: Writes[RetirementAfterDeathError.type] = Json.writes[RetirementAfterDeathError.type]
+  implicit val tooEarlyErrorWrites: Writes[TooEarlyError.type] = Json.writes[TooEarlyError.type]
+  implicit val unknownBusinessErrorWrites: Writes[UnknownBusinessError.type] = Json.writes[UnknownBusinessError.type]
+  implicit val ninoNotFoundErrorWrites: Writes[NinoNotFoundError.type] = Json.writes[NinoNotFoundError.type]
+  implicit val matchNotFoundErrorWrites: Writes[MatchNotFoundError.type] = Json.writes[MatchNotFoundError.type]
+  implicit val serviceUnavailableErrorWrites: Writes[ServiceUnavailableError.type] = Json.writes[ServiceUnavailableError.type]
   implicit val throttledErrorWrites: Writes[ThrottledError.type] = Json.writes[ThrottledError.type]
   implicit val reads: Reads[Error] = (
     (__ \ "code").read[String] and
