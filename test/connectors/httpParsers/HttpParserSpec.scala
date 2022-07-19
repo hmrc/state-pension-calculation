@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "parsing JSON that represents as single DES error" should {
     "return a single error" in {
-      val errorResponseJson = Json.parse(
+      val errorResponseJson =
         """
           |{
           |  "code": "TEST_CODE",
           |  "reason": "some reason"
           |}
-        """.stripMargin)
+        """.stripMargin
 
       val expected = Errors(Error("TEST_CODE", "some reason"))
 
-      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
       val target = new HttpParser {}
       val result = target.parseErrors(httpResponse)
       result shouldBe expected
@@ -43,7 +43,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "parsing JSON that represents as multiple DES errors" should {
     "return a multiple error" in {
-      val errorResponseJson = Json.parse(
+      val errorResponseJson =
         """
           |{
           |  "failures": [
@@ -57,7 +57,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
           |    }
           |  ]
           |}
-        """.stripMargin)
+        """.stripMargin
 
       val expected = Errors(
         Seq(
@@ -66,7 +66,7 @@ class HttpParserSpec extends HttpParserBaseSpec {
         )
       )
 
-      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
       val target = new HttpParser {}
       val result = target.parseErrors(httpResponse)
       result shouldBe expected
@@ -75,16 +75,16 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "parsing JSON that represents does not conform to the DES error schema" should {
     "return a internal server error" in {
-      val errorResponseJson = Json.parse(
+      val errorResponseJson =
         """
           |{
           |  "error": "will robinson"
           |}
-        """.stripMargin)
+        """.stripMargin
 
       val expected = Errors(ApiServiceError)
 
-      val httpResponse = HttpResponse(BAD_REQUEST, Some(errorResponseJson))
+      val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
       val target = new HttpParser {}
       val result = target.parseErrors(httpResponse)
       result shouldBe expected
@@ -93,9 +93,16 @@ class HttpParserSpec extends HttpParserBaseSpec {
 
   "attempting to parse a response with no content" should {
     "return a internal server error" in {
+      val errorResponseJson =
+        """
+          |{
+          |
+          |}
+        """.stripMargin
+
       val expected = Errors(ApiServiceError)
 
-      val httpResponse = HttpResponse(NO_CONTENT, None)
+      val httpResponse = HttpResponse(NO_CONTENT, errorResponseJson)
       val target = new HttpParser {}
       val result = target.parseErrors(httpResponse)
       result shouldBe expected
