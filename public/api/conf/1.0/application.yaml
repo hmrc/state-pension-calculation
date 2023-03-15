@@ -1,0 +1,621 @@
+openapi: 3.0.0
+info:
+  title: Get State Pension calculation
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://test-api.service.hmrc.gov.uk
+    description: Sandbox
+  - url: https://api.service.hmrc.gov.uk
+    description: Production
+paths:
+  /individuals/state-pension-calculation/calculation:
+    post:
+      tags:
+      - individuals
+      summary: Get a State Pension calculation
+      description: Gets a State Pension calculation for an individual.
+      operationId: GetaStatePensioncalculation
+      parameters:
+      - name: Correlationid
+        in: header
+        description: Identifier used to track a request throughout the service.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/GetStatePensionCalculationrequestschema'
+              - example:
+                  nino: AB123456C
+                  checkBrick: SMIJ
+                  gender: M
+                  finalise: false
+            examples:
+              example-1:
+                description: Get initial calculation
+                value:
+                  nino: AB123456C
+                  checkBrick: SMIJ
+                  gender: M
+                  finalise: false
+              example-2:
+                description: Get final calculation using a FRY amount.
+                value:
+                  nino: AB123456C
+                  checkBrick: SMIJ
+                  gender: M
+                  finalise: true
+                  fryAmount: 123.99
+              example-3:
+                description: Get final calculation without a FRY amount.
+                value:
+                  nino: AB123456C
+                  checkBrick: SMIJ
+                  gender: M
+                  finalise: true
+        required: true
+      responses:
+        '201':
+          description: ''
+          headers:
+            Correlationid:
+              description: Identifier used to track a request throughout the service.
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    description: Identifier used to track a request throughout the service.
+                    example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+                  example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/IndividualsStatePensionCalculationCalculationresponse'
+                - example:
+                    result:
+                      nino: AA111111A
+                      protectedPaymentAmount: 123.45
+                      rebateDerivedAmount: 123.45
+                      newStatePensionEntitlementAmount: 123.45
+                      reducedRateElectionToConsider: false
+                      pensionShareOrderContractedOutEmploymentGroup: true
+                      pensionShareOrderStateEarningsRelatedPensionService: true
+                      isleOfManContributions: false
+                      contractedOutEmploymentGroupInvestigationPosition: true
+                      statePensionOldRulesAmount: 123.45
+                      basicAmount: 123.45
+                      additionalPensionPre1997GrossAmount: 123.45
+                      additionalPensionPre1997NetAmount: 123.45
+                      additionalPensionPost1997Amount: 123.45
+                      additionalPensionPost2002Amount: 123.45
+                      graduatedRetirementBenefitAmount: 123.45
+                      statePensionNewRulesAmount: 123.45
+                      statePensionAgeDate: 2018-11-12
+                      post2016YearsUsed: 2
+                      newStatePensionQualifyingYears: 33
+                      incompleteContributionRecordIndicator: true
+                    associatedNotes:
+                    - noteIdentifier: 260
+                      numberOfNoteFields: 3
+                      fieldsList:
+                      - noteField: NOTE FIELD 1 FOR NOTE 260
+                      - noteField: NOTE FIELD 2 FOR NOTE 260
+                      - noteField: NOTE FIELD 3 FOR NOTE 260
+                    - noteIdentifier: 541
+                      numberOfNoteFields: 4
+                      fieldsList:
+                      - noteField: NOTE FIELD 1 FOR NOTE 541
+                      - noteField: NOTE FIELD 2 FOR NOTE 541
+                      - noteField: NOTE FIELD 3 FOR NOTE 541
+                      - noteField: NOTE FIELD 4 FOR NOTE 541
+                    listOfQualifyingYears:
+                    - taxYear: 2017
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2016
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2015
+                      qualifyingTaxYear: true
+                      earningsAmount: 23456.78
+                    - taxYear: 2014
+                      qualifyingTaxYear: false
+                      earningsAmount: 0
+                    - taxYear: 2013
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2012
+                      qualifyingTaxYear: false
+                      earningsAmount: 12.34
+                    - taxYear: 2011
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2010
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2009
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2008
+                      qualifyingTaxYear: false
+                      earningsAmount: 1.23
+                    - taxYear: 2007
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2006
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+              examples:
+                standardResponse:
+                  description: Example with all arrays populated.
+                  value:
+                    result:
+                      nino: AA111111A
+                      protectedPaymentAmount: 123.45
+                      rebateDerivedAmount: 123.45
+                      newStatePensionEntitlementAmount: 123.45
+                      reducedRateElectionToConsider: false
+                      pensionShareOrderContractedOutEmploymentGroup: true
+                      pensionShareOrderStateEarningsRelatedPensionService: true
+                      isleOfManContributions: false
+                      contractedOutEmploymentGroupInvestigationPosition: true
+                      statePensionOldRulesAmount: 123.45
+                      basicAmount: 123.45
+                      additionalPensionPre1997GrossAmount: 123.45
+                      additionalPensionPre1997NetAmount: 123.45
+                      additionalPensionPost1997Amount: 123.45
+                      additionalPensionPost2002Amount: 123.45
+                      graduatedRetirementBenefitAmount: 123.45
+                      statePensionNewRulesAmount: 123.45
+                      statePensionAgeDate: 2018-11-12
+                      post2016YearsUsed: 2
+                      newStatePensionQualifyingYears: 33
+                      incompleteContributionRecordIndicator: true
+                    associatedNotes:
+                    - noteIdentifier: 260
+                      numberOfNoteFields: 3
+                      fieldsList:
+                      - noteField: NOTE FIELD 1 FOR NOTE 260
+                      - noteField: NOTE FIELD 2 FOR NOTE 260
+                      - noteField: NOTE FIELD 3 FOR NOTE 260
+                    - noteIdentifier: 541
+                      numberOfNoteFields: 4
+                      fieldsList:
+                      - noteField: NOTE FIELD 1 FOR NOTE 541
+                      - noteField: NOTE FIELD 2 FOR NOTE 541
+                      - noteField: NOTE FIELD 3 FOR NOTE 541
+                      - noteField: NOTE FIELD 4 FOR NOTE 541
+                    listOfQualifyingYears:
+                    - taxYear: 2017
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2016
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2015
+                      qualifyingTaxYear: true
+                      earningsAmount: 23456.78
+                    - taxYear: 2014
+                      qualifyingTaxYear: false
+                      earningsAmount: 0
+                    - taxYear: 2013
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2012
+                      qualifyingTaxYear: false
+                      earningsAmount: 12.34
+                    - taxYear: 2011
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2010
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2009
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2008
+                      qualifyingTaxYear: false
+                      earningsAmount: 1.23
+                    - taxYear: 2007
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2006
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                noNotesResponse:
+                  description: Example with no notes.
+                  value:
+                    result:
+                      nino: AA111111A
+                      protectedPaymentAmount: 123.45
+                      rebateDerivedAmount: 123.45
+                      newStatePensionEntitlementAmount: 123.45
+                      reducedRateElectionToConsider: false
+                      pensionShareOrderContractedOutEmploymentGroup: true
+                      pensionShareOrderStateEarningsRelatedPensionService: true
+                      isleOfManContributions: false
+                      contractedOutEmploymentGroupInvestigationPosition: true
+                      statePensionOldRulesAmount: 123.45
+                      basicAmount: 123.45
+                      additionalPensionPre1997GrossAmount: 123.45
+                      additionalPensionPre1997NetAmount: 123.45
+                      additionalPensionPost1997Amount: 123.45
+                      additionalPensionPost2002Amount: 123.45
+                      graduatedRetirementBenefitAmount: 123.45
+                      statePensionNewRulesAmount: 123.45
+                      statePensionAgeDate: 2018-11-12
+                      post2016YearsUsed: 2
+                      newStatePensionQualifyingYears: 33
+                      incompleteContributionRecordIndicator: true
+                    listOfQualifyingYears:
+                    - taxYear: 2017
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2016
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2015
+                      qualifyingTaxYear: true
+                      earningsAmount: 23456.78
+                    - taxYear: 2014
+                      qualifyingTaxYear: false
+                      earningsAmount: 0
+                    - taxYear: 2013
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2012
+                      qualifyingTaxYear: false
+                      earningsAmount: 12.34
+                    - taxYear: 2011
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2010
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+                    - taxYear: 2009
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2008
+                      qualifyingTaxYear: false
+                      earningsAmount: 1.23
+                    - taxYear: 2007
+                      qualifyingTaxYear: false
+                      earningsAmount: 123.45
+                    - taxYear: 2006
+                      qualifyingTaxYear: true
+                      earningsAmount: 12345.67
+        '400':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/errorResponse'
+                - example:
+                    code: INVALID_REQUEST
+              examples:
+                invalidRequest:
+                  description: Invalid request
+                  value:
+                    code: INVALID_REQUEST
+                fryAmountNotExpected:
+                  description: FRY amount supplied with initial calculation request
+                  value:
+                    code: FRY_AMOUNT_NOT_EXPECTED
+        '403':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/errorResponse'
+                - example:
+                    code: RETIREMENT_DATE_AFTER_DEATH_DATE
+              examples:
+                retirementDateAfterPensionAge:
+                  description: The date of retirement is after the death of the individual.
+                  value:
+                    code: RETIREMENT_DATE_AFTER_DEATH_DATE
+                tooEarly:
+                  description: The pension calculation can only be done within 6 months of the SPA date
+                  value:
+                    code: TOO_EARLY
+                unknownBusinessError:
+                  description: An unknown business validation error occurred
+                  value:
+                    code: UNKNOWN_BUSINESS_ERROR
+                calculationError:
+                  description: Unable to perform calculation. The code is unique to the calculation error.
+                  value:
+                    code: CALCULATION_ERROR_ followed by five or six numeric digits e.g. CALCULATION_ERROR_12345
+        '404':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/errorResponse'
+                - example:
+                    code: NOT_FOUND_NINO
+              examples:
+                ninoNotFound:
+                  description: NINO not found
+                  value:
+                    code: NOT_FOUND_NINO
+                matchNotFound:
+                  description: Match not found for individual
+                  value:
+                    code: NOT_FOUND_MATCH
+      deprecated: false
+      security:
+        - userRestricted:
+            - read:state-pension-calculation
+components:
+  schemas:
+    errorResponse:
+      title: errorResponse
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+    AssociatedNote:
+      title: AssociatedNote
+      required:
+      - noteIdentifier
+      - numberOfNoteFields
+      - fieldsList
+      type: object
+      properties:
+        noteIdentifier:
+          maximum: 999
+          minimum: 1
+          type: integer
+          description: Note ID
+          format: int32
+        numberOfNoteFields:
+          maximum: 99
+          minimum: 0
+          type: integer
+          description: Number of noteFields that make up the note
+          format: int32
+        fieldsList:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldsList'
+          description: List of note fields that make up the note
+    FieldsList:
+      title: FieldsList
+      required:
+      - noteField
+      type: object
+      properties:
+        noteField:
+          pattern: ^[0-9A-Z\'\&\,\-\(\)\.\/\ ]{1,255}$
+          type: string
+          description: A single note field
+    Gender:
+      title: Gender
+      enum:
+      - M
+      - F
+      type: string
+      description: Gender of the Individual.
+    GetStatePensionCalculationrequestschema:
+      title: GetStatePensionCalculationrequestschema
+      required:
+      - nino
+      - checkBrick
+      - gender
+      - finalise
+      type: object
+      properties:
+        nino:
+          pattern: ^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIQUV])[A-Z]|[A-Z]([DFIOQUV]))[A-Z]{2})[0-9]{6}[A-D\s]?$
+          type: string
+          description: The Individuals National Insurance number with or without the suffix character.
+        checkBrick:
+          pattern: ^([A-Z][ A-Z-'.]{2,4})$
+          type: string
+          description: First 3 characters of the Individuals surname and 2 initials.
+        gender:
+          allOf:
+          - $ref: '#/components/schemas/Gender'
+          - description: Gender of the Individual.
+        finalise:
+          type: boolean
+          description: Final flag used to indicate this is a final calculation request.
+        fryAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+          description: Total amount of earnings missing in the Final Relevant Year (FRY). This can only be supplied if finalise is true.
+    IndividualsStatePensionCalculationCalculationresponse:
+      title: IndividualsStatePensionCalculationCalculationresponse
+      required:
+      - result
+      - listOfQualifyingYears
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/Result'
+        associatedNotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssociatedNote'
+          description: List of note items
+        listOfQualifyingYears:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListOfQualifyingYear'
+          description: A list of the 12 required years (FRY and the 11 preceding years) tax year data in descending tax year order, FRY first
+    ListOfQualifyingYear:
+      title: ListOfQualifyingYear
+      required:
+      - taxYear
+      - qualifyingTaxYear
+      - earningsAmount
+      type: object
+      properties:
+        taxYear:
+          maximum: 2099
+          minimum: 1975
+          type: integer
+          description: The tax year which equals the qualifying year
+          format: int32
+        qualifyingTaxYear:
+          type: boolean
+          description: Qualifying or Non-Qualifying Year; true - Qualifying
+        earningsAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+    Result:
+      title: Result
+      required:
+      - nino
+      - protectedPaymentAmount
+      - rebateDerivedAmount
+      - newStatePensionEntitlementAmount
+      - reducedRateElectionToConsider
+      - pensionShareOrderContractedOutEmploymentGroup
+      - pensionShareOrderStateEarningsRelatedPensionService
+      - isleOfManContributions
+      - contractedOutEmploymentGroupInvestigationPosition
+      - statePensionOldRulesAmount
+      - basicAmount
+      - additionalPensionPre1997GrossAmount
+      - additionalPensionPre1997NetAmount
+      - additionalPensionPost1997Amount
+      - additionalPensionPost2002Amount
+      - graduatedRetirementBenefitAmount
+      - statePensionNewRulesAmount
+      - statePensionAgeDate
+      - post2016YearsUsed
+      - newStatePensionQualifyingYears
+      - incompleteContributionRecordIndicator
+      type: object
+      properties:
+        nino:
+          pattern: ^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$
+          type: string
+          description: National Insurance Number with optional suffix
+        protectedPaymentAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        rebateDerivedAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        newStatePensionEntitlementAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        reducedRateElectionToConsider:
+          type: boolean
+          description: Up until 1977 women could opt to pay a reduced amount of NI contributions; true - opted in, false - did not opt in
+        pensionShareOrderContractedOutEmploymentGroup:
+          type: boolean
+          description: true - the pension is impacted by share
+        pensionShareOrderStateEarningsRelatedPensionService:
+          type: boolean
+          description: true - the pension is impacted by share
+        isleOfManContributions:
+          type: boolean
+          description: true - if there has ever been any Isle of Man contribution made
+        contractedOutEmploymentGroupInvestigationPosition:
+          type: boolean
+          description: true - under investigation
+        statePensionOldRulesAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        basicAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        additionalPensionPre1997GrossAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        additionalPensionPre1997NetAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        additionalPensionPost1997Amount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        additionalPensionPost2002Amount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        graduatedRetirementBenefitAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        statePensionNewRulesAmount:
+          multipleOf: 0.01
+          maximum: 999999999.99
+          minimum: 0
+          type: number
+        statePensionAgeDate:
+          pattern: ^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|1[0-9]|2[0-9]|30)|(19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$
+          type: string
+          description: Format CCYY-MM-DD
+        post2016YearsUsed:
+          maximum: 99
+          minimum: 0
+          type: integer
+          description: The count of the Minimum Qualifying Years used after 2016
+          format: int32
+        newStatePensionQualifyingYears:
+          maximum: 99
+          minimum: 0
+          type: integer
+          description: Amount of new state pension qualifying years
+          format: int32
+        incompleteContributionRecordIndicator:
+          type: boolean
+          description: Indicator for missing factors in an Individual's final relevant year
+  securitySchemes:
+    userRestricted:
+      type: oauth2
+      description: |
+        HMRC supports OAuth 2.0 for authenticating user restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
+        See https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/user-restricted-endpoints for details.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.service.hmrc.gov.uk/oauth/authorize
+          tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
+          refreshUrl: https://api.service.hmrc.gov.uk/oauth/refresh
+          scopes:
+            read:state-pension-calculation: Get State Pension calculation
+tags:
+- name: individuals
+  description: ''
