@@ -25,6 +25,16 @@ paths:
         schema:
           type: string
           example: 543f61b1-14c1-45a4-afd8-bd064a6738c4
+      - name: Accept
+        in: header
+        description: Specifies the response format and the [version](/api-documentation/docs/reference-guide#versioning) of the API to be used.
+        schema:
+          type: string
+          example: application/vnd.hmrc.1.0+json
+          enum: [
+            "application/vnd.hmrc.1.0+json"
+          ]
+        required: true
       requestBody:
         description: ''
         content:

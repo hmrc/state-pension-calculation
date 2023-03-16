@@ -1,1 +1,0 @@
-This service provides a calculation resource related to an individuals State Pension. It has been developed for the Department of Work and Pensions (DWP) **only** and access is restricted to this government department.
