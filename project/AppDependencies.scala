@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-import play.core.PlayVersion.current
 import sbt._
 
 object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "play-hmrc-api"             % "7.1.0-play-28"
+    "uk.gov.hmrc" %% "play-hmrc-api" % "7.2.0-play-28"
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"            %% "bootstrap-test-play-28" % "5.24.0" % "test, it",
-    "org.scalamock"          %% "scalamock"           % "5.2.0"   % "test",
-    "org.pegdown"             % "pegdown"             % "1.6.0"   % "test, it",
-    "com.github.tomakehurst"  % "wiremock-standalone" % "2.27.2"  % "test, it",
+    "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.24.0" % "test, it", //bootstrap version limited by play-hmrc-api
+    "org.scalamock" %% "scalamock" % "5.2.0" % "test"
   )
 
 }
