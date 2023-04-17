@@ -31,14 +31,9 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
-  .settings(scalaVersion := "2.12.12",
+  .settings(scalaVersion := "2.13.8",
     SilencerSettings()
   )
   .settings(isPublicArtefact := true)
   .settings(PlayKeys.playDefaultPort := 9790)
 
-// Dependencies upgrades that have been reviewed (16th April 2019) and discounted
-dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
-dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play", revision = "2.7.*")
-dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play", name = "twirl-api")
-dependencyUpdatesFilter -= moduleFilter(organization = "org.scalatestplus.play", revision = "4.*")
