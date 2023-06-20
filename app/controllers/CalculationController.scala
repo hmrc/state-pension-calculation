@@ -57,7 +57,7 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
     val statusCode: Int = errorToResponseMapping(errors.errors.head)
 
     if (statusCode == INTERNAL_SERVER_ERROR) {
-      Status(statusCode)(Json.toJson(ApiServiceError))
+      Status(statusCode)(Json.toJson[Error](ApiServiceError))
     } else {
       Status(statusCode)(Json.toJson(errors))
     }
