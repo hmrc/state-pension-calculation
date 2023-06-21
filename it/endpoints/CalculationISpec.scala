@@ -16,8 +16,6 @@
 
 package endpoints
 
-import java.util.UUID
-
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.errors._
 import play.api.http.{HeaderNames, Status}
@@ -28,6 +26,8 @@ import support.IntegrationSpec
 import support.data.CalculationTestData.{Response => testData}
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes._
+
+import java.util.UUID
 
 class CalculationISpec extends IntegrationSpec {
 
@@ -160,7 +160,7 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidPayloadBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson(ApiServiceError))
+        Json.toJson[Error](ApiServiceError))
     }
 
     {
@@ -173,7 +173,7 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidNinoBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson(ApiServiceError))
+        Json.toJson[Error](ApiServiceError))
     }
 
     {
@@ -186,7 +186,7 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidCorrelationIdBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson(ApiServiceError))
+        Json.toJson[Error](ApiServiceError))
     }
 
     {
@@ -208,19 +208,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson(ApiServiceError))
+        Json.toJson[Error](ApiServiceError))
     }
 
     {
-      val retirementAfterDeathErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$RetirementDateAfterDeathDateCode",
-           |  "message": "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> RetirementDateAfterDeathDateCode,
         "reason" -> "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
@@ -230,19 +221,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        retirementAfterDeathErrorJson)
+        Json.toJson[Error](RetirementAfterDeathError))
     }
 
     {
-      val tooEarlyErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$TooEarlyCode",
-           |  "message": "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> TooEarlyCode,
         "reason" -> "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date."
@@ -252,19 +234,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        tooEarlyErrorJson)
+        Json.toJson[Error](TooEarlyError))
     }
 
     {
-      val unknownBusinessErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$UnknownBusinessErrorCode",
-           |  "message": "The remote endpoint has returned an unknown business validation error."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> UnknownBusinessErrorCode,
         "reason" -> "The remote endpoint has returned an unknown business validation error."
@@ -274,19 +247,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        unknownBusinessErrorJson)
+        Json.toJson[Error](UnknownBusinessError))
     }
 
     {
-      val ninoNotFoundErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$NinoNotFoundCode",
-           |  "message": "The remote endpoint has indicated that the Nino provided cannot be found."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> NinoNotFoundCode,
         "reason" -> "The remote endpoint has indicated that the Nino provided cannot be found."
@@ -296,19 +260,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.NOT_FOUND,
         invalidBody,
         Status.NOT_FOUND,
-        ninoNotFoundErrorJson)
+        Json.toJson[Error](NinoNotFoundError))
     }
 
     {
-      val matchNotFoundErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$MatchNotFoundCode",
-           |  "message": "The remote endpoint has indicated that there is no match for the person details provided."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> MatchNotFoundCode,
         "reason" -> "The remote endpoint has indicated that there is no match for the person details provided."
@@ -318,7 +273,7 @@ class CalculationISpec extends IntegrationSpec {
         Status.NOT_FOUND,
         invalidBody,
         Status.NOT_FOUND,
-        matchNotFoundErrorJson)
+        Json.toJson[Error](MatchNotFoundError))
     }
 
     {
@@ -331,19 +286,10 @@ class CalculationISpec extends IntegrationSpec {
         Status.INTERNAL_SERVER_ERROR,
         invalidBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson(ApiServiceError))
+        Json.toJson[Error](ApiServiceError))
     }
 
     {
-      val serviceUnavailableErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$ServerErrorCode",
-           |  "message": "Service unavailable."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj(
         "code" -> ServiceUnavailableCode,
         "reason" -> "Dependent systems are currently not responding."
@@ -353,7 +299,7 @@ class CalculationISpec extends IntegrationSpec {
         Status.SERVICE_UNAVAILABLE,
         invalidBody,
         Status.SERVICE_UNAVAILABLE,
-        serviceUnavailableErrorJson)
+        Json.toJson[Error](ServiceUnavailableError))
     }
 
     "DES responds with 429 response code" should {
@@ -379,16 +325,7 @@ class CalculationISpec extends IntegrationSpec {
       }
 
       "return the correct JSON" in new CalcTest {
-        val throttledErrorJson: JsValue = Json.parse(
-          s"""
-             |{
-             |  "code": "$MessageThrottledCode",
-             |  "message": "The application has reached its maximum rate limit."
-             |}
-      """.stripMargin
-        )
-
-        response.body[JsValue] shouldBe throttledErrorJson
+        response.body[JsValue] shouldBe Json.toJson[Error](ThrottledError)
       }
 
       "have the correct Content-Type header and value" in new CalcTest {
@@ -399,23 +336,13 @@ class CalculationISpec extends IntegrationSpec {
 
     {
       val serviceUnavailableCode = "SERVICE_UNAVAILABLE throttled response"
-
-      val throttledErrorJson: JsValue = Json.parse(
-        s"""
-           |{
-           |  "code": "$MessageThrottledCode",
-           |  "message": "The application has reached its maximum rate limit."
-           |}
-      """.stripMargin
-      )
-
       val invalidBody = Json.obj("incidentReference" -> "LTM000503")
 
       testDesErrorHandling(serviceUnavailableCode,
         Status.SERVICE_UNAVAILABLE,
         invalidBody,
         Status.TOO_MANY_REQUESTS,
-        throttledErrorJson)
+        Json.toJson[Error](ThrottledError))
     }
 
     {

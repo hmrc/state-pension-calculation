@@ -24,7 +24,7 @@ object ErrorCodes {
   val TooEarlyCode: String = "TOO_EARLY"
   val UnknownBusinessErrorCode: String = "UNKNOWN_BUSINESS_ERROR"
   val NinoNotFoundCode: String = "NOT_FOUND_NINO"
-  val MatchNotFoundCode: String = "NOT_FOUND_MATCH"
+  val MatchNotFoundCode: String = "NO_MATCH_FOUND"
   val ServerErrorCode: String = "SERVER_ERROR"
   val ServiceUnavailableCode: String = "SERVICE_UNAVAILABLE"
   val MessageThrottledCode: String = "MESSAGE_THROTTLED_OUT"
