@@ -19,11 +19,11 @@ import sbt._
 object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "play-hmrc-api" % "7.2.0-play-28"
+    "uk.gov.hmrc" %% "play-hmrc-api-play-30" % "8.0.0"
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.24.0" % "test, it", //bootstrap version limited by play-hmrc-api
+    "uk.gov.hmrc" %% "bootstrap-test-play-30" % "8.2.0" % "test, it", //bootstrap version limited by play-hmrc-api
     "org.scalamock" %% "scalamock" % "5.2.0" % "test"
   )
 

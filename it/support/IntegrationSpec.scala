@@ -48,7 +48,6 @@ trait IntegrationSpec extends AnyWordSpecLike
     s"$servicesPath.des.port" -> mockPort,
     s"$servicesPath.auth.host" -> mockHost,
     s"$servicesPath.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
     "api.status" -> "BETA",
   )
 
