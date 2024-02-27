@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package controllers
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.ActorMaterializer
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers.stubControllerComponents
