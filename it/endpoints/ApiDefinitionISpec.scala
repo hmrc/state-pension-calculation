@@ -45,13 +45,6 @@ class ApiDefinitionISpec extends IntegrationSpec {
       private val expectedJson = Json.parse(
         """
           |{
-          |  "scopes": [
-          |    {
-          |      "key": "read:state-pension-calculation",
-          |      "name": "Get State Pension calculation",
-          |      "description": "Get State Pension calculation"
-          |    }
-          |  ],
           |  "api": {
           |    "name": "Get State Pension Calculation",
           |    "description": "Get an Individuals State Pension calculation",
