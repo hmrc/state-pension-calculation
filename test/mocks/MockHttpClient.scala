@@ -16,31 +16,35 @@
 
 package mocks
 
+import models.CalculationOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Writes
+import play.api.libs.json.{Json, Writes}
+import uk.gov.hmrc.http
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockHttpClient extends MockFactory {
 
-  val mockHttpClient: HttpClient = mock[HttpClient]
+  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
 
   object MockedHttpClient {
 
     def post[I, O](url: String, body: I, headers: Seq[(String, String)]): CallHandler[Future[O]] = {
-      (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
+     (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
         (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
-        .expects(url, body, headers, *, *, *, *)
+       .expects(url, body, headers, *, *, *, *)
     }
 
-    def post[I, O](url: String, body: I): CallHandler[Future[O]] = {
+
+   def post[I, O](url: String, body: I): CallHandler[Future[O]] = {
       (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
-        (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
+       (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
         .expects(url, body, *, *, *, *, *)
-    }
+   }
 
   }
 
