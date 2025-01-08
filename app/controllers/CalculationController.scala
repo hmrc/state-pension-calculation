@@ -27,12 +27,12 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes.CalculationErrorCodePrefix
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
-class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)
-  extends BackendController(cc) {
+class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)(
+  implicit ec: ExecutionContext
+) extends BackendController(cc) {
 
   private def handleErrors(errors: Errors): Result = {
 
