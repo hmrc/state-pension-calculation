@@ -19,13 +19,19 @@ package connectors
 import config.AppConfig
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.AdditionalHeaderNames.{CorrelationIdHeader, Environment}
+
+import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class DesConnector @Inject()(http: HttpClient,
-                             appConfig: AppConfig) {
+class DesConnector @Inject()(http: HttpClientV2, appConfig: AppConfig) {
+
   private[connectors] def desHeaders(correlationId: String): Seq[(String, String)] =
     Seq(
       "Authorization" -> s"Bearer ${appConfig.desToken()}",
@@ -33,16 +39,33 @@ class DesConnector @Inject()(http: HttpClient,
       CorrelationIdHeader -> correlationId,
       HeaderNames.CONTENT_TYPE -> "application/json"
     )
-  def getInitialCalculation(request: CalculationRequest)
-                           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
-    import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
-    val url = s"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/initial/${request.nino}"
-    http.POST(url, request, desHeaders(request.correlationId))(implicitly, getCalculationHttpReads, hc, implicitly)
+
+  def getInitialCalculation(request: CalculationRequest)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext
+  ): Future[CalculationOutcome] = {
+
+    val url = url"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/initial/${request.nino}"
+    sendRequest(url, request)
   }
-  def getFinalCalculation(request: CalculationRequest)
-                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
-    import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
-    val url = s"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/final/${request.nino}"
-    http.POST(url, request, desHeaders(request.correlationId))(implicitly, getCalculationHttpReads, hc, implicitly)
+
+  def getFinalCalculation(request: CalculationRequest)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext
+  ): Future[CalculationOutcome] = {
+
+    val url = url"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/final/${request.nino}"
+    sendRequest(url, request)
   }
+
+  private def sendRequest(url: URL, request: CalculationRequest)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext
+  ): Future[CalculationOutcome] = {
+    import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
+
+    http
+      .post(url)
+      .withBody(Json.toJson(request))
+      .setHeader(desHeaders(request.correlationId): _*)
+      .execute[CalculationOutcome]
+  }
+
 }

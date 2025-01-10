@@ -29,6 +29,7 @@ import support.data.CalculationTestData.Response.{expectedModel => validResponse
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes.CalculationErrorCodePrefix
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CalculationControllerSpec extends ControllerBaseSpec {

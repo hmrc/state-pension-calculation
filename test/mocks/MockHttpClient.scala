@@ -16,32 +16,44 @@
 
 package mocks
 
-import org.scalamock.handlers.CallHandler
+import izumi.reflect.Tag
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
-import uk.gov.hmrc.http.HttpClient
+import play.api.libs.json._
+import play.api.libs.ws.BodyWritable
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, StringContextOps}
 
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockHttpClient extends MockFactory {
 
-  val mockHttpClient: HttpClient = mock[HttpClient]
+  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
   object MockedHttpClient {
 
-    def post[I, O](url: String, body: I, headers: Seq[(String, String)]): CallHandler[Future[O]] = {
-      (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
-        (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
-        .expects(url, body, headers, *, *, *, *)
-    }
+    def post[O](url: String, body: JsValue)(response: Future[O]): Unit = {
+      (mockHttpClient
+        .post(_: URL)(_: HeaderCarrier))
+        .expects(url"$url", *)
+        .returns(mockRequestBuilder)
 
-    def post[I, O](url: String, body: I): CallHandler[Future[O]] = {
-      (mockHttpClient.POST[I, O](_: String, _: I, _: Seq[(String, String)])
-        (_: Writes[I], _: HttpReads[O], _: HeaderCarrier, _: ExecutionContext))
-        .expects(url, body, *, *, *, *, *)
-    }
+      (mockRequestBuilder
+        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+        .expects(body, *, *, *)
+        .returns(mockRequestBuilder)
 
+      (mockRequestBuilder
+        .setHeader(_: (String, String)))
+        .expects(*)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder
+        .execute(_: HttpReads[O], _: ExecutionContext))
+        .expects(*, *)
+        .returns(response)
+    }
   }
 
 }

@@ -16,21 +16,21 @@
 
 package connectors
 
-import java.util.UUID
-
 import mocks.{MockAppConfig, MockHttpClient}
 import models.errors.{ApiServiceError, Errors}
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.http.HeaderNames
+import play.api.libs.json.Json
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
 import utils.AdditionalHeaderNames.{CorrelationIdHeader, Environment}
 
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DesConnectorSpec extends ConnectorBaseSpec {
 
-  val baseUrl = "des-base-url"
+  private val baseUrl = "http://des-base-url"
 
   private trait Test extends MockHttpClient with MockAppConfig {
 
@@ -74,8 +74,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
     "return a calculation" when {
       "the http client returns a success response" in new Test {
-        MockedHttpClient.post(url, request)
-          .returns(Future.successful(Right(response)))
+        MockedHttpClient.post(url, Json.toJson(request))(response = Future.successful(Right(response)))
 
         val result: CalculationOutcome = await(connector.getInitialCalculation(request))
         result shouldBe Right(response)
@@ -86,8 +85,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
       "the http client returns an error response" in new Test {
         val errorResponse = Errors(ApiServiceError)
 
-        MockedHttpClient.post(url, request)
-          .returns(Future.successful(Left(errorResponse)))
+        MockedHttpClient.post(url, Json.toJson(request))(response = Future.successful(Left(errorResponse)))
 
         val result: CalculationOutcome = await(connector.getInitialCalculation(request))
         result shouldBe Left(errorResponse)
@@ -105,8 +103,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
     "return a calculation" when {
       "the http client returns a success response" in new Test {
-        MockedHttpClient.post(url, request)
-          .returns(Future.successful(Right(response)))
+        MockedHttpClient.post(url, Json.toJson(request))(response = Future.successful(Right(response)))
 
         val result: CalculationOutcome = await(connector.getFinalCalculation(request))
         result shouldBe Right(response)
@@ -117,8 +114,7 @@ class DesConnectorSpec extends ConnectorBaseSpec {
       "the http client returns an error response" in new Test {
         val errorResponse = Errors(ApiServiceError)
 
-        MockedHttpClient.post(url, request)
-          .returns(Future.successful(Left(errorResponse)))
+        MockedHttpClient.post(url, Json.toJson(request))(response = Future.successful(Left(errorResponse)))
 
         val result: CalculationOutcome = await(connector.getFinalCalculation(request))
         result shouldBe Left(errorResponse)
