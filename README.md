@@ -10,7 +10,7 @@ This is the code repository for the Get State Pension Calculation API. This repo
 Start state-pension-calculation locally in root folder/terminal  
 `sbt 'run 9790'`  
 Start microservices using service manager  
-`sm2 -start GYSP_ALL`
+`sm2 --start GYSP_ALL`
 
 ### License
 
