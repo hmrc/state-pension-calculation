@@ -29,6 +29,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
       val request: WSRequest = buildRequest(s"/api/definition")
       await(request.get())
     }
+
   }
 
   "Calling the /api/definition endpoint" should {

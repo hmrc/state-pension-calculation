@@ -31,25 +31,28 @@ object GetCalculationHttpParser extends HttpParser with Logging {
         if (response.status != CREATED) {
           val correlationId = response.header("CorrelationId").getOrElse("NOT FOUND")
 
-          logger.warn("[GetCalculationHttpParser][read] - Error response received from DES\n" +
-            s"URL: $url\n" +
-            s"Status code: ${response.status}\n" +
-            s"Correlation ID: $correlationId\n" +
-            s"Body: ${response.body}"
+          logger.warn(
+            "[GetCalculationHttpParser][read] - Error response received from DES\n" +
+              s"URL: $url\n" +
+              s"Status code: ${response.status}\n" +
+              s"Correlation ID: $correlationId\n" +
+              s"Body: ${response.body}"
           )
         }
 
         response.status match {
 
-          case CREATED => response.validateJson[CalculationResponse] match {
-            case Some(result) => Right(result)
-            case None => Left(Errors(ApiServiceError))
-          }
-          case TOO_MANY_REQUESTS => Left(Errors(ThrottledError))
+          case CREATED =>
+            response.validateJson[CalculationResponse] match {
+              case Some(result) => Right(result)
+              case None         => Left(Errors(ApiServiceError))
+            }
+          case TOO_MANY_REQUESTS   => Left(Errors(ThrottledError))
           case SERVICE_UNAVAILABLE => Left(parseServiceUnavailableError(response))
-          case BAD_GATEWAY => Left(Errors(Seq(Error(BAD_GATEWAY.toString, response.body))))
-          case _ => Left(parseErrors(response))
+          case BAD_GATEWAY         => Left(Errors(Seq(Error(BAD_GATEWAY.toString, response.body))))
+          case _                   => Left(parseErrors(response))
         }
       }
     }
+
 }

@@ -24,9 +24,8 @@ object AuditStub extends WireMockMethods {
 
   private val auditUri: String = s"/write/audit.*"
 
-  def audit(): StubMapping = {
+  def audit(): StubMapping =
     when(method = POST, uri = auditUri)
       .thenReturn(status = NO_CONTENT)
-  }
 
 }

@@ -30,15 +30,15 @@ trait MockDesConnector extends MockFactory {
 
   object MockedDesConnector {
 
-    def getInitialCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] = {
-      (mockDesConnector.getInitialCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+    def getInitialCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
+      (mockDesConnector
+        .getInitialCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
-    }
 
-    def getFinalCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] = {
-      (mockDesConnector.getFinalCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+    def getFinalCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
+      (mockDesConnector
+        .getFinalCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
-    }
 
   }
 

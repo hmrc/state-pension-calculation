@@ -22,32 +22,32 @@ import play.api.libs.json.{JsValue, Json}
 object CalculationTestData {
 
   object Result {
-    val json: JsValue = Json.parse(
-      """
-        |{
-        |  "nino": "AA123456A",
-        |  "protectedPaymentAmount": 123.45,
-        |  "rebateDerivedAmount": 123.45,
-        |  "newStatePensionEntitlementAmount": 123.45,
-        |  "reducedRateElectionToConsider": false,
-        |  "pensionShareOrderContractedOutEmploymentGroup": true,
-        |  "pensionShareOrderStateEarningsRelatedPensionService": true,
-        |  "isleOfManContributions": false,
-        |  "contractedOutEmploymentGroupInvestigationPosition": true,
-        |  "statePensionOldRulesAmount": 123.45,
-        |  "basicAmount": 123.45,
-        |  "additionalPensionPre1997GrossAmount": 123.45,
-        |  "additionalPensionPre1997NetAmount": 123.45,
-        |  "additionalPensionPost1997Amount": 123.45,
-        |  "additionalPensionPost2002Amount": 123.45,
-        |  "graduatedRetirementBenefitAmount": 123.45,
-        |  "statePensionNewRulesAmount": 123.45,
-        |  "statePensionAgeDate": "2018-11-12",
-        |  "post2016YearsUsed": 2,
-        |  "newStatePensionQualifyingYears": 1,
-        |  "incompleteContributionRecordIndicator": true
-        |}
-        |""".stripMargin)
+
+    val json: JsValue = Json.parse("""
+                                     |{
+                                     |  "nino": "AA123456A",
+                                     |  "protectedPaymentAmount": 123.45,
+                                     |  "rebateDerivedAmount": 123.45,
+                                     |  "newStatePensionEntitlementAmount": 123.45,
+                                     |  "reducedRateElectionToConsider": false,
+                                     |  "pensionShareOrderContractedOutEmploymentGroup": true,
+                                     |  "pensionShareOrderStateEarningsRelatedPensionService": true,
+                                     |  "isleOfManContributions": false,
+                                     |  "contractedOutEmploymentGroupInvestigationPosition": true,
+                                     |  "statePensionOldRulesAmount": 123.45,
+                                     |  "basicAmount": 123.45,
+                                     |  "additionalPensionPre1997GrossAmount": 123.45,
+                                     |  "additionalPensionPre1997NetAmount": 123.45,
+                                     |  "additionalPensionPost1997Amount": 123.45,
+                                     |  "additionalPensionPost2002Amount": 123.45,
+                                     |  "graduatedRetirementBenefitAmount": 123.45,
+                                     |  "statePensionNewRulesAmount": 123.45,
+                                     |  "statePensionAgeDate": "2018-11-12",
+                                     |  "post2016YearsUsed": 2,
+                                     |  "newStatePensionQualifyingYears": 1,
+                                     |  "incompleteContributionRecordIndicator": true
+                                     |}
+                                     |""".stripMargin)
 
     val expectedModel = CalculationResult(
       nino = "AA123456A",
@@ -70,33 +70,36 @@ object CalculationTestData {
       statePensionAgeDate = "2018-11-12",
       post2016YearsUsed = 2,
       newStatePensionQualifyingYears = 1,
-      incompleteContributionRecordIndicator = true)
+      incompleteContributionRecordIndicator = true
+    )
+
   }
 
   object Notes {
-    val json: JsValue = Json.parse(
-      """
-        |{
-        |  "noteIdentifier": 1,
-        |  "numberOfNoteFields": 4,
-        |  "fieldsList": [
-        |    {
-        |      "noteField": "note #1"
-        |    },
-        |    {
-        |      "noteField": "note #2"
-        |    },
-        |    {
-        |      "noteField": "note #3"
-        |    },
-        |    {
-        |      "noteField": "note #4"
-        |    }
-        |  ]
-        |}
+
+    val json: JsValue = Json.parse("""
+                                     |{
+                                     |  "noteIdentifier": 1,
+                                     |  "numberOfNoteFields": 4,
+                                     |  "fieldsList": [
+                                     |    {
+                                     |      "noteField": "note #1"
+                                     |    },
+                                     |    {
+                                     |      "noteField": "note #2"
+                                     |    },
+                                     |    {
+                                     |      "noteField": "note #3"
+                                     |    },
+                                     |    {
+                                     |      "noteField": "note #4"
+                                     |    }
+                                     |  ]
+                                     |}
       """.stripMargin)
 
-    val expectedModel = CalculationNote(1,
+    val expectedModel = CalculationNote(
+      1,
       4,
       Seq(
         "note #1",
@@ -105,18 +108,18 @@ object CalculationTestData {
         "note #4"
       )
     )
+
   }
 
   object QualifyingYears {
     val taxYear = 2017
 
-    val json: JsValue = Json.parse(
-      s"""
-         |{
-         |  "taxYear": $taxYear,
-         |  "qualifyingTaxYear": true,
-         |  "earningsAmount": 12345.67
-         |}
+    val json: JsValue = Json.parse(s"""
+                                      |{
+                                      |  "taxYear": $taxYear,
+                                      |  "qualifyingTaxYear": true,
+                                      |  "earningsAmount": 12345.67
+                                      |}
       """.stripMargin)
 
     val expectedModel = QualifyingYear(taxYear, qualifyingTaxYear = true, BigDecimal("12345.67"))
@@ -125,6 +128,7 @@ object CalculationTestData {
 
   object Response {
     private val placeholder = "PLACEHOLDER"
+
     private val json =
       s"""
          |{
@@ -135,17 +139,20 @@ object CalculationTestData {
       """.stripMargin
 
     val initialCalcJson: JsValue = Json.parse(json.replace(placeholder, "initialRequestResult"))
-    val finalCalcJson: JsValue = Json.parse(json.replace(placeholder, "finalRequestResult"))
-    val generatedJson: JsValue = Json.parse(json.replace(placeholder, "result"))
+    val finalCalcJson: JsValue   = Json.parse(json.replace(placeholder, "finalRequestResult"))
+    val generatedJson: JsValue   = Json.parse(json.replace(placeholder, "result"))
 
-    val expectedModel = CalculationResponse(Result.expectedModel,
+    val expectedModel = CalculationResponse(
+      Result.expectedModel,
       Some(Seq(Notes.expectedModel, Notes.expectedModel)),
       Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel)
     )
+
   }
 
   object ResponseWithoutNotes {
     private val placeholder = "PLACEHOLDER"
+
     private val json =
       s"""
          |{
@@ -155,13 +162,12 @@ object CalculationTestData {
       """.stripMargin
 
     val initialCalcJson: JsValue = Json.parse(json.replace(placeholder, "initialRequestResult"))
-    val finalCalcJson: JsValue = Json.parse(json.replace(placeholder, "finalRequestResult"))
-    val generatedJson: JsValue = Json.parse(json.replace(placeholder, "result"))
+    val finalCalcJson: JsValue   = Json.parse(json.replace(placeholder, "finalRequestResult"))
+    val generatedJson: JsValue   = Json.parse(json.replace(placeholder, "result"))
 
-    val expectedModel = CalculationResponse(Result.expectedModel,
-      None,
-      Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel)
-    )
+    val expectedModel =
+      CalculationResponse(Result.expectedModel, None, Seq(QualifyingYears.expectedModel, QualifyingYears.expectedModel))
+
   }
 
 }

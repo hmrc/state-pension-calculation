@@ -38,9 +38,10 @@ class CalculationNoteSpec extends UnitSpec {
 
   "Serialising CalculationNotes to JSON" should {
     "generate JSON that conforms to the JSON schema for calc notes" in {
-      val result = Json.toJson(expectedModel)
+      val result   = Json.toJson(expectedModel)
       val expected = generatedJson
       result shouldBe expected
     }
   }
+
 }

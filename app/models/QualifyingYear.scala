@@ -18,11 +18,9 @@ package models
 
 import play.api.libs.json.{Json, Reads, Writes}
 
-case class QualifyingYear(taxYear: Int,
-                          qualifyingTaxYear: Boolean,
-                          earningsAmount: BigDecimal)
+case class QualifyingYear(taxYear: Int, qualifyingTaxYear: Boolean, earningsAmount: BigDecimal)
 
 object QualifyingYear {
-  implicit val reads: Reads[QualifyingYear] = Json.reads[QualifyingYear]
+  implicit val reads: Reads[QualifyingYear]   = Json.reads[QualifyingYear]
   implicit val writes: Writes[QualifyingYear] = Json.writes[QualifyingYear]
 }

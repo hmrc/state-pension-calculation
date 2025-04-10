@@ -24,19 +24,19 @@ case class CalculationNote(id: Int, count: Int, notes: Seq[String])
 object CalculationNote {
   val noteReader: Reads[String] = (__ \ "noteField").read[String]
 
-  implicit val reads: Reads[CalculationNote] = (
-    (__ \ "noteIdentifier").read[Int] and
-      (__ \ "numberOfNoteFields").read[Int] and
-      (__ \ "fieldsList").lazyRead(Reads.seq[String](noteReader))
-    ) (CalculationNote.apply _)
+  implicit val reads: Reads[CalculationNote] =
+    (__ \ "noteIdentifier")
+      .read[Int]
+      .and((__ \ "numberOfNoteFields").read[Int])
+      .and((__ \ "fieldsList").lazyRead(Reads.seq[String](noteReader)))(CalculationNote.apply _)
 
   implicit val writes: Writes[CalculationNote] = new Writes[CalculationNote] {
-    override def writes(data: CalculationNote): JsValue = {
+    override def writes(data: CalculationNote): JsValue =
       Json.obj(
-        "noteIdentifier" -> data.id,
+        "noteIdentifier"     -> data.id,
         "numberOfNoteFields" -> data.count,
-        "fieldsList" -> JsArray(data.notes.map { note => Json.obj("noteField" -> note) })
+        "fieldsList"         -> JsArray(data.notes.map(note => Json.obj("noteField" -> note)))
       )
-    }
   }
+
 }

@@ -35,8 +35,8 @@ class HttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(Error("TEST_CODE", "some reason"))
 
       val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
-      val target = new HttpParser {}
-      val result = target.parseErrors(httpResponse)
+      val target       = new HttpParser {}
+      val result       = target.parseErrors(httpResponse)
       result shouldBe expected
     }
   }
@@ -67,8 +67,8 @@ class HttpParserSpec extends HttpParserBaseSpec {
       )
 
       val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
-      val target = new HttpParser {}
-      val result = target.parseErrors(httpResponse)
+      val target       = new HttpParser {}
+      val result       = target.parseErrors(httpResponse)
       result shouldBe expected
     }
   }
@@ -85,8 +85,8 @@ class HttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(BAD_REQUEST, errorResponseJson)
-      val target = new HttpParser {}
-      val result = target.parseErrors(httpResponse)
+      val target       = new HttpParser {}
+      val result       = target.parseErrors(httpResponse)
       result shouldBe expected
     }
   }
@@ -103,8 +103,8 @@ class HttpParserSpec extends HttpParserBaseSpec {
       val expected = Errors(ApiServiceError)
 
       val httpResponse = HttpResponse(NO_CONTENT, errorResponseJson)
-      val target = new HttpParser {}
-      val result = target.parseErrors(httpResponse)
+      val target       = new HttpParser {}
+      val result       = target.parseErrors(httpResponse)
       result shouldBe expected
     }
   }

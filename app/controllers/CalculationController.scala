@@ -30,28 +30,27 @@ import utils.ErrorCodes.CalculationErrorCodePrefix
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
-class CalculationController @Inject()(cc: ControllerComponents, service: CalculationService)(
-  implicit ec: ExecutionContext
+class CalculationController @Inject() (cc: ControllerComponents, service: CalculationService)(
+    implicit ec: ExecutionContext
 ) extends BackendController(cc) {
 
   private def handleErrors(errors: Errors): Result = {
 
-    val handleNonStandardError: Error => Int = error => {
+    val handleNonStandardError: Error => Int = error =>
       if (error.code.startsWith(CalculationErrorCodePrefix)) {
         FORBIDDEN
       } else {
         INTERNAL_SERVER_ERROR
       }
-    }
 
     val errorToResponseMapping: Map[Error, Int] = Map(
       RetirementAfterDeathError -> FORBIDDEN,
-      TooEarlyError -> FORBIDDEN,
-      UnknownBusinessError -> FORBIDDEN,
-      NinoNotFoundError -> NOT_FOUND,
-      MatchNotFoundError -> NOT_FOUND,
-      ServiceUnavailableError -> SERVICE_UNAVAILABLE,
-      ThrottledError -> TOO_MANY_REQUESTS
+      TooEarlyError             -> FORBIDDEN,
+      UnknownBusinessError      -> FORBIDDEN,
+      NinoNotFoundError         -> NOT_FOUND,
+      MatchNotFoundError        -> NOT_FOUND,
+      ServiceUnavailableError   -> SERVICE_UNAVAILABLE,
+      ThrottledError            -> TOO_MANY_REQUESTS
     ).withDefault(handleNonStandardError)
 
     val statusCode: Int = errorToResponseMapping(errors.errors.head)
@@ -63,34 +62,36 @@ class CalculationController @Inject()(cc: ControllerComponents, service: Calcula
     }
   }
 
-  private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] = {
+  private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] =
     service.calculate(calculationRequest).map {
       case Right(result) => Created(Json.toJson(result))
-      case Left(errors) => handleErrors(errors)
+      case Left(errors)  => handleErrors(errors)
     }
-  }
 
   private def buildRequest(request: Request[JsValue]): Either[Errors, CalculationRequest] = {
     val correlationIdPattern = "^[A-Za-z0-9\\-]{36}$"
-    request.headers.get(CorrelationIdHeader).map { correlationId =>
-      request.body.validate[CalculationRequest] match {
-        case JsSuccess(CalculationRequest(_, _, _, false, Some(_), _), _) =>
-          Left(Errors(UnexpectedFryAmountError))
-        case JsSuccess(calculationRequest, _) if correlationId.matches(correlationIdPattern) =>
-          Right(calculationRequest.copy(correlationId = correlationId))
-        case _ =>
-          Left(Errors(InvalidRequestError))
+    request.headers
+      .get(CorrelationIdHeader)
+      .map { correlationId =>
+        request.body.validate[CalculationRequest] match {
+          case JsSuccess(CalculationRequest(_, _, _, false, Some(_), _), _) =>
+            Left(Errors(UnexpectedFryAmountError))
+          case JsSuccess(calculationRequest, _) if correlationId.matches(correlationIdPattern) =>
+            Right(calculationRequest.copy(correlationId = correlationId))
+          case _ =>
+            Left(Errors(InvalidRequestError))
+        }
       }
-    }.getOrElse(Left(Errors(InvalidRequestError)))
+      .getOrElse(Left(Errors(InvalidRequestError)))
   }
 
   def calculation(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val response = buildRequest(request) match {
       case Right(calcRequest) => calculate(calcRequest)
-      case Left(error) => Future.successful(BadRequest(Json.toJson(error)))
+      case Left(error)        => Future.successful(BadRequest(Json.toJson(error)))
     }
 
-    response map { result =>
+    response.map { result =>
       val correlationId = request.headers.get(CorrelationIdHeader).getOrElse("")
       result.withHeaders(CorrelationIdHeader -> correlationId)
     }

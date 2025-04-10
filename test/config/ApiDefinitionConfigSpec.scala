@@ -24,9 +24,9 @@ class ApiDefinitionConfigSpec extends UnitSpec {
   private trait Test {
     lazy val mockConfig: Configuration = mock[Configuration]
 
-    lazy val target: ApiDefinitionConfigImpl = {
+    lazy val target: ApiDefinitionConfigImpl =
       new ApiDefinitionConfigImpl(mockConfig)
-    }
+
   }
 
   "calling status" when {
@@ -36,7 +36,8 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "BETA"
 
-        (mockConfig.get[String](_: String)(_: ConfigLoader[String]))
+        (mockConfig
+          .get[String](_: String)(_: ConfigLoader[String]))
           .expects("api.status", *)
           .returns(expected)
 
@@ -60,7 +61,8 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "PUBLIC"
 
-        (mockConfig.getOptional[String](_: String)(_: ConfigLoader[String]))
+        (mockConfig
+          .getOptional[String](_: String)(_: ConfigLoader[String]))
           .expects("api.access.type", *)
           .returns(Some(expected))
 
@@ -73,7 +75,8 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "PRIVATE"
 
-        (mockConfig.getOptional[String](_: String)(_: ConfigLoader[String]))
+        (mockConfig
+          .getOptional[String](_: String)(_: ConfigLoader[String]))
           .expects("api.access.type", *)
           .returns(None)
 

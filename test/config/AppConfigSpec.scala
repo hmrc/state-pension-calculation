@@ -24,9 +24,9 @@ class AppConfigSpec extends UnitSpec {
   trait Test {
     lazy val mockConfig: ServicesConfig = mock[ServicesConfig]
 
-    lazy val target: AppConfigImpl = {
+    lazy val target: AppConfigImpl =
       new AppConfigImpl(mockConfig)
-    }
+
   }
 
   "calling desBaseUrl" should {
@@ -34,7 +34,8 @@ class AppConfigSpec extends UnitSpec {
 
       val url = "http://des-host"
 
-      (mockConfig.baseUrl(_: String))
+      (mockConfig
+        .baseUrl(_: String))
         .expects("des")
         .returns(url)
 
@@ -49,7 +50,8 @@ class AppConfigSpec extends UnitSpec {
 
         val env = "TEST_ENV"
 
-        (mockConfig.getString(_: String))
+        (mockConfig
+          .getString(_: String))
           .stubs("microservice.services.des.env")
           .returns(env)
 
@@ -73,7 +75,8 @@ class AppConfigSpec extends UnitSpec {
 
         val token = "some-token"
 
-        (mockConfig.getString(_: String))
+        (mockConfig
+          .getString(_: String))
           .stubs("microservice.services.des.token")
           .returns(token)
 
@@ -89,4 +92,5 @@ class AppConfigSpec extends UnitSpec {
       }
     }
   }
+
 }

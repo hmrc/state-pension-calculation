@@ -21,11 +21,7 @@ import play.api.test.ResultExtractors
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 
-trait ConnectorBaseSpec extends UnitSpec
-  with Status
-  with MimeTypes
-  with HeaderNames
-  with ResultExtractors {
+trait ConnectorBaseSpec extends UnitSpec with Status with MimeTypes with HeaderNames with ResultExtractors {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
     .withExtraHeaders(HeaderNames.CONTENT_TYPE -> "application/json")

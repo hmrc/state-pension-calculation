@@ -30,18 +30,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DesConnector @Inject()(http: HttpClientV2, appConfig: AppConfig) {
+class DesConnector @Inject() (http: HttpClientV2, appConfig: AppConfig) {
 
   private[connectors] def desHeaders(correlationId: String): Seq[(String, String)] =
     Seq(
-      "Authorization" -> s"Bearer ${appConfig.desToken()}",
-      Environment -> appConfig.desEnvironment(),
-      CorrelationIdHeader -> correlationId,
+      "Authorization"          -> s"Bearer ${appConfig.desToken()}",
+      Environment              -> appConfig.desEnvironment(),
+      CorrelationIdHeader      -> correlationId,
       HeaderNames.CONTENT_TYPE -> "application/json"
     )
 
   def getInitialCalculation(request: CalculationRequest)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext
   ): Future[CalculationOutcome] = {
 
     val url = url"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/initial/${request.nino}"
@@ -49,7 +50,8 @@ class DesConnector @Inject()(http: HttpClientV2, appConfig: AppConfig) {
   }
 
   def getFinalCalculation(request: CalculationRequest)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext
   ): Future[CalculationOutcome] = {
 
     val url = url"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/final/${request.nino}"
@@ -57,7 +59,8 @@ class DesConnector @Inject()(http: HttpClientV2, appConfig: AppConfig) {
   }
 
   private def sendRequest(url: URL, request: CalculationRequest)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext
   ): Future[CalculationOutcome] = {
     import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
 
