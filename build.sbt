@@ -18,14 +18,13 @@ import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 
 val appName = "state-pension-calculation"
 
-
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "2.13.16"
 
-lazy val plugins : Seq[Plugins] = Seq.empty
+lazy val plugins: Seq[Plugins] = Seq.empty
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin)++ plugins:_*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin) ++ plugins: _*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
@@ -38,4 +37,3 @@ lazy val microservice = Project(appName, file("."))
   .settings(CodeCoverageSettings.settings: _*)
   .settings(isPublicArtefact := true)
   .settings(PlayKeys.playDefaultPort := 9790)
-
