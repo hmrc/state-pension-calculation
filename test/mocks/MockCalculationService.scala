@@ -30,10 +30,10 @@ trait MockCalculationService extends MockFactory {
 
   object MockedCalculationService {
 
-    def calculate(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] = {
-      (mockCalculationService.calculate(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+    def calculate(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
+      (mockCalculationService
+        .calculate(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
-    }
 
   }
 

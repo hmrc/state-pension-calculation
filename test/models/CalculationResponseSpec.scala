@@ -60,7 +60,7 @@ class CalculationResponseSpec extends UnitSpec {
   "Serialising a CalculationResponse with notes to JSON" should {
     "generate JSON that conforms to the JSON schema for a calc response" in {
       import support.data.CalculationTestData.Response._
-      val result = Json.toJson(expectedModel)
+      val result   = Json.toJson(expectedModel)
       val expected = generatedJson
       result shouldBe expected
     }
@@ -69,9 +69,10 @@ class CalculationResponseSpec extends UnitSpec {
   "Serialising a CalculationResponse without notes to JSON" should {
     "generate JSON that conforms to the JSON schema for a calc response" in {
       import support.data.CalculationTestData.ResponseWithoutNotes._
-      val result = Json.toJson(expectedModel)
+      val result   = Json.toJson(expectedModel)
       val expected = generatedJson
       result shouldBe expected
     }
   }
+
 }

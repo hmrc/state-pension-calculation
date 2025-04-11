@@ -27,10 +27,11 @@ import utils.ErrorCodes._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationService @Inject()(connector: DesConnector) extends Logging {
+class CalculationService @Inject() (connector: DesConnector) extends Logging {
 
-  def calculate(request: CalculationRequest)
-               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
+  def calculate(
+      request: CalculationRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
 
     val unexpectedErrorMapping: String => Error = code => {
       logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")
@@ -38,18 +39,18 @@ class CalculationService @Inject()(connector: DesConnector) extends Logging {
     }
 
     val errorMappings: Map[String, Error] = Map(
-      InvalidCorrelationIdCode -> ApiServiceError,
-      InvalidNinoCode -> ApiServiceError,
-      InvalidPayloadCode -> ApiServiceError,
+      InvalidCorrelationIdCode         -> ApiServiceError,
+      InvalidNinoCode                  -> ApiServiceError,
+      InvalidPayloadCode               -> ApiServiceError,
       RetirementDateAfterDeathDateCode -> RetirementAfterDeathError,
-      TooEarlyCode -> TooEarlyError,
-      UnknownBusinessErrorCode -> UnknownBusinessError,
-      NinoNotFoundCode -> NinoNotFoundError,
-      MatchNotFoundCode -> MatchNotFoundError,
-      ServerErrorCode -> ApiServiceError,
-      ServiceUnavailableCode -> ServiceUnavailableError,
-      MessageThrottledCode -> ThrottledError,
-      InternalServerErrorCode -> ApiServiceError
+      TooEarlyCode                     -> TooEarlyError,
+      UnknownBusinessErrorCode         -> UnknownBusinessError,
+      NinoNotFoundCode                 -> NinoNotFoundError,
+      MatchNotFoundCode                -> MatchNotFoundError,
+      ServerErrorCode                  -> ApiServiceError,
+      ServiceUnavailableCode           -> ServiceUnavailableError,
+      MessageThrottledCode             -> ThrottledError,
+      InternalServerErrorCode          -> ApiServiceError
     ).withDefault(unexpectedErrorMapping)
 
     val result = if (request.finalCalculation) {
@@ -59,11 +60,11 @@ class CalculationService @Inject()(connector: DesConnector) extends Logging {
     }
 
     result.map {
-      case calculation@Right(_) => calculation
+      case calculation @ Right(_) => calculation
       case Left(Errors(errors)) =>
         val calculationErrorCodePattern = """^[0-9]{5,6}$"""
         val apiErrors = if (errors.forall(_.code.matches(calculationErrorCodePattern))) {
-          errors.map { error => Error(CalculationErrorCodePrefix + error.code, error.message) }
+          errors.map(error => Error(CalculationErrorCodePrefix + error.code, error.message))
         } else {
           val desErrorCodes = errors.map(_.code)
           desErrorCodes.map(errorMappings).distinct

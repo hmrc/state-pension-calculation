@@ -39,9 +39,9 @@ class DesConnectorSpec extends ConnectorBaseSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desBaseUrl.returns(baseUrl)
+    MockedAppConfig.desToken.returns("des-token")
+    MockedAppConfig.desEnvironment.returns("des-environment")
   }
 
   "desHeaderCarrier" should {
@@ -66,8 +66,8 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
   "getInitialCalculation" should {
 
-    val nino = "AA12356A"
-    val request = CalculationRequest(nino, "M", "SMIJ", finalCalculation = false, None)
+    val nino     = "AA12356A"
+    val request  = CalculationRequest(nino, "M", "SMIJ", finalCalculation = false, None)
     val response = validResponse
 
     val url = s"$baseUrl/individuals/pensions/ltb-calculation/initial/$nino"
@@ -95,8 +95,8 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
   "getFinalCalculation" should {
 
-    val nino = "AA12356A"
-    val request = CalculationRequest(nino, "M", "SMIJ", finalCalculation = true, Some(BigDecimal("123.99")))
+    val nino     = "AA12356A"
+    val request  = CalculationRequest(nino, "M", "SMIJ", finalCalculation = true, Some(BigDecimal("123.99")))
     val response = validResponse
 
     val url = s"$baseUrl/individuals/pensions/ltb-calculation/final/$nino"

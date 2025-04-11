@@ -30,11 +30,14 @@ trait ApiDefinitionConfig {
 }
 
 @Singleton
-class ApiDefinitionConfigImpl @Inject()(configuration: Configuration) extends ApiDefinitionConfig {
+class ApiDefinitionConfigImpl @Inject() (configuration: Configuration) extends ApiDefinitionConfig {
 
   private val PRIVATE = "PRIVATE"
 
-  override lazy val status: String = configuration.get[String]("api.status")
+  override lazy val status: String     = configuration.get[String]("api.status")
   override lazy val accessType: String = configuration.getOptional[String]("api.access.type").getOrElse(PRIVATE)
-  override lazy val endpointsEnabled: Boolean = configuration.getOptional[Boolean]("api.endpointsEnabled").getOrElse(false)
+
+  override lazy val endpointsEnabled: Boolean =
+    configuration.getOptional[Boolean]("api.endpointsEnabled").getOrElse(false)
+
 }

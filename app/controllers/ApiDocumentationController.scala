@@ -26,11 +26,12 @@ import uk.gov.hmrc.api.controllers.DocumentationController
 import scala.concurrent.Future
 
 @Singleton()
-class ApiDocumentationController @Inject()(cc: ControllerComponents,
-                                           assets: Assets,
-                                           errorHandler: HttpErrorHandler,
-                                           apiConfig: ApiDefinitionConfig)
-  extends DocumentationController(cc, assets, errorHandler) {
+class ApiDocumentationController @Inject() (
+    cc: ControllerComponents,
+    assets: Assets,
+    errorHandler: HttpErrorHandler,
+    apiConfig: ApiDefinitionConfig
+) extends DocumentationController(cc, assets, errorHandler) {
 
   override def definition(): Action[AnyContent] = Action.async {
 

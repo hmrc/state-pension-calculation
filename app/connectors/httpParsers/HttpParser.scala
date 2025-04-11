@@ -23,25 +23,25 @@ import uk.gov.hmrc.http.HttpResponse
 
 import scala.util.{Success, Try}
 
-trait HttpParser extends Logging{
+trait HttpParser extends Logging {
 
   implicit class KnownJsonResponse(response: HttpResponse) {
-    def validateJson[T](implicit reads: Reads[T]): Option[T] = {
+
+    def validateJson[T](implicit reads: Reads[T]): Option[T] =
       Try(response.json) match {
         case Success(json: JsValue) => parseResult(json)
         case _ =>
           logger.warn("[KnownJsonResponse][validateJson] No JSON was returned")
           None
       }
-    }
 
-    private def parseResult[T](json: JsValue)
-                              (implicit reads: Reads[T]): Option[T] = json.validate[T] match {
+    private def parseResult[T](json: JsValue)(implicit reads: Reads[T]): Option[T] = json.validate[T] match {
       case JsSuccess(value, _) => Some(value)
       case JsError(error) =>
         logger.warn(s"[KnownJsonResponse][validateJson] Unable to parse JSON: $error")
         None
     }
+
   }
 
   private val multipleErrorReads: Reads[Seq[Error]] = (__ \ "failures").read[Seq[Error]]
@@ -58,14 +58,13 @@ trait HttpParser extends Logging{
       Errors(ApiServiceError)
     }
 
-    errors getOrElse unableToParseJsonError
+    errors.getOrElse(unableToParseJsonError)
   }
 
-  def parseServiceUnavailableError(response: HttpResponse): Errors = {
+  def parseServiceUnavailableError(response: HttpResponse): Errors =
     (response.json \ "incidentReference").asOpt[String] match {
       case Some("LTM000503") => Errors(ThrottledError)
-      case _ => parseErrors(response)
+      case _                 => parseErrors(response)
     }
-  }
 
 }

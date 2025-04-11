@@ -18,29 +18,31 @@ package models
 
 import play.api.libs.json.{Json, Reads, Writes}
 
-case class CalculationResult(nino: String,
-                             protectedPaymentAmount: BigDecimal,
-                             rebateDerivedAmount: BigDecimal,
-                             newStatePensionEntitlementAmount: BigDecimal,
-                             reducedRateElectionToConsider: Boolean,
-                             pensionShareOrderContractedOutEmploymentGroup: Boolean,
-                             pensionShareOrderStateEarningsRelatedPensionService: Boolean,
-                             isleOfManContributions: Boolean,
-                             contractedOutEmploymentGroupInvestigationPosition: Boolean,
-                             statePensionOldRulesAmount: BigDecimal,
-                             basicAmount: BigDecimal,
-                             additionalPensionPre1997GrossAmount: BigDecimal,
-                             additionalPensionPre1997NetAmount: BigDecimal,
-                             additionalPensionPost1997Amount: BigDecimal,
-                             additionalPensionPost2002Amount: BigDecimal,
-                             graduatedRetirementBenefitAmount: BigDecimal,
-                             statePensionNewRulesAmount: BigDecimal,
-                             statePensionAgeDate: String,
-                             post2016YearsUsed: Int,
-                             newStatePensionQualifyingYears: Int,
-                             incompleteContributionRecordIndicator: Boolean)
+case class CalculationResult(
+    nino: String,
+    protectedPaymentAmount: BigDecimal,
+    rebateDerivedAmount: BigDecimal,
+    newStatePensionEntitlementAmount: BigDecimal,
+    reducedRateElectionToConsider: Boolean,
+    pensionShareOrderContractedOutEmploymentGroup: Boolean,
+    pensionShareOrderStateEarningsRelatedPensionService: Boolean,
+    isleOfManContributions: Boolean,
+    contractedOutEmploymentGroupInvestigationPosition: Boolean,
+    statePensionOldRulesAmount: BigDecimal,
+    basicAmount: BigDecimal,
+    additionalPensionPre1997GrossAmount: BigDecimal,
+    additionalPensionPre1997NetAmount: BigDecimal,
+    additionalPensionPost1997Amount: BigDecimal,
+    additionalPensionPost2002Amount: BigDecimal,
+    graduatedRetirementBenefitAmount: BigDecimal,
+    statePensionNewRulesAmount: BigDecimal,
+    statePensionAgeDate: String,
+    post2016YearsUsed: Int,
+    newStatePensionQualifyingYears: Int,
+    incompleteContributionRecordIndicator: Boolean
+)
 
 object CalculationResult {
-  implicit val reads: Reads[CalculationResult] = Json.reads[CalculationResult]
+  implicit val reads: Reads[CalculationResult]   = Json.reads[CalculationResult]
   implicit val writes: Writes[CalculationResult] = Json.writes[CalculationResult]
 }

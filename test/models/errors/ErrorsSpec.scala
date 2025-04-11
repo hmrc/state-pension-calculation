@@ -71,4 +71,5 @@ class ErrorsSpec extends UnitSpec {
       result shouldBe expected
     }
   }
+
 }

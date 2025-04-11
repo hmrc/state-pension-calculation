@@ -24,8 +24,8 @@ object AuthStub extends WireMockMethods {
 
   private val authoriseUri: String = "/auth/authorise"
 
-  def authorised(): StubMapping = {
+  def authorised(): StubMapping =
     when(method = POST, uri = authoriseUri)
       .thenReturn(status = OK)
-  }
+
 }

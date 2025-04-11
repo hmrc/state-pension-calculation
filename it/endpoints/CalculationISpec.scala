@@ -40,6 +40,7 @@ class CalculationISpec extends IntegrationSpec {
       buildRequest(s"/calculation")
         .addHttpHeaders(CorrelationIdHeader -> UUID.randomUUID().toString)
     }
+
   }
 
   "Calling the /calculation endpoint" when {
@@ -49,10 +50,10 @@ class CalculationISpec extends IntegrationSpec {
       trait InitialCalcTest extends Test {
         lazy val desResponse: JsValue = testData.initialCalcJson
         lazy val requestBody: JsValue = Json.obj(
-          "nino" -> "AA123456A",
+          "nino"       -> "AA123456A",
           "checkBrick" -> "SMIJ",
-          "gender" -> "M",
-          "finalise" -> false
+          "gender"     -> "M",
+          "finalise"   -> false
         )
 
         override def setupStubs(): StubMapping = {
@@ -82,10 +83,10 @@ class CalculationISpec extends IntegrationSpec {
       trait FinalCalcTest extends Test {
         lazy val desResponse: JsValue = testData.finalCalcJson
         lazy val requestBody: JsValue = Json.obj(
-          "nino" -> "AA123456A",
+          "nino"       -> "AA123456A",
           "checkBrick" -> "SMIJ",
-          "gender" -> "M",
-          "finalise" -> true
+          "gender"     -> "M",
+          "finalise"   -> true
         )
 
         override def setupStubs(): StubMapping = {
@@ -110,21 +111,23 @@ class CalculationISpec extends IntegrationSpec {
 
     }
 
-    def testDesErrorHandling(desErrorCode: String,
-                             desStatusCode: Int,
-                             desResponseBody: JsValue,
-                             apiStatusCode: Int,
-                             apiResponseBody: JsValue): Unit = {
+    def testDesErrorHandling(
+        desErrorCode: String,
+        desStatusCode: Int,
+        desResponseBody: JsValue,
+        apiStatusCode: Int,
+        apiResponseBody: JsValue
+    ): Unit =
 
       s"DES responds with $desErrorCode" should {
 
         trait CalcTest extends Test {
           lazy val desResponse: JsValue = desResponseBody
           lazy val requestBody: JsValue = Json.obj(
-            "nino" -> "AA123456A",
+            "nino"       -> "AA123456A",
             "checkBrick" -> "SMIJ",
-            "gender" -> "M",
-            "finalise" -> true
+            "gender"     -> "M",
+            "finalise"   -> true
           )
 
           override def setupStubs(): StubMapping = {
@@ -148,45 +151,50 @@ class CalculationISpec extends IntegrationSpec {
         }
 
       }
-    }
 
     {
       val invalidPayloadBody = Json.obj(
-        "code" -> InvalidPayloadCode,
+        "code"   -> InvalidPayloadCode,
         "reason" -> "Submission has not passed validation. Invalid Payload."
       )
 
-      testDesErrorHandling(InvalidPayloadCode,
+      testDesErrorHandling(
+        InvalidPayloadCode,
         Status.BAD_REQUEST,
         invalidPayloadBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson[Error](ApiServiceError))
+        Json.toJson[Error](ApiServiceError)
+      )
     }
 
     {
       val invalidNinoBody = Json.obj(
-        "code" -> InvalidNinoCode,
+        "code"   -> InvalidNinoCode,
         "reason" -> "Submission has not passed validation. Invalid parameter nino."
       )
 
-      testDesErrorHandling(InvalidNinoCode,
+      testDesErrorHandling(
+        InvalidNinoCode,
         Status.BAD_REQUEST,
         invalidNinoBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson[Error](ApiServiceError))
+        Json.toJson[Error](ApiServiceError)
+      )
     }
 
     {
       val invalidCorrelationIdBody = Json.obj(
-        "code" -> InvalidCorrelationIdCode,
+        "code"   -> InvalidCorrelationIdCode,
         "reason" -> "Submission has not passed validation. Invalid header CorrelationId."
       )
 
-      testDesErrorHandling(InvalidCorrelationIdCode,
+      testDesErrorHandling(
+        InvalidCorrelationIdCode,
         Status.BAD_REQUEST,
         invalidCorrelationIdBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson[Error](ApiServiceError))
+        Json.toJson[Error](ApiServiceError)
+      )
     }
 
     {
@@ -194,34 +202,38 @@ class CalculationISpec extends IntegrationSpec {
       val invalidBody = Json.obj(
         "failures" -> Json.arr(
           Json.obj(
-            "code" -> InvalidPayloadCode,
+            "code"   -> InvalidPayloadCode,
             "reason" -> "Submission has not passed validation. Invalid Payload."
           ),
           Json.obj(
-            "code" -> InvalidNinoCode,
+            "code"   -> InvalidNinoCode,
             "reason" -> "Submission has not passed validation. Invalid parameter nino."
           )
         )
       )
 
-      testDesErrorHandling(multipleErrorCodes,
+      testDesErrorHandling(
+        multipleErrorCodes,
         Status.BAD_REQUEST,
         invalidBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson[Error](ApiServiceError))
+        Json.toJson[Error](ApiServiceError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> RetirementDateAfterDeathDateCode,
+        "code"   -> RetirementDateAfterDeathDateCode,
         "reason" -> "The remote endpoint has indicated that the Date of Retirement is after the Date of Death."
       )
 
-      testDesErrorHandling(RetirementDateAfterDeathDateCode,
+      testDesErrorHandling(
+        RetirementDateAfterDeathDateCode,
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        Json.toJson[Error](RetirementAfterDeathError))
+        Json.toJson[Error](RetirementAfterDeathError)
+      )
     }
 
     {
@@ -230,86 +242,98 @@ class CalculationISpec extends IntegrationSpec {
         "reason" -> "The remote endpoint has indicated that the pension calculation can only be done within 6 months of the SPA date."
       )
 
-      testDesErrorHandling(TooEarlyCode,
+      testDesErrorHandling(
+        TooEarlyCode,
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        Json.toJson[Error](TooEarlyError))
+        Json.toJson[Error](TooEarlyError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> UnknownBusinessErrorCode,
+        "code"   -> UnknownBusinessErrorCode,
         "reason" -> "The remote endpoint has returned an unknown business validation error."
       )
 
-      testDesErrorHandling(UnknownBusinessErrorCode,
+      testDesErrorHandling(
+        UnknownBusinessErrorCode,
         Status.BAD_REQUEST,
         invalidBody,
         Status.FORBIDDEN,
-        Json.toJson[Error](UnknownBusinessError))
+        Json.toJson[Error](UnknownBusinessError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> NinoNotFoundCode,
+        "code"   -> NinoNotFoundCode,
         "reason" -> "The remote endpoint has indicated that the Nino provided cannot be found."
       )
 
-      testDesErrorHandling(NinoNotFoundCode,
+      testDesErrorHandling(
+        NinoNotFoundCode,
         Status.NOT_FOUND,
         invalidBody,
         Status.NOT_FOUND,
-        Json.toJson[Error](NinoNotFoundError))
+        Json.toJson[Error](NinoNotFoundError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> MatchNotFoundCode,
+        "code"   -> MatchNotFoundCode,
         "reason" -> "The remote endpoint has indicated that there is no match for the person details provided."
       )
 
-      testDesErrorHandling(MatchNotFoundCode,
+      testDesErrorHandling(
+        MatchNotFoundCode,
         Status.NOT_FOUND,
         invalidBody,
         Status.NOT_FOUND,
-        Json.toJson[Error](MatchNotFoundError))
+        Json.toJson[Error](MatchNotFoundError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> ServerErrorCode,
+        "code"   -> ServerErrorCode,
         "reason" -> "DES is currently experiencing problems that require live service intervention."
       )
 
-      testDesErrorHandling(ServerErrorCode,
+      testDesErrorHandling(
+        ServerErrorCode,
         Status.INTERNAL_SERVER_ERROR,
         invalidBody,
         Status.INTERNAL_SERVER_ERROR,
-        Json.toJson[Error](ApiServiceError))
+        Json.toJson[Error](ApiServiceError)
+      )
     }
 
     {
       val invalidBody = Json.obj(
-        "code" -> ServiceUnavailableCode,
+        "code"   -> ServiceUnavailableCode,
         "reason" -> "Dependent systems are currently not responding."
       )
 
-      testDesErrorHandling(ServiceUnavailableCode,
+      testDesErrorHandling(
+        ServiceUnavailableCode,
         Status.SERVICE_UNAVAILABLE,
         invalidBody,
         Status.SERVICE_UNAVAILABLE,
-        Json.toJson[Error](ServiceUnavailableError))
+        Json.toJson[Error](ServiceUnavailableError)
+      )
     }
 
     "DES responds with 429 response code" should {
 
       trait CalcTest extends Test {
         lazy val requestBody: JsValue = Json.obj(
-          "nino" -> "AA123456A",
+          "nino"       -> "AA123456A",
           "checkBrick" -> "SMIJ",
-          "gender" -> "M",
-          "finalise" -> true
+          "gender"     -> "M",
+          "finalise"   -> true
         )
 
         override def setupStubs(): StubMapping = {
@@ -336,28 +360,33 @@ class CalculationISpec extends IntegrationSpec {
 
     {
       val serviceUnavailableCode = "SERVICE_UNAVAILABLE throttled response"
-      val invalidBody = Json.obj("incidentReference" -> "LTM000503")
+      val invalidBody            = Json.obj("incidentReference" -> "LTM000503")
 
-      testDesErrorHandling(serviceUnavailableCode,
+      testDesErrorHandling(
+        serviceUnavailableCode,
         Status.SERVICE_UNAVAILABLE,
         invalidBody,
         Status.TOO_MANY_REQUESTS,
-        Json.toJson[Error](ThrottledError))
+        Json.toJson[Error](ThrottledError)
+      )
     }
 
     {
       val serverErrorCode = "a calculation error"
       val invalidBody = Json.obj(
-        "code" -> "12345",
+        "code"   -> "12345",
         "reason" -> "Backend returned calculation error code 12345."
       )
-      val expectedResponse = Error(CalculationErrorCodePrefix + "12345", "Backend returned calculation error code 12345.")
+      val expectedResponse =
+        Error(CalculationErrorCodePrefix + "12345", "Backend returned calculation error code 12345.")
 
-      testDesErrorHandling(serverErrorCode,
+      testDesErrorHandling(
+        serverErrorCode,
         Status.CONFLICT,
         invalidBody,
         Status.FORBIDDEN,
-        Json.toJson(expectedResponse))
+        Json.toJson(expectedResponse)
+      )
     }
 
     {
@@ -365,11 +394,11 @@ class CalculationISpec extends IntegrationSpec {
       val invalidBody = Json.obj(
         "failures" -> Json.arr(
           Json.obj(
-            "code" -> "12345",
+            "code"   -> "12345",
             "reason" -> "Backend returned calculation error code 12345."
           ),
           Json.obj(
-            "code" -> "123456",
+            "code"   -> "123456",
             "reason" -> "Backend returned calculation error code 123456."
           )
         )
@@ -380,11 +409,13 @@ class CalculationISpec extends IntegrationSpec {
           Error(CalculationErrorCodePrefix + "123456", "Backend returned calculation error code 123456.")
         )
       )
-      testDesErrorHandling(serverErrorCode,
+      testDesErrorHandling(
+        serverErrorCode,
         Status.CONFLICT,
         invalidBody,
         Status.FORBIDDEN,
-        Json.toJson(expectedResponse))
+        Json.toJson(expectedResponse)
+      )
     }
 
   }

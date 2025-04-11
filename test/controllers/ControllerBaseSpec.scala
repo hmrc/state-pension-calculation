@@ -27,17 +27,13 @@ import play.api.test.{FakeRequest, ResultExtractors}
 import support.UnitSpec
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 
-
-class ControllerBaseSpec extends UnitSpec
-  with Status
-  with MimeTypes
-  with HeaderNames
-  with ResultExtractors {
+class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with HeaderNames with ResultExtractors {
 
   val correlationId: String = UUID.randomUUID().toString
 
-  implicit val system: ActorSystem = ActorSystem("MyTest")
+  implicit val system: ActorSystem    = ActorSystem("MyTest")
   implicit val mat: ActorMaterializer = ActorMaterializer()
+
   implicit lazy val validRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withHeaders(CorrelationIdHeader -> correlationId)
 

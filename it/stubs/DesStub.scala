@@ -23,16 +23,14 @@ import support.WireMockMethods
 object DesStub extends WireMockMethods {
 
   private val initialCalcUri: String = s"/individuals/pensions/ltb-calculation/initial/.*"
-  private val finalCalcUri: String = s"/individuals/pensions/ltb-calculation/final/.*"
+  private val finalCalcUri: String   = s"/individuals/pensions/ltb-calculation/final/.*"
 
-  def initialCalc(status: Int, response: JsValue): StubMapping = {
+  def initialCalc(status: Int, response: JsValue): StubMapping =
     when(method = POST, uri = initialCalcUri)
       .thenReturn(status, response)
-  }
 
-  def finalCalc(status: Int, response: JsValue): StubMapping = {
+  def finalCalc(status: Int, response: JsValue): StubMapping =
     when(method = POST, uri = finalCalcUri)
       .thenReturn(status, response)
-  }
 
 }

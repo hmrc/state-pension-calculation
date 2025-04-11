@@ -26,15 +26,16 @@ import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import play.api.{Application, Environment, Mode}
 
-trait IntegrationSpec extends AnyWordSpecLike
-  with EitherValues
-  with Matchers
-  with FutureAwaits
-  with DefaultAwaitTimeout
-  with WireMockHelper
-  with GuiceOneServerPerSuite
-  with BeforeAndAfterEach
-  with BeforeAndAfterAll {
+trait IntegrationSpec
+    extends AnyWordSpecLike
+    with EitherValues
+    with Matchers
+    with FutureAwaits
+    with DefaultAwaitTimeout
+    with WireMockHelper
+    with GuiceOneServerPerSuite
+    with BeforeAndAfterEach
+    with BeforeAndAfterAll {
 
   val mockHost: String = WireMockHelper.host
   val mockPort: String = WireMockHelper.wireMockPort.toString
@@ -44,11 +45,11 @@ trait IntegrationSpec extends AnyWordSpecLike
   private val servicesPath = "microservice.services"
 
   def overriddenConfig: Map[String, Any] = Map(
-    s"$servicesPath.des.host" -> mockHost,
-    s"$servicesPath.des.port" -> mockPort,
+    s"$servicesPath.des.host"  -> mockHost,
+    s"$servicesPath.des.port"  -> mockPort,
     s"$servicesPath.auth.host" -> mockHost,
     s"$servicesPath.auth.port" -> mockPort,
-    "api.status" -> "BETA",
+    "api.status"               -> "BETA"
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

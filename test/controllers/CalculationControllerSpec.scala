@@ -57,10 +57,10 @@ class CalculationControllerSpec extends ControllerBaseSpec {
   )
 
   val validPayload: JsObject = Json.obj(
-    "nino" -> "AA123456A",
+    "nino"       -> "AA123456A",
     "checkBrick" -> "SMIJ",
-    "gender" -> "M",
-    "finalise" -> true
+    "gender"     -> "M",
+    "finalise"   -> true
   )
 
   implicit val request: Request[JsValue] = postRequest[JsValue](validPayload)
@@ -73,7 +73,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
       "return 201" in new Test {
 
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(request)
@@ -82,7 +83,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
       "return the Correlation ID in the header" in new Test {
 
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(request)
@@ -141,9 +143,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
     }
 
-    def testInvalidRequestProperty[T](propertyName: String,
-                                      invalidValue: T,
-                                      expectedError: Error = InvalidRequestError)(implicit w: Writes[T]) {
+    def testInvalidRequestProperty[T](
+        propertyName: String,
+        invalidValue: T,
+        expectedError: Error = InvalidRequestError
+    )(implicit w: Writes[T]) {
       s"the request has an invalid value ($invalidValue) for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
         val invalidRequest = postRequest[JsValue](invalidPayload)
@@ -184,7 +188,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       val invalidRequest = postRequest[JsValue](invalidPayload)
 
       "return 400" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(invalidRequest)
@@ -193,7 +198,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       }
 
       "return an FRY_AMOUNT_NOT_EXPECTED error in the body" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(invalidRequest)
@@ -204,7 +210,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "an InternalServerError is returned from the service" should {
       "return a 500 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(ApiServiceError))))
 
         private val result = target.calculation()(request)
@@ -214,7 +221,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "an RetirementAfterDeathError is returned from the service" should {
       "return a 403 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(RetirementAfterDeathError))))
 
         private val result = target.calculation()(request)
@@ -224,7 +232,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "an TooEarlyError is returned from the service" should {
       "return a 403 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(TooEarlyError))))
 
         private val result = target.calculation()(request)
@@ -234,7 +243,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "an UnknownBusinessError is returned from the service" should {
       "return a 403 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(UnknownBusinessError))))
 
         private val result = target.calculation()(request)
@@ -244,7 +254,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "a NinoNotFoundError is returned from the service" should {
       "return a 404 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(NinoNotFoundError))))
 
         private val result = target.calculation()(request)
@@ -254,7 +265,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "a MatchNotFoundError is returned from the service" should {
       "return a 404 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(MatchNotFoundError))))
 
         private val result = target.calculation()(request)
@@ -264,7 +276,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "a ServiceUnavailableError is returned from the service" should {
       "return a 503 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(ServiceUnavailableError))))
 
         private val result = target.calculation()(request)
@@ -274,7 +287,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     "a ThrottledError is returned from the service" should {
       "return a 429 response" in new Test {
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(ThrottledError))))
 
         private val result = target.calculation()(request)
@@ -285,7 +299,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     "a calculation error is returned from the service" should {
       "return a 403 response" in new Test {
         val calculationError = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(calculationError))))
 
         private val result = target.calculation()(request)
@@ -297,7 +312,8 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 403 response" in new Test {
         val calculationError1 = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
         val calculationError2 = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
-        MockedCalculationService.calculate(calcRequest)
+        MockedCalculationService
+          .calculate(calcRequest)
           .returns(Future.successful(Left(Errors(Seq(calculationError1, calculationError2)))))
 
         private val result = target.calculation()(request)

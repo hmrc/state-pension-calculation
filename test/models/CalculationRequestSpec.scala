@@ -23,12 +23,8 @@ class CalculationRequestSpec extends UnitSpec {
 
   "Generating JSON from a CalculationRequest with a fry amount" should {
 
-    val request = CalculationRequest("some nino",
-      "a gender",
-      "a check brick",
-      finalCalculation = true,
-      Some(BigDecimal("123.99"))
-    )
+    val request =
+      CalculationRequest("some nino", "a gender", "a check brick", finalCalculation = true, Some(BigDecimal("123.99")))
 
     val json = Json.toJson(request)
 
@@ -49,10 +45,7 @@ class CalculationRequestSpec extends UnitSpec {
 
   "Generating JSON from a CalculationRequest without a fry amount" should {
 
-    val request = CalculationRequest("some nino",
-      "a gender",
-      "a check brick"
-    )
+    val request = CalculationRequest("some nino", "a gender", "a check brick")
 
     val json = Json.toJson(request)
 

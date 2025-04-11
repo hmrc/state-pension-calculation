@@ -22,50 +22,58 @@ import play.api.libs.json._
 
 import scala.util.matching.Regex
 
-case class CalculationRequest(nino: String,
-                              gender: String,
-                              checkBrick: String,
-                              finalCalculation: Boolean = false,
-                              fryAmount: Option[BigDecimal] = None,
-                              correlationId: String = "")
+case class CalculationRequest(
+    nino: String,
+    gender: String,
+    checkBrick: String,
+    finalCalculation: Boolean = false,
+    fryAmount: Option[BigDecimal] = None,
+    correlationId: String = ""
+)
 
 object CalculationRequest {
 
-  def createWithoutCorrelationId(nino: String,
-            gender: String,
-            checkBrick: String,
-            finalCalculation: Boolean = false,
-            fryAmount: Option[BigDecimal] = None): CalculationRequest =
+  def createWithoutCorrelationId(
+      nino: String,
+      gender: String,
+      checkBrick: String,
+      finalCalculation: Boolean = false,
+      fryAmount: Option[BigDecimal] = None
+  ): CalculationRequest =
     CalculationRequest(nino, gender, checkBrick, finalCalculation, fryAmount)
 
-  val ninoPattern: Regex = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D\s]?$""".r
+  val ninoPattern: Regex =
+    """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D\s]?$""".r
+
   val checkBrickPattern: Regex = """^([A-Z]{1}[ A-Z-'.]{2,4})$""".r
-  val genderPattern: Regex = """^[MF]$""".r
+  val genderPattern: Regex     = """^[MF]$""".r
+
   val readAmount: BigDecimal => Boolean = {
-    case amount if amount < BigDecimal("0") => false
+    case amount if amount < BigDecimal("0")            => false
     case amount if amount > BigDecimal("999999999.99") => false
-    case amount if amount.scale > 2 => false
-    case _ => true
+    case amount if amount.scale > 2                    => false
+    case _                                             => true
   }
 
-  implicit val reads: Reads[CalculationRequest] = (
-    (__ \ "nino").read[String](pattern(ninoPattern)) and
-      (__ \ "gender").read[String](pattern(genderPattern)) and
-      (__ \ "checkBrick").read[String](pattern(checkBrickPattern)) and
-      (__ \ "finalise").read[Boolean] and
-      (__ \ "fryAmount").readNullable[BigDecimal](verifying(readAmount))
-    ) (CalculationRequest.createWithoutCorrelationId _)
+  implicit val reads: Reads[CalculationRequest] =
+    (__ \ "nino")
+      .read[String](pattern(ninoPattern))
+      .and((__ \ "gender").read[String](pattern(genderPattern)))
+      .and((__ \ "checkBrick").read[String](pattern(checkBrickPattern)))
+      .and((__ \ "finalise").read[Boolean])
+      .and((__ \ "fryAmount").readNullable[BigDecimal](verifying(readAmount)))(
+        CalculationRequest.createWithoutCorrelationId _
+      )
 
   implicit val writes: Writes[CalculationRequest] = new Writes[CalculationRequest] {
     override def writes(request: CalculationRequest): JsValue = {
       val json = Json.obj(
-        "gender" -> request.gender,
+        "gender"     -> request.gender,
         "checkbrick" -> request.checkBrick
       )
 
-      request.fryAmount.fold(json) { amount =>
-        json + ("totalPrimaryEarningsForFry" -> Json.toJson(amount))
-      }
+      request.fryAmount.fold(json)(amount => json + ("totalPrimaryEarningsForFry" -> Json.toJson(amount)))
     }
   }
+
 }

@@ -18,5 +18,5 @@ package utils
 
 object AdditionalHeaderNames {
   val CorrelationIdHeader: String = "Correlationid"
-  val Environment: String = "Environment"
+  val Environment: String         = "Environment"
 }
