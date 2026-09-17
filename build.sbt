@@ -39,3 +39,4 @@ lazy val microservice = Project(appName, file("."))
   .settings(CodeCoverageSettings.settings: _*)
   .settings(isPublicArtefact := true)
   .settings(PlayKeys.playDefaultPort := 9790)
+
