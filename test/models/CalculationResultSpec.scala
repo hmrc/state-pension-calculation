@@ -16,7 +16,7 @@
 
 package models
 
-import support.data.CalculationTestData.Result._
+import support.data.CalculationTestData.Result.*
 import support.UnitSpec
 
 class CalculationResultSpec extends UnitSpec {

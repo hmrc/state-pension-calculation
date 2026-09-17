@@ -31,10 +31,10 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
 
   val correlationId: String = UUID.randomUUID().toString
 
-  implicit val system: ActorSystem    = ActorSystem("MyTest")
-  implicit val mat: ActorMaterializer = ActorMaterializer()
+  given ActorSystem       = ActorSystem("MyTest")
+  given ActorMaterializer = ActorMaterializer()
 
-  implicit lazy val validRequest: FakeRequest[AnyContentAsEmpty.type] =
+  given validRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withHeaders(CorrelationIdHeader -> correlationId)
 
   lazy val cc: ControllerComponents = stubControllerComponents()

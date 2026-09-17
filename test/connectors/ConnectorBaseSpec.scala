@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 trait ConnectorBaseSpec extends UnitSpec with Status with MimeTypes with HeaderNames with ResultExtractors {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier = HeaderCarrier()
     .withExtraHeaders(HeaderNames.CONTENT_TYPE -> "application/json")
 
 }

@@ -18,9 +18,9 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.CalculationRequest
-import models.errors._
+import models.errors.*
 import play.api.libs.json.{JsSuccess, JsValue, Json}
-import play.api.mvc._
+import play.api.mvc.*
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class CalculationController @Inject() (cc: ControllerComponents, service: CalculationService)(
-    implicit ec: ExecutionContext
+    using ExecutionContext
 ) extends BackendController(cc) {
 
   private def handleErrors(errors: Errors): Result = {
@@ -62,7 +62,7 @@ class CalculationController @Inject() (cc: ControllerComponents, service: Calcul
     }
   }
 
-  private def calculate(calculationRequest: CalculationRequest)(implicit hc: HeaderCarrier): Future[Result] =
+  private def calculate(calculationRequest: CalculationRequest)(using HeaderCarrier): Future[Result] =
     service.calculate(calculationRequest).map {
       case Right(result) => Created(Json.toJson(result))
       case Left(errors)  => handleErrors(errors)
@@ -85,7 +85,9 @@ class CalculationController @Inject() (cc: ControllerComponents, service: Calcul
       .getOrElse(Left(Errors(InvalidRequestError)))
   }
 
-  def calculation(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def calculation(): Action[JsValue] = Action.async(parse.json) { request =>
+    given Request[JsValue] = request
+
     val response = buildRequest(request) match {
       case Right(calcRequest) => calculate(calcRequest)
       case Left(error)        => Future.successful(BadRequest(Json.toJson(error)))

@@ -23,7 +23,7 @@ case class Errors(errors: Seq[Error])
 object Errors {
   def apply(error: Error): Errors = Errors(Seq(error))
 
-  implicit val writes: Writes[Errors] = new Writes[Errors] {
+  given Writes[Errors] = new Writes[Errors] {
     override def writes(data: Errors): JsValue =
       if (data.errors.size > 1) {
         Json.obj("errors" -> Json.toJson(data.errors))

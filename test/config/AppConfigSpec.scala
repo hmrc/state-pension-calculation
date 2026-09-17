@@ -39,7 +39,7 @@ class AppConfigSpec extends UnitSpec {
         .expects("des")
         .returns(url)
 
-      target.desBaseUrl shouldBe url
+      target.desBaseUrl() shouldBe url
     }
   }
 
@@ -55,14 +55,14 @@ class AppConfigSpec extends UnitSpec {
           .stubs("microservice.services.des.env")
           .returns(env)
 
-        target.desEnvironment shouldBe env
+        target.desEnvironment() shouldBe env
       }
     }
 
     "no value added to the configuration" should {
       "return the run time exception" in new Test {
         intercept[RuntimeException] {
-          target.desEnvironment
+          target.desEnvironment()
         }
       }
     }
@@ -80,14 +80,14 @@ class AppConfigSpec extends UnitSpec {
           .stubs("microservice.services.des.token")
           .returns(token)
 
-        target.desToken shouldBe token
+        target.desToken() shouldBe token
       }
     }
 
     "no value added to the configuration" should {
       "return the run time exception" in new Test {
         intercept[RuntimeException] {
-          target.desToken
+          target.desToken()
         }
       }
     }

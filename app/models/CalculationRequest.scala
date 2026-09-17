@@ -16,9 +16,9 @@
 
 package models
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.Reads.*
+import play.api.libs.json.*
 
 import scala.util.matching.Regex
 
@@ -55,7 +55,7 @@ object CalculationRequest {
     case _                                             => true
   }
 
-  implicit val reads: Reads[CalculationRequest] =
+  given Reads[CalculationRequest] =
     (__ \ "nino")
       .read[String](pattern(ninoPattern))
       .and((__ \ "gender").read[String](pattern(genderPattern)))
@@ -65,7 +65,7 @@ object CalculationRequest {
         CalculationRequest.createWithoutCorrelationId _
       )
 
-  implicit val writes: Writes[CalculationRequest] = new Writes[CalculationRequest] {
+  given Writes[CalculationRequest] = new Writes[CalculationRequest] {
     override def writes(request: CalculationRequest): JsValue = {
       val json = Json.obj(
         "gender"     -> request.gender,

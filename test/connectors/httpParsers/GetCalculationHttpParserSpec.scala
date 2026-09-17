@@ -17,8 +17,8 @@
 package connectors.httpParsers
 
 import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
-import support.data.CalculationTestData.Response._
-import models.errors._
+import support.data.CalculationTestData.Response.*
+import models.errors.*
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 

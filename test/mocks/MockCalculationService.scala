@@ -19,12 +19,14 @@ package mocks
 import models.{CalculationOutcome, CalculationRequest}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCalculationService extends MockFactory {
+  this: TestSuite =>
 
   val mockCalculationService: CalculationService = mock[CalculationService]
 
@@ -32,7 +34,7 @@ trait MockCalculationService extends MockFactory {
 
     def calculate(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
       (mockCalculationService
-        .calculate(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .calculate(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
 
   }
