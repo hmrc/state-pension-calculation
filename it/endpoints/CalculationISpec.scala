@@ -25,7 +25,7 @@ import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.JsonBodyReadables.readableAsJson
 import stubs.{AuditStub, DesStub}
 import support.IntegrationSpec
-import support.data.CalculationTestData.{Response as testData}
+import support.data.CalculationTestData.Response as testData
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes.*
 
