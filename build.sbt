@@ -19,7 +19,7 @@ import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 val appName = "state-pension-calculation"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.18"
+ThisBuild / scalaVersion := "3.3.7"
 
 lazy val plugins: Seq[Plugins] = Seq.empty
 

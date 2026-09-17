@@ -19,6 +19,7 @@ package controllers
 import mocks.MockCalculationService
 import models.CalculationRequest
 import models.errors._
+import org.scalatest.TestSuite
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
 import play.api.libs.json.{JsObject, JsValue, Json, Writes}
@@ -34,7 +35,7 @@ import scala.concurrent.Future
 
 class CalculationControllerSpec extends ControllerBaseSpec {
 
-  private trait Test extends MockCalculationService {
+  private trait Test extends TestSuite with MockCalculationService {
     lazy val target = new CalculationController(stubControllerComponents(), mockCalculationService)
   }
 
@@ -125,7 +126,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
     }
 
-    def testMissingRequestProperty(propertyName: String) {
+    def testMissingRequestProperty(propertyName: String): Unit =
       s"the request is missing the $propertyName property" should {
         val invalidPayload = validPayload - propertyName
         val invalidRequest = postRequest[JsValue](invalidPayload)
@@ -141,13 +142,12 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         }
 
       }
-    }
 
     def testInvalidRequestProperty[T](
         propertyName: String,
         invalidValue: T,
         expectedError: Error = InvalidRequestError
-    )(implicit w: Writes[T]) {
+    )(implicit w: Writes[T]): Unit =
       s"the request has an invalid value ($invalidValue) for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
         val invalidRequest = postRequest[JsValue](invalidPayload)
@@ -162,7 +162,6 @@ class CalculationControllerSpec extends ControllerBaseSpec {
           contentAsJson(result) shouldBe toJson(expectedError)
         }
       }
-    }
 
     testMissingRequestProperty("nino")
     testInvalidRequestProperty("nino", "INVALID NINO")

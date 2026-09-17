@@ -21,6 +21,8 @@ import models.errors._
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.JsonBodyReadables.readableAsJson
 import stubs.{AuditStub, DesStub}
 import support.IntegrationSpec
 import support.data.CalculationTestData.{Response => testData}

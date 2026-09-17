@@ -19,6 +19,7 @@ package connectors
 import mocks.{MockAppConfig, MockHttpClient}
 import models.errors.{ApiServiceError, Errors}
 import models.{CalculationOutcome, CalculationRequest}
+import org.scalatest.TestSuite
 import play.api.http.HeaderNames
 import play.api.libs.json.Json
 import support.data.CalculationTestData.Response.{expectedModel => validResponse}
@@ -32,16 +33,16 @@ class DesConnectorSpec extends ConnectorBaseSpec {
 
   private val baseUrl = "http://des-base-url"
 
-  private trait Test extends MockHttpClient with MockAppConfig {
+  private trait Test extends TestSuite with MockHttpClient with MockAppConfig {
 
     val connector = new DesConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl.returns(baseUrl)
-    MockedAppConfig.desToken.returns("des-token")
-    MockedAppConfig.desEnvironment.returns("des-environment")
+    MockedAppConfig.desBaseUrl().returns(baseUrl)
+    MockedAppConfig.desToken().returns("des-token")
+    MockedAppConfig.desEnvironment().returns("des-environment")
   }
 
   "desHeaderCarrier" should {

@@ -19,12 +19,14 @@ package mocks
 import models.{CalculationOutcome, CalculationRequest}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCalculationService extends MockFactory {
+  this: TestSuite =>
 
   val mockCalculationService: CalculationService = mock[CalculationService]
 

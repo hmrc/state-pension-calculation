@@ -20,11 +20,13 @@ import connectors.DesConnector
 import models.{CalculationOutcome, CalculationRequest}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockDesConnector extends MockFactory {
+  this: TestSuite =>
 
   val mockDesConnector: DesConnector = mock[DesConnector]
 
