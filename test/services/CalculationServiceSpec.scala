@@ -17,7 +17,7 @@
 package services
 
 import mocks.MockDesConnector
-import models.errors._
+import models.errors.*
 import models.{CalculationOutcome, CalculationRequest}
 import org.scalatest.TestSuite
 import support.data.CalculationTestData.Response.expectedModel as validResponse

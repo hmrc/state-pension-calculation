@@ -16,8 +16,8 @@
 
 package models
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class CalculationResponse(
     result: CalculationResult,
@@ -27,14 +27,14 @@ case class CalculationResponse(
 
 object CalculationResponse {
 
-  implicit val reads: Reads[CalculationResponse] =
+  given Reads[CalculationResponse] =
     (__ \ "initialRequestResult")
       .read[CalculationResult]
       .or((__ \ "finalRequestResult").read[CalculationResult])
       .and((__ \ "associatedNotes").readNullable[Seq[CalculationNote]])
       .and((__ \ "listOfQualifyingYears").read[Seq[QualifyingYear]])(CalculationResponse.apply _)
 
-  implicit val writes: Writes[CalculationResponse] = new Writes[CalculationResponse] {
+  given Writes[CalculationResponse] = new Writes[CalculationResponse] {
     override def writes(data: CalculationResponse): JsValue = {
       val calc = data.result
       val json = Json.obj(

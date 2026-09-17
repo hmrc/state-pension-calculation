@@ -34,12 +34,12 @@ trait MockDesConnector extends MockFactory {
 
     def getInitialCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
       (mockDesConnector
-        .getInitialCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .getInitialCalculation(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
 
     def getFinalCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
       (mockDesConnector
-        .getFinalCalculation(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .getFinalCalculation(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
 
   }

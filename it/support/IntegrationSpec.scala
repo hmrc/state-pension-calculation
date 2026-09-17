@@ -52,7 +52,7 @@ trait IntegrationSpec
     "api.status"               -> "BETA"
   )
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override given app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure(overriddenConfig)
     .build()

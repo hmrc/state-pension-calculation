@@ -16,15 +16,15 @@
 
 package models.errors
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class Error(code: String, message: String)
 
 object Error {
-  implicit val writes: OWrites[Error] = Json.writes[Error]
+  given OWrites[Error] = Json.writes[Error]
 
-  implicit val reads: Reads[Error] =
+  given Reads[Error] =
     (__ \ "code").read[String].and((__ \ "reason").read[String])(Error.apply _)
 
 }

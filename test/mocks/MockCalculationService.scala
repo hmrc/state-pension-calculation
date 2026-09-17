@@ -34,7 +34,7 @@ trait MockCalculationService extends MockFactory {
 
     def calculate(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
       (mockCalculationService
-        .calculate(_: CalculationRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .calculate(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
 
   }

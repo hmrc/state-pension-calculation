@@ -42,7 +42,7 @@ class DesConnector @Inject() (http: HttpClientV2, appConfig: AppConfig) {
     )
 
   def getInitialCalculation(request: CalculationRequest)(
-      implicit hc: HeaderCarrier,
+      using hc: HeaderCarrier,
       ec: ExecutionContext
   ): Future[CalculationOutcome] = {
 
@@ -51,7 +51,7 @@ class DesConnector @Inject() (http: HttpClientV2, appConfig: AppConfig) {
   }
 
   def getFinalCalculation(request: CalculationRequest)(
-      implicit hc: HeaderCarrier,
+      using hc: HeaderCarrier,
       ec: ExecutionContext
   ): Future[CalculationOutcome] = {
 
@@ -60,15 +60,15 @@ class DesConnector @Inject() (http: HttpClientV2, appConfig: AppConfig) {
   }
 
   private def sendRequest(url: URL, request: CalculationRequest)(
-      implicit hc: HeaderCarrier,
-      ec: ExecutionContext
+      using HeaderCarrier,
+      ExecutionContext
   ): Future[CalculationOutcome] = {
     import connectors.httpParsers.GetCalculationHttpParser.getCalculationHttpReads
 
     http
       .post(url)
       .withBody(Json.toJson(request))
-      .setHeader(desHeaders(request.correlationId): _*)
+      .setHeader(desHeaders(request.correlationId)*)
       .execute[CalculationOutcome]
   }
 

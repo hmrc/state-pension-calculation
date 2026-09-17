@@ -18,7 +18,7 @@ package controllers
 
 import mocks.MockCalculationService
 import models.CalculationRequest
-import models.errors._
+import models.errors.*
 import org.scalatest.TestSuite
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
@@ -26,7 +26,7 @@ import play.api.libs.json.{JsObject, JsValue, Json, Writes}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
-import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import support.data.CalculationTestData.Response.expectedModel as validResponse
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes.CalculationErrorCodePrefix
 
@@ -64,7 +64,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
     "finalise"   -> true
   )
 
-  implicit val request: Request[JsValue] = postRequest[JsValue](validPayload)
+  given request: Request[JsValue] = postRequest[JsValue](validPayload)
 
   val calcRequest = CalculationRequest("AA123456A", "M", "SMIJ", finalCalculation = true, correlationId = correlationId)
 
@@ -147,7 +147,7 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         propertyName: String,
         invalidValue: T,
         expectedError: Error = InvalidRequestError
-    )(implicit w: Writes[T]): Unit =
+    )(using Writes[T]): Unit =
       s"the request has an invalid value ($invalidValue) for the property $propertyName" should {
         val invalidPayload = validPayload ++ Json.obj(propertyName -> invalidValue)
         val invalidRequest = postRequest[JsValue](invalidPayload)

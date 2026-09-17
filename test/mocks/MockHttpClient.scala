@@ -19,7 +19,7 @@ package mocks
 import izumi.reflect.Tag
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.libs.ws.BodyWritable
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, StringContextOps}

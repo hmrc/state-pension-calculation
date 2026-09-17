@@ -22,7 +22,7 @@ import models.{CalculationOutcome, CalculationRequest}
 import org.scalatest.TestSuite
 import play.api.http.HeaderNames
 import play.api.libs.json.Json
-import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import support.data.CalculationTestData.Response.expectedModel as validResponse
 import utils.AdditionalHeaderNames.{CorrelationIdHeader, Environment}
 
 import java.util.UUID

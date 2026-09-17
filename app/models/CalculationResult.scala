@@ -43,6 +43,6 @@ case class CalculationResult(
 )
 
 object CalculationResult {
-  implicit val reads: Reads[CalculationResult]   = Json.reads[CalculationResult]
-  implicit val writes: Writes[CalculationResult] = Json.writes[CalculationResult]
+  given Reads[CalculationResult]  = Json.reads[CalculationResult]
+  given Writes[CalculationResult] = Json.writes[CalculationResult]
 }

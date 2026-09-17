@@ -16,8 +16,7 @@
 
 package connectors.httpParsers
 
-import models.errors._
-import play.api.libs.json.Json
+import models.errors.*
 import uk.gov.hmrc.http.HttpResponse
 
 class HttpParserSpec extends HttpParserBaseSpec {
