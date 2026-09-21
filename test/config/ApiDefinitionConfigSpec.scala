@@ -41,14 +41,14 @@ class ApiDefinitionConfigSpec extends UnitSpec {
           .expects("api.status", *)
           .returns(expected)
 
-        target.status shouldBe expected
+        target.status() shouldBe expected
       }
     }
 
     "no value is added to the configuration" should {
       "return a runtime exception" in new Test {
         intercept[RuntimeException] {
-          target.status
+          target.status()
         }
       }
     }
@@ -66,7 +66,7 @@ class ApiDefinitionConfigSpec extends UnitSpec {
           .expects("api.access.type", *)
           .returns(Some(expected))
 
-        target.accessType shouldBe expected
+        target.accessType() shouldBe expected
       }
     }
 
@@ -80,7 +80,7 @@ class ApiDefinitionConfigSpec extends UnitSpec {
           .expects("api.access.type", *)
           .returns(None)
 
-        target.accessType shouldBe expected
+        target.accessType() shouldBe expected
       }
     }
   }

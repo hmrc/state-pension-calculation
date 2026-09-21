@@ -34,10 +34,10 @@ class ApiDefinitionConfigImpl @Inject() (configuration: Configuration) extends A
 
   private val PRIVATE = "PRIVATE"
 
-  override lazy val status: String     = configuration.get[String]("api.status")
-  override lazy val accessType: String = configuration.getOptional[String]("api.access.type").getOrElse(PRIVATE)
+  override def status(): String     = configuration.get[String]("api.status")
+  override def accessType(): String = configuration.getOptional[String]("api.access.type").getOrElse(PRIVATE)
 
-  override lazy val endpointsEnabled: Boolean =
+  override def endpointsEnabled(): Boolean =
     configuration.getOptional[Boolean]("api.endpointsEnabled").getOrElse(false)
 
 }

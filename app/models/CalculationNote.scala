@@ -16,21 +16,21 @@
 
 package models
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class CalculationNote(id: Int, count: Int, notes: Seq[String])
 
 object CalculationNote {
   val noteReader: Reads[String] = (__ \ "noteField").read[String]
 
-  implicit val reads: Reads[CalculationNote] =
+  given Reads[CalculationNote] =
     (__ \ "noteIdentifier")
       .read[Int]
       .and((__ \ "numberOfNoteFields").read[Int])
       .and((__ \ "fieldsList").lazyRead(Reads.seq[String](noteReader)))(CalculationNote.apply _)
 
-  implicit val writes: Writes[CalculationNote] = new Writes[CalculationNote] {
+  given Writes[CalculationNote] = new Writes[CalculationNote] {
     override def writes(data: CalculationNote): JsValue =
       Json.obj(
         "noteIdentifier"     -> data.id,

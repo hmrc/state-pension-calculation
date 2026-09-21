@@ -33,7 +33,7 @@ class AppConfigImpl @Inject() (configuration: ServicesConfig) extends AppConfig 
 
   private val desServicePrefix = "microservice.services.des"
 
-  override lazy val desBaseUrl: String     = configuration.baseUrl("des")
-  override lazy val desEnvironment: String = configuration.getString(s"$desServicePrefix.env")
-  override lazy val desToken: String       = configuration.getString(s"$desServicePrefix.token")
+  override def desBaseUrl(): String     = configuration.baseUrl("des")
+  override def desEnvironment(): String = configuration.getString(s"$desServicePrefix.env")
+  override def desToken(): String       = configuration.getString(s"$desServicePrefix.token")
 }

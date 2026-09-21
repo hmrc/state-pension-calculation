@@ -19,12 +19,12 @@ package connectors.httpParsers
 import models.errors.{ApiServiceError, Error, Errors, ThrottledError}
 import models.{CalculationOutcome, CalculationResponse}
 import play.api.Logging
-import play.api.http.Status._
+import play.api.http.Status.*
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object GetCalculationHttpParser extends HttpParser with Logging {
 
-  implicit val getCalculationHttpReads: HttpReads[CalculationOutcome] =
+  given getCalculationHttpReads: HttpReads[CalculationOutcome] =
     new HttpReads[CalculationOutcome] {
       override def read(method: String, url: String, response: HttpResponse): CalculationOutcome = {
 

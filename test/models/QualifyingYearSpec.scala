@@ -16,7 +16,7 @@
 
 package models
 
-import support.data.CalculationTestData.QualifyingYears._
+import support.data.CalculationTestData.QualifyingYears.*
 import support.UnitSpec
 
 class QualifyingYearSpec extends UnitSpec {

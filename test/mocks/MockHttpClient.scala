@@ -18,7 +18,8 @@ package mocks
 
 import izumi.reflect.Tag
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json._
+import org.scalatest.TestSuite
+import play.api.libs.json.*
 import play.api.libs.ws.BodyWritable
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, StringContextOps}
@@ -27,6 +28,7 @@ import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockHttpClient extends MockFactory {
+  this: TestSuite =>
 
   val mockHttpClient: HttpClientV2       = mock[HttpClientV2]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
@@ -44,8 +46,7 @@ trait MockHttpClient extends MockFactory {
         .expects(body, *, *, *)
         .returns(mockRequestBuilder)
 
-      (mockRequestBuilder
-        .setHeader(_: (String, String)))
+      (mockRequestBuilder.setHeader _)
         .expects(*)
         .returns(mockRequestBuilder)
 

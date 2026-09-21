@@ -18,11 +18,11 @@ package services
 
 import connectors.DesConnector
 import javax.inject.{Inject, Singleton}
-import models.errors._
+import models.errors.*
 import models.{CalculationOutcome, CalculationRequest}
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.ErrorCodes._
+import utils.ErrorCodes.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +31,7 @@ class CalculationService @Inject() (connector: DesConnector) extends Logging {
 
   def calculate(
       request: CalculationRequest
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
+  )(using HeaderCarrier, ExecutionContext): Future[CalculationOutcome] = {
 
     val unexpectedErrorMapping: String => Error = code => {
       logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")

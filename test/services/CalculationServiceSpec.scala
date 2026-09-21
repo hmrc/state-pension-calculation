@@ -17,16 +17,17 @@
 package services
 
 import mocks.MockDesConnector
-import models.errors._
+import models.errors.*
 import models.{CalculationOutcome, CalculationRequest}
-import support.data.CalculationTestData.Response.{expectedModel => validResponse}
+import org.scalatest.TestSuite
+import support.data.CalculationTestData.Response.expectedModel as validResponse
 import utils.ErrorCodes.CalculationErrorCodePrefix
 
 import scala.concurrent.Future
 
 class CalculationServiceSpec extends ServiceBaseSpec {
 
-  private trait Test extends MockDesConnector {
+  private trait Test extends TestSuite with MockDesConnector {
     lazy val target = new CalculationService(mockDesConnector)
   }
 
