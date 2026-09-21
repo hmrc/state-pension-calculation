@@ -51,8 +51,8 @@ class DesConnector @Inject() (http: HttpClientV2, appConfig: AppConfig) {
   }
 
   def getFinalCalculation(request: CalculationRequest)(
-      using hc: HeaderCarrier,
-      ec: ExecutionContext
+      using HeaderCarrier,
+      ExecutionContext
   ): Future[CalculationOutcome] = {
 
     val url = url"${appConfig.desBaseUrl()}/individuals/pensions/ltb-calculation/final/${request.nino}"

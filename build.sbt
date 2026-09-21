@@ -24,7 +24,7 @@ ThisBuild / scalaVersion := "3.3.7"
 lazy val plugins: Seq[Plugins] = Seq.empty
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin) ++ plugins: _*)
+  .enablePlugins((Seq(play.sbt.PlayScala, SbtDistributablesPlugin) ++ plugins)*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
@@ -35,8 +35,8 @@ lazy val microservice = Project(appName, file("."))
     )
   )
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
-  .settings(CodeCoverageSettings.settings: _*)
+  .settings((integrationTestSettings())*)
+  .settings((CodeCoverageSettings.settings)*)
   .settings(isPublicArtefact := true)
   .settings(PlayKeys.playDefaultPort := 9790)
 

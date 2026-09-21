@@ -31,7 +31,7 @@ class CalculationService @Inject() (connector: DesConnector) extends Logging {
 
   def calculate(
       request: CalculationRequest
-  )(using hc: HeaderCarrier, ec: ExecutionContext): Future[CalculationOutcome] = {
+  )(using HeaderCarrier, ExecutionContext): Future[CalculationOutcome] = {
 
     val unexpectedErrorMapping: String => Error = code => {
       logger.warn(s"[CalculationService][calculate] Unexpected error received from DES. Code: $code")
