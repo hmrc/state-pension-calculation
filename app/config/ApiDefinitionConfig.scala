@@ -37,6 +37,7 @@ class ApiDefinitionConfigImpl @Inject() (configuration: Configuration) extends A
   override def status(): String     = configuration.get[String]("api.status")
 
   override def accessType(): String = configuration.getOptional[String]("api.access").getOrElse(INTERNAL)
+
   override def endpointsEnabled(): Boolean =
     configuration.getOptional[Boolean]("api.endpointsEnabled").getOrElse(false)
 
