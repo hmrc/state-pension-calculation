@@ -57,7 +57,7 @@ class ApiDefinitionISpec extends IntegrationSpec {
           |        "status": "BETA",
           |        "endpointsEnabled": true,
           |        "access" : {
-          |          "type": "PRIVATE"
+          |          "type": "INTERNAL"
           |        }
           |      }
           |    ]
