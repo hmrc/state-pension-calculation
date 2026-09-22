@@ -34,7 +34,7 @@ class ApiDefinitionConfigImpl @Inject() (configuration: Configuration) extends A
 
   private val INTERNAL = "INTERNAL"
 
-  override def status(): String     = configuration.get[String]("api.status")
+  override def status(): String = configuration.get[String]("api.status")
 
   override def accessType(): String = configuration.getOptional[String]("api.access").getOrElse(INTERNAL)
 
