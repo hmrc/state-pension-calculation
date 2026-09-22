@@ -63,7 +63,7 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         (mockConfig
           .getOptional[String](_: String)(_: ConfigLoader[String]))
-          .expects("api.access.type", *)
+          .expects("api.access", *)
           .returns(Some(expected))
 
         target.accessType() shouldBe expected
@@ -71,13 +71,13 @@ class ApiDefinitionConfigSpec extends UnitSpec {
     }
 
     "no value is added to the configuration" should {
-      "retrieve the default API access setting (PRIVATE)" in new Test {
+      "retrieve the default API access setting (INTERNAL)" in new Test {
 
-        val expected = "PRIVATE"
+        val expected = "INTERNAL"
 
         (mockConfig
           .getOptional[String](_: String)(_: ConfigLoader[String]))
-          .expects("api.access.type", *)
+          .expects("api.access", *)
           .returns(None)
 
         target.accessType() shouldBe expected

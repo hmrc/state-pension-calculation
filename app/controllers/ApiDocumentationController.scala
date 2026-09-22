@@ -35,10 +35,6 @@ class ApiDocumentationController @Inject() (
 
   override def definition(): Action[AnyContent] = Action.async {
 
-    lazy val apiAccess: JsObject = Json.obj(
-      "type" -> apiConfig.accessType()
-    )
-
     val apiDefinition = Json.parse(
       s"""
          |{
@@ -52,7 +48,7 @@ class ApiDocumentationController @Inject() (
          |        "version": "1.0",
          |        "status": "${apiConfig.status()}",
          |        "endpointsEnabled": ${apiConfig.endpointsEnabled()},
-         |        "access" : $apiAccess
+         |        "access" : "${apiConfig.accessType()}"
          |      }
          |    ]
          |  }
