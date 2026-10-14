@@ -3,3 +3,4 @@ digital-service: Get State Pension Calculation
 test-repositories:
   - state-pension-calculation-performance-tests
   - state-pension-calculation-acceptance-tests
+serviceNowMapping: SNSVC0005590
