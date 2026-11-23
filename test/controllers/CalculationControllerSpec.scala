@@ -19,6 +19,9 @@ package controllers
 import mocks.MockCalculationService
 import models.CalculationRequest
 import models.errors.*
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 import org.scalatest.TestSuite
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
@@ -29,14 +32,22 @@ import play.api.test.Helpers.stubControllerComponents
 import support.data.CalculationTestData.Response.expectedModel as validResponse
 import utils.AdditionalHeaderNames.CorrelationIdHeader
 import utils.ErrorCodes.CalculationErrorCodePrefix
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CalculationControllerSpec extends ControllerBaseSpec {
 
   private trait Test extends TestSuite with MockCalculationService {
     lazy val target = new CalculationController(stubControllerComponents(), mockCalculationService)
+
+    def verifyCalculation(request: CalculationRequest): Unit =
+      verify(mockCalculationService).calculate(eqTo(request))(
+        using any[HeaderCarrier],
+        any[ExecutionContext]
+      )
+
   }
 
   val InvalidRequestErrorJson: JsValue = Json.parse(
@@ -76,20 +87,22 @@ class CalculationControllerSpec extends ControllerBaseSpec {
 
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.CREATED
+        verifyCalculation(calcRequest)
       }
 
       "return the Correlation ID in the header" in new Test {
 
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(request)
         header(CorrelationIdHeader, result) shouldBe Some(correlationId)
+        verifyCalculation(calcRequest)
       }
 
     }
@@ -189,21 +202,23 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return 400" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(invalidRequest)
 
         status(result) shouldBe Status.BAD_REQUEST
+        verifyNoInteractions(mockCalculationService)
       }
 
       "return an FRY_AMOUNT_NOT_EXPECTED error in the body" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         private val result = target.calculation()(invalidRequest)
 
         contentAsJson(result) shouldBe UnexpectedFryAmountErrorJson
+        verifyNoInteractions(mockCalculationService)
       }
     }
 
@@ -211,10 +226,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 500 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(ApiServiceError))))
+          .thenReturn(Future.successful(Left(Errors(ApiServiceError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -222,10 +238,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 403 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(RetirementAfterDeathError))))
+          .thenReturn(Future.successful(Left(Errors(RetirementAfterDeathError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.FORBIDDEN
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -233,10 +250,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 403 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(TooEarlyError))))
+          .thenReturn(Future.successful(Left(Errors(TooEarlyError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.FORBIDDEN
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -244,10 +262,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 403 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(UnknownBusinessError))))
+          .thenReturn(Future.successful(Left(Errors(UnknownBusinessError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.FORBIDDEN
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -255,10 +274,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 404 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(NinoNotFoundError))))
+          .thenReturn(Future.successful(Left(Errors(NinoNotFoundError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.NOT_FOUND
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -266,10 +286,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 404 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(MatchNotFoundError))))
+          .thenReturn(Future.successful(Left(Errors(MatchNotFoundError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.NOT_FOUND
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -277,10 +298,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 503 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(ServiceUnavailableError))))
+          .thenReturn(Future.successful(Left(Errors(ServiceUnavailableError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.SERVICE_UNAVAILABLE
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -288,10 +310,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
       "return a 429 response" in new Test {
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(ThrottledError))))
+          .thenReturn(Future.successful(Left(Errors(ThrottledError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.TOO_MANY_REQUESTS
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -300,10 +323,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         val calculationError = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(calculationError))))
+          .thenReturn(Future.successful(Left(Errors(calculationError))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.FORBIDDEN
+        verifyCalculation(calcRequest)
       }
     }
 
@@ -313,10 +337,11 @@ class CalculationControllerSpec extends ControllerBaseSpec {
         val calculationError2 = Error(CalculationErrorCodePrefix + "12345", "Calc error 12345")
         MockedCalculationService
           .calculate(calcRequest)
-          .returns(Future.successful(Left(Errors(Seq(calculationError1, calculationError2)))))
+          .thenReturn(Future.successful(Left(Errors(Seq(calculationError1, calculationError2)))))
 
         private val result = target.calculation()(request)
         status(result) shouldBe Status.FORBIDDEN
+        verifyCalculation(calcRequest)
       }
     }
   }

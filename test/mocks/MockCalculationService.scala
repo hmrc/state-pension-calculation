@@ -17,25 +17,31 @@
 package mocks
 
 import models.{CalculationOutcome, CalculationRequest}
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, when}
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.TestSuite
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCalculationService extends MockFactory {
+trait MockCalculationService {
   this: TestSuite =>
 
-  val mockCalculationService: CalculationService = mock[CalculationService]
+  val mockCalculationService: CalculationService = mock(classOf[CalculationService])
 
   object MockedCalculationService {
 
-    def calculate(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
-      (mockCalculationService
-        .calculate(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+    def calculate(
+        request: CalculationRequest
+    ): OngoingStubbing[Future[CalculationOutcome]] =
+      when(
+        mockCalculationService.calculate(eqTo(request))(
+          using any[HeaderCarrier],
+          any[ExecutionContext]
+        )
+      )
 
   }
 

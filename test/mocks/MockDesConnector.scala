@@ -17,30 +17,41 @@
 package mocks
 
 import connectors.DesConnector
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, when}
 import models.{CalculationOutcome, CalculationRequest}
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.TestSuite
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDesConnector extends MockFactory {
+trait MockDesConnector {
   this: TestSuite =>
 
-  val mockDesConnector: DesConnector = mock[DesConnector]
+  val mockDesConnector: DesConnector = mock(classOf[DesConnector])
 
   object MockedDesConnector {
 
-    def getInitialCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
-      (mockDesConnector
-        .getInitialCalculation(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+    def getInitialCalculation(
+        request: CalculationRequest
+    ): OngoingStubbing[Future[CalculationOutcome]] =
+      when(
+        mockDesConnector.getInitialCalculation(eqTo(request))(
+          using any[HeaderCarrier],
+          any[ExecutionContext]
+        )
+      )
 
-    def getFinalCalculation(request: CalculationRequest): CallHandler[Future[CalculationOutcome]] =
-      (mockDesConnector
-        .getFinalCalculation(_: CalculationRequest)(using _: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+    def getFinalCalculation(
+        request: CalculationRequest
+    ): OngoingStubbing[Future[CalculationOutcome]] =
+      when(
+        mockDesConnector.getFinalCalculation(eqTo(request))(
+          using any[HeaderCarrier],
+          any[ExecutionContext]
+        )
+      )
 
   }
 
