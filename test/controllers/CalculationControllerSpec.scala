@@ -19,7 +19,7 @@ package controllers
 import mocks.MockCalculationService
 import models.CalculationRequest
 import models.errors.*
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.scalatest.TestSuite

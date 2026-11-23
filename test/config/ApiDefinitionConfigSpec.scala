@@ -16,7 +16,7 @@
 
 package config
 
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{mock, verify, when}
 import play.api.{ConfigLoader, Configuration}
 import support.UnitSpec

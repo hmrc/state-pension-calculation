@@ -19,7 +19,7 @@ package services
 import mocks.MockDesConnector
 import models.errors.*
 import models.{CalculationOutcome, CalculationRequest}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{verify, verifyNoMoreInteractions}
 import org.scalatest.TestSuite
 import support.data.CalculationTestData.Response.expectedModel as validResponse

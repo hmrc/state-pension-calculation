@@ -17,7 +17,7 @@
 package mocks
 
 import models.{CalculationOutcome, CalculationRequest}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{mock, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.TestSuite

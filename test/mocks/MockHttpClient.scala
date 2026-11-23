@@ -17,7 +17,7 @@
 package mocks
 
 import izumi.reflect.Tag
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.TestSuite
 import play.api.libs.json.*
