@@ -17,43 +17,47 @@
 package mocks
 
 import izumi.reflect.Tag
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.TestSuite
 import play.api.libs.json.*
 import play.api.libs.ws.BodyWritable
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, StringContextOps}
 
-import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockHttpClient extends MockFactory {
+trait MockHttpClient {
   this: TestSuite =>
 
-  val mockHttpClient: HttpClientV2       = mock[HttpClientV2]
-  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
+  val mockHttpClient: HttpClientV2       = mock(classOf[HttpClientV2])
+  val mockRequestBuilder: RequestBuilder = mock(classOf[RequestBuilder])
 
   object MockedHttpClient {
 
     def post[O](url: String, body: JsValue)(response: Future[O]): Unit = {
-      (mockHttpClient
-        .post(_: URL)(_: HeaderCarrier))
-        .expects(url"$url", *)
-        .returns(mockRequestBuilder)
+      when(
+        mockHttpClient.post(eqTo(url"$url"))(any[HeaderCarrier])
+      ).thenReturn(mockRequestBuilder)
 
-      (mockRequestBuilder
-        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
-        .expects(body, *, *, *)
-        .returns(mockRequestBuilder)
+      when(
+        mockRequestBuilder.withBody(eqTo(body))(
+          any[BodyWritable[JsValue]],
+          any[Tag[JsValue]],
+          any[ExecutionContext]
+        )
+      ).thenReturn(mockRequestBuilder)
 
-      (mockRequestBuilder.setHeader _)
-        .expects(*)
-        .returns(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(any[(String, String)])
+      ).thenReturn(mockRequestBuilder)
 
-      (mockRequestBuilder
-        .execute(_: HttpReads[O], _: ExecutionContext))
-        .expects(*, *)
-        .returns(response)
+      when(
+        mockRequestBuilder.execute[O](
+          any[HttpReads[O]],
+          any[ExecutionContext]
+        )
+      ).thenReturn(response)
     }
 
   }

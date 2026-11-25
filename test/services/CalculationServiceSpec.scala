@@ -19,16 +19,38 @@ package services
 import mocks.MockDesConnector
 import models.errors.*
 import models.{CalculationOutcome, CalculationRequest}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{verify, verifyNoMoreInteractions}
 import org.scalatest.TestSuite
 import support.data.CalculationTestData.Response.expectedModel as validResponse
 import utils.ErrorCodes.CalculationErrorCodePrefix
 
-import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
+import scala.concurrent.{ExecutionContext, Future}
 
 class CalculationServiceSpec extends ServiceBaseSpec {
 
   private trait Test extends TestSuite with MockDesConnector {
     lazy val target = new CalculationService(mockDesConnector)
+
+    def verifyInitialCalculation(request: CalculationRequest): Unit = {
+      verify(mockDesConnector)
+        .getInitialCalculation(eqTo(request))(
+          using any[HeaderCarrier],
+          any[ExecutionContext]
+        )
+      verifyNoMoreInteractions(mockDesConnector)
+    }
+
+    def verifyFinalCalculation(request: CalculationRequest): Unit = {
+      verify(mockDesConnector)
+        .getFinalCalculation(eqTo(request))(
+          using any[HeaderCarrier],
+          any[ExecutionContext]
+        )
+      verifyNoMoreInteractions(mockDesConnector)
+    }
+
   }
 
   "Calling calculate" when {
@@ -42,10 +64,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
 
         MockedDesConnector
           .getInitialCalculation(request)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
         result shouldBe Right(validResponse)
+
+        verifyInitialCalculation(request)
       }
     }
 
@@ -55,10 +79,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
 
         MockedDesConnector
           .getFinalCalculation(request)
-          .returns(Future.successful(Right(validResponse)))
+          .thenReturn(Future.successful(Right(validResponse)))
 
         val result: CalculationOutcome = await(target.calculate(request))
         result shouldBe Right(validResponse)
+
+        verifyFinalCalculation(request)
       }
     }
 
@@ -67,10 +93,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("UNKNOWN", "unknown message")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ApiServiceError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -79,10 +107,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("INVALID_CORRELATIONID", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ApiServiceError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -91,10 +121,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("INVALID_NINO", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ApiServiceError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -103,10 +135,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("INVALID_PAYLOAD", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ApiServiceError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -115,10 +149,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("RETIREMENT_DATE_AFTER_DEATH_DATE", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(RetirementAfterDeathError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -127,10 +163,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("TOO_EARLY", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(TooEarlyError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -139,10 +177,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("UNKNOWN_BUSINESS_ERROR", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(UnknownBusinessError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -151,10 +191,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("NOT_FOUND_NINO", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(NinoNotFoundError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -163,10 +205,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("NO_MATCH_FOUND", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(MatchNotFoundError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -175,10 +219,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("SERVER_ERROR", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ApiServiceError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -187,10 +233,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("SERVICE_UNAVAILABLE", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ServiceUnavailableError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -199,10 +247,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val error = Error("MESSAGE_THROTTLED_OUT", "")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(error))))
+          .thenReturn(Future.successful(Left(Errors(error))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(ThrottledError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -212,10 +262,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val expectedError = Error(CalculationErrorCodePrefix + "12345", "Calc Error for scenario 12345")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(calcError))))
+          .thenReturn(Future.successful(Left(Errors(calcError))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(expectedError))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 
@@ -227,10 +279,12 @@ class CalculationServiceSpec extends ServiceBaseSpec {
         val expectedError2 = Error(CalculationErrorCodePrefix + "123456", "Calc Error for scenario 123456")
         MockedDesConnector
           .getFinalCalculation(validRequest)
-          .returns(Future.successful(Left(Errors(Seq(error1, error2)))))
+          .thenReturn(Future.successful(Left(Errors(Seq(error1, error2)))))
 
         val result: CalculationOutcome = await(target.calculate(validRequest))
         result shouldBe Left(Errors(Seq(expectedError1, expectedError2)))
+
+        verifyFinalCalculation(validRequest)
       }
     }
 

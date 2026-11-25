@@ -18,7 +18,7 @@ import sbt.*
 
 object AppDependencies {
 
-  private val playBootstrapVersion = "10.8.0"
+  private val playBootstrapVersion = "10.9.0"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% "play-hmrc-api-play-30"     % "9.0.0",
@@ -27,7 +27,7 @@ object AppDependencies {
 
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% "bootstrap-test-play-30" % playBootstrapVersion % "test, it", // bootstrap version limited by play-hmrc-api
-    "org.scalamock" %% "scalamock" % "7.5.5" % "test"
+    "org.mockito"             % "mockito-core"           % "5.23.0" % "test"
   )
 
 }
