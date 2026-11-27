@@ -16,13 +16,15 @@
 
 package config
 
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{mock, verify, when}
 import play.api.{ConfigLoader, Configuration}
 import support.UnitSpec
 
 class ApiDefinitionConfigSpec extends UnitSpec {
 
   private trait Test {
-    lazy val mockConfig: Configuration = mock[Configuration]
+    lazy val mockConfig: Configuration = mock(classOf[Configuration])
 
     lazy val target: ApiDefinitionConfigImpl =
       new ApiDefinitionConfigImpl(mockConfig)
@@ -36,17 +38,28 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "BETA"
 
-        (mockConfig
-          .get[String](_: String)(_: ConfigLoader[String]))
-          .expects("api.status", *)
-          .returns(expected)
+        when(
+          mockConfig.get[String](eqTo("api.status"))(
+            using any[ConfigLoader[String]]
+          )
+        ).thenReturn(expected)
 
         target.status() shouldBe expected
+
+        verify(mockConfig).get[String](eqTo("api.status"))(
+          using any[ConfigLoader[String]]
+        )
       }
     }
 
     "no value is added to the configuration" should {
       "return a runtime exception" in new Test {
+        when(
+          mockConfig.get[String](eqTo("api.status"))(
+            using any[ConfigLoader[String]]
+          )
+        ).thenThrow(new RuntimeException("Missing api.status"))
+
         intercept[RuntimeException] {
           target.status()
         }
@@ -61,12 +74,17 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "PUBLIC"
 
-        (mockConfig
-          .getOptional[String](_: String)(_: ConfigLoader[String]))
-          .expects("api.access", *)
-          .returns(Some(expected))
+        when(
+          mockConfig.getOptional[String](eqTo("api.access"))(
+            using any[ConfigLoader[String]]
+          )
+        ).thenReturn(Some(expected))
 
         target.accessType() shouldBe expected
+
+        verify(mockConfig).getOptional[String](eqTo("api.access"))(
+          using any[ConfigLoader[String]]
+        )
       }
     }
 
@@ -75,12 +93,17 @@ class ApiDefinitionConfigSpec extends UnitSpec {
 
         val expected = "INTERNAL"
 
-        (mockConfig
-          .getOptional[String](_: String)(_: ConfigLoader[String]))
-          .expects("api.access", *)
-          .returns(None)
+        when(
+          mockConfig.getOptional[String](eqTo("api.access"))(
+            using any[ConfigLoader[String]]
+          )
+        ).thenReturn(None)
 
         target.accessType() shouldBe expected
+
+        verify(mockConfig).getOptional[String](eqTo("api.access"))(
+          using any[ConfigLoader[String]]
+        )
       }
     }
   }

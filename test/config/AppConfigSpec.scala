@@ -16,13 +16,14 @@
 
 package config
 
+import org.mockito.Mockito.{mock, verify, when}
 import support.UnitSpec
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class AppConfigSpec extends UnitSpec {
 
   trait Test {
-    lazy val mockConfig: ServicesConfig = mock[ServicesConfig]
+    lazy val mockConfig: ServicesConfig = mock(classOf[ServicesConfig])
 
     lazy val target: AppConfigImpl =
       new AppConfigImpl(mockConfig)
@@ -34,12 +35,12 @@ class AppConfigSpec extends UnitSpec {
 
       val url = "http://des-host"
 
-      (mockConfig
-        .baseUrl(_: String))
-        .expects("des")
-        .returns(url)
+      when(mockConfig.baseUrl("des"))
+        .thenReturn(url)
 
       target.desBaseUrl() shouldBe url
+
+      verify(mockConfig).baseUrl("des")
     }
   }
 
@@ -50,10 +51,8 @@ class AppConfigSpec extends UnitSpec {
 
         val env = "TEST_ENV"
 
-        (mockConfig
-          .getString(_: String))
-          .stubs("microservice.services.des.env")
-          .returns(env)
+        when(mockConfig.getString("microservice.services.des.env"))
+          .thenReturn(env)
 
         target.desEnvironment() shouldBe env
       }
@@ -61,6 +60,9 @@ class AppConfigSpec extends UnitSpec {
 
     "no value added to the configuration" should {
       "return the run time exception" in new Test {
+        when(mockConfig.getString("microservice.services.des.env"))
+          .thenThrow(new RuntimeException("Missing DES environment"))
+
         intercept[RuntimeException] {
           target.desEnvironment()
         }
@@ -75,10 +77,8 @@ class AppConfigSpec extends UnitSpec {
 
         val token = "some-token"
 
-        (mockConfig
-          .getString(_: String))
-          .stubs("microservice.services.des.token")
-          .returns(token)
+        when(mockConfig.getString("microservice.services.des.token"))
+          .thenReturn(token)
 
         target.desToken() shouldBe token
       }
@@ -86,6 +86,9 @@ class AppConfigSpec extends UnitSpec {
 
     "no value added to the configuration" should {
       "return the run time exception" in new Test {
+        when(mockConfig.getString("microservice.services.des.token"))
+          .thenThrow(new RuntimeException("Missing DES token"))
+
         intercept[RuntimeException] {
           target.desToken()
         }

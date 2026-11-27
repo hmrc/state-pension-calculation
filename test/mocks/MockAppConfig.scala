@@ -17,28 +17,25 @@
 package mocks
 
 import config.AppConfig
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import org.mockito.Mockito.{mock, when}
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.TestSuite
 
-trait MockAppConfig extends MockFactory {
+trait MockAppConfig {
   this: TestSuite =>
 
-  val mockAppConfig: AppConfig = mock[AppConfig]
+  val mockAppConfig: AppConfig = mock(classOf[AppConfig])
 
   object MockedAppConfig {
 
-    def desBaseUrl(): CallHandler[String] =
-      (mockAppConfig.desBaseUrl: () => String)
-        .expects()
+    def desBaseUrl(): OngoingStubbing[String] =
+      when(mockAppConfig.desBaseUrl())
 
-    def desEnvironment(): CallHandler[String] =
-      (mockAppConfig.desEnvironment: () => String)
-        .expects()
+    def desEnvironment(): OngoingStubbing[String] =
+      when(mockAppConfig.desEnvironment())
 
-    def desToken(): CallHandler[String] =
-      (mockAppConfig.desToken: () => String)
-        .expects()
+    def desToken(): OngoingStubbing[String] =
+      when(mockAppConfig.desToken())
 
   }
 

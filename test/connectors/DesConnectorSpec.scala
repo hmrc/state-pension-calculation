@@ -40,9 +40,9 @@ class DesConnectorSpec extends ConnectorBaseSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl().returns(baseUrl)
-    MockedAppConfig.desToken().returns("des-token")
-    MockedAppConfig.desEnvironment().returns("des-environment")
+    MockedAppConfig.desBaseUrl().thenReturn(baseUrl)
+    MockedAppConfig.desToken().thenReturn("des-token")
+    MockedAppConfig.desEnvironment().thenReturn("des-environment")
   }
 
   "desHeaderCarrier" should {
